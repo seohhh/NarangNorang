@@ -10,11 +10,13 @@
   - [와이키즈 홈페이지](https://whykids.co.kr/?utm_source=google_pc&utm_medium=sa&utm_campaign=whykids23&utm_term=)
   <br />
   2. 로고 디자인
+  <br />
   ![logo1](./img/logo1.PNG)
   <br />
   ![logo2](./img/logo2.jpg)
   <br />
   3. figma 작성
+  <br />
   - 메인 페이지
   <br />
   ![main](./img/main.PNG)
