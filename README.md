@@ -10,4 +10,4 @@
 
 - EC2서버에 MYSQL 서버 구축
 - ERD 완성
-  ![나랑노랑.png](images/나랑노랑.png){: width="200" height="200"}
+![나랑노랑.png](images/나랑노랑.png){: width="400" height="400"}
