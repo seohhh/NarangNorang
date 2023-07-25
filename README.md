@@ -1,6 +1,6 @@
 ## ERD
 
-![erd](/img/erd.png)
+![erd](/img/erd2.png)
 
 <!--
 ## 프로젝트 소개
