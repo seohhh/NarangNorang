@@ -1,4 +1,4 @@
-package com.narang_norang.NarangNorang.configureration;
+package com.narang_norang.NarangNorang.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
