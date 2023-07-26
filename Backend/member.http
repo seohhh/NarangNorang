@@ -3,7 +3,7 @@ POST http://localhost:8080/narang-norang/sign-up
 Content-Type: application/json
 
 {
-  "memberId": "cksdnd1001",
+  "memberId": "cksdnd100001",
   "password": "qpal1234"
 }
 

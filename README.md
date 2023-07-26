@@ -10,4 +10,8 @@
 
 - EC2서버에 MYSQL 서버 구축
 - ERD 완성<br/>
-![나랑노랑.png](images/나랑노랑.png){: width="400" height="400"}
+  ![나랑노랑.png](images/나랑노랑.png){: width="400" height="400"}
+
+### 07.26
+
+- Spring Security, JWT 토큰 학습 및 실습
