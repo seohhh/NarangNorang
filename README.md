@@ -95,42 +95,42 @@
   ```
 <br />
 
-2. figma 전체 화면
+2. figma 전체 화면<br />
 ![figma](./img/figma.PNG)
 
-3. 메인 및 QnA 창
+3. 메인 및 QnA 창<br />
 ![main_f](./img/main_f.PNG)<br />
 ![QNA](./img/QNA.PNG)<br />
 ![ANSWER](./img/ANSWER.PNG)<br />
 
-4. 회원가입, 로그인, 마이페이지
+4. 회원가입, 로그인, 마이페이지<br />
 ![SIGNUP](./img/SIGNUP.PNG)<br />
 ![LOGIN_f](./img/LOGIN_f.PNG)<br />
 
-5. 마이페이지, 앨범
+5. 마이페이지, 앨범<br />
 ![MYPAGE](./img/MYPAGE.PNG)<br />
 ![ALBUM](./img/ALBUM.PNG)<br />
 
-6. 게임방에 초대 받아 접속한 후 화면
+6. 게임방에 초대 받아 접속한 후 화면<br />
 ![WAITING](./img/WAITING.PNG)<br />
 ![GUEST](./img/GUEST.PNG)<br />
 ![WAITINGROOM](./img/WAITINGROOM.PNG)<br />
 ![BACKGROUND](./img/BACKGROUND.PNG)<br />
 
-7. 방장이 게임방을 만들었을 때 화면
+7. 방장이 게임방을 만들었을 때 화면<br />
 ![GAMEROOM](./img/GAMEROOM.PNG)<br />
 ![ROOM](./img/ROOM.PNG)<br />
 
-8. 게임 선택하기
+8. 게임 선택하기<br />
 ![GAME_SELECT1](./img/GAME_SELECT1.PNG)<br />
 ![GAME_SELECT2](./img/GAME_SELECT2.PNG)<br />
 ![GAME_SELECT3](./img/GAME_SELECT3.PNG)<br />
 
-9. 게임중 화면
+9. 게임중 화면<br />
 ![PLAYING](./img/PLAYING.PNG)<br />
 ![TEAMPLAYING](./img/TEAMPLAYING.PNG)<br />
 
-10. 게임 후 사진 선택
+10. 게임 후 사진 선택<br />
 ![PHOTO](./img/PHOTO.PNG)<br />
 ![PHOTO_MEMBER](./img/PHOTO_MEMBER.PNG)<br />
 
