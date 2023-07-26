@@ -2,6 +2,43 @@
 
 ![erd](/img/erd2.png)
 
+## JPA
+
+- @Entity
+
+- @Table
+
+### 상속관계
+
+- @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+
+  상속 구현 전략 선택
+
+  - SINGLE_TABLE (default) : 단일 테이블 전략
+
+    통합 테이블로 변환<br>
+    DiscriminatorColumn를 선언하지 않아도 기본으로 DTYPE 칼럼이 생성된다.
+    DTYPE 칼럼 없이는 테이블을 판단할 수 없다.
+    ![jpa_enheritance_singletable](/img/jpa_enheritance_singletable.png)
+
+  - JOINED : 각각의 테이블로 변환
+
+    DiscriminatorColumn 선언하지 않으면 DTYPE 칼럼이 생성되지 않는다.
+    ![jpa_enheritance_joined](/img/jpa_enheritance_joined.png)
+
+  - TABLE_PER_CLASS
+
+- @DiscriminatorColumn(name = "DTYPE")
+
+  부모 클래스에 선언한다.<br>
+  하위 클래스를 구분하는 용도의 칼럼이다.<br>
+
+- @DiscriminatorValue("XXX")
+
+  하위 클래스에 선언한다.<br>
+  엔티티를 저장할 때 슈퍼타입의 구분 칼럼에 저장할 값을 지정한다.<br>
+  어노테이션을 선언하지 않을 경우 기본값으로 클래스 이름이 들어간다.
+
 <!--
 ## 프로젝트 소개
 
