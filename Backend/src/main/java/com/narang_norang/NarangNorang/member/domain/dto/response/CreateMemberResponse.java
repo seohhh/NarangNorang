@@ -1,4 +1,4 @@
-package com.narang_norang.NarangNorang.member.domain.dto;
+package com.narang_norang.NarangNorang.member.domain.dto.response;
 
 import com.narang_norang.NarangNorang.member.domain.entity.Member;
 import lombok.Getter;

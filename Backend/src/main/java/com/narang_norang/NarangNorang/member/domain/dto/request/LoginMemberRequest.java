@@ -1,16 +1,17 @@
-package com.narang_norang.NarangNorang.member.domain.dto;
+package com.narang_norang.NarangNorang.member.domain.dto.request;
 
 import com.narang_norang.NarangNorang.member.domain.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Getter
-@NoArgsConstructor
+@Setter
 @AllArgsConstructor
-public class CreateMemberRequest {
-
+@NoArgsConstructor
+public class LoginMemberRequest {
     private String memberId;
     private String password;
 
