@@ -4,15 +4,19 @@ import com.narang_norang.NarangNorang.member.domain.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Setter
 public class LoginMemberResponse {
 
-    private String memberId;
+    private Integer statusCode;
+    private String message;
+    private String accessToken;
 
-    public LoginMemberResponse(Member member) {
-        this.memberId = member.getMemberId();
+    public LoginMemberResponse(Integer statusCode, String message, String accessToken) {
+        this.statusCode = statusCode;
+        this.message = message;
+        this.accessToken = accessToken;
     }
 }
