@@ -4,7 +4,7 @@ import Nav from './components/Nav';
 // page
 import Main from './pages/Main';
 import Login from './pages/Login';
-import Signin from './pages/Signin';
+import Signup from './pages/Signup';
 import Album from './pages/Album';
 import Contents from './pages/Contents';
 
@@ -18,7 +18,7 @@ function App() {
           <Route path="/contents" element={<Contents />} />
           <Route path="/album" element={<Album />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/signin" element={<Signin />} />
+          <Route path="/signup" element={<Signup />} />
         </Routes>
       </div>
     </BrowserRouter>
