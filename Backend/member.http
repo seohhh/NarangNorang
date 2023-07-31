@@ -1,0 +1,24 @@
+// 회원 가입
+POST http://localhost:8080/narang-norang/sign-up
+Content-Type: application/json
+
+{
+  "memberId": "cksdnd100001",
+  "password": "qpal1234"
+}
+
+
+###
+// 로그인
+POST http://localhost:8080/narang-norang/login
+Content-Type: application/json
+
+{
+"memberId": "cksdnd1001",
+"password": "qpal1234"
+}
+
+
+###
+// 회원 수정
+// 비밀번호, 닉네임, 휴대폰 번호
