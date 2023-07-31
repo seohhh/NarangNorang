@@ -1,6 +1,7 @@
 package com.narang_norang.NarangNorang.member.security;
 
 import com.narang_norang.NarangNorang.member.auth.MemberDetailService;
+import com.narang_norang.NarangNorang.member.security.jwt.JwtAuthenticationFilter;
 import com.narang_norang.NarangNorang.member.service.MemberService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -21,10 +22,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private MemberService memberService;
+    private MemberDetailService memberDetailService;
 
     @Autowired
-    private MemberDetailService memberDetailService;
+    private MemberService memberService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -35,6 +36,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
+        daoAuthenticationProvider.setUserDetailsService(this.memberDetailService);
         return daoAuthenticationProvider;
     }
 
@@ -44,13 +46,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.authenticationProvider(authenticationProvider());
     }
 
-    @Bean
+    @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                .httpBasic().disable()
                 .csrf().disable()
 
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
+
+                .addFilter(new JwtAuthenticationFilter(authenticationManager(), memberService))
 
                 .authorizeRequests()
                 .anyRequest().permitAll()
