@@ -1,15 +1,26 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { login } from "../slice/authSlice";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 import { Form, Button } from "react-bootstrap";
+import { useNavigate } from "react-router-dom";
+
 
 function Login() {
   const [inputId, setInputId] = useState("");
   const [inputPw, setInputPw] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const isLoggedin = useSelector((state) => state.login.isLoggedin);
+
+  useEffect(() => {
+    // isLoggedin 값이 변경되었을 때 실행
+    if (isLoggedin === true) {
+      navigate('/');
+    }
+  }, [isLoggedin, navigate]);
 
   const handleInputId = (e) => {
     setInputId(e.target.value);
@@ -23,9 +34,8 @@ function Login() {
     setShowPassword(!showPassword);
   };
 
-  const onClickLogin = (e) => {
+  const onClickLogin = (e) => {    
     e.preventDefault();
-
     dispatch(login(inputId, inputPw));
   };
 
