@@ -11,6 +11,7 @@ axios.defaults.baseURL = 'http://localhost:8080/api/v1/'
 
 function SignupForm() {
   const dispatch = useDispatch()
+  const [idValidation, setIdValidation] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState(true)
   const [passwordValidation, setPasswordValidation] = useState(true)
   const [formData, setFormData] = useState({
@@ -55,6 +56,11 @@ function SignupForm() {
     })
     .then((res) => {
       console.log(res)
+      if (res.data === false) {
+        setIdValidation(true)
+      } else (
+        setIdValidation(false)
+      )
       })
     .catch((err) => {
       console.log(err)
@@ -104,6 +110,9 @@ function SignupForm() {
           </Col>
         </Form.Group>
         <Button variant="primary" type="button" onClick={idCheckHandler}>아이디 중복 확인</Button>
+        {idValidation===true
+            ? <Form.Text className="text-muted">사용 가능한 아이디입니다</Form.Text>
+            : (idValidation===false ? <Form.Text className="text-muted">사용 불가능한 아이디입니다</Form.Text> : null)}
 
       <Form.Group as={Row} className="mb-3" controlId="password">
         <Form.Label column sm="2">비밀번호</Form.Label>

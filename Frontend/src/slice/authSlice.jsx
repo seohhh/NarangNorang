@@ -35,7 +35,7 @@ export const { loginSuccess, loginFailure, logoutSuccess } = authSlice.actions
 export const signUp = (member_id, password, member_name, member_nickname, member_email, member_phone) => async (dispatch) => {
   axios({
     method: 'POST',
-    url: 'api/v1/member',
+    url: 'member',
     data: {member_id, password, member_name, member_nickname, member_email, member_phone}
   })
   .then((res) => {
@@ -50,7 +50,7 @@ export const signUp = (member_id, password, member_name, member_nickname, member
 }
 
 
-export const login = (memberId, password) => async (dispatch) => {
+export const login = (member_id, password) => async (dispatch) => {
   try {
     // API 요청을 보내는 부분
     const response = await axios.post('/auth/login', { member_id, password })
