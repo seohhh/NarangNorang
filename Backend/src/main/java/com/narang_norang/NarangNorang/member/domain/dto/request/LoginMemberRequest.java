@@ -13,12 +13,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @NoArgsConstructor
 public class LoginMemberRequest {
     private String memberId;
-    private String password;
+    private String memberPassword;
 
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .memberId(memberId)
-                .password(passwordEncoder.encode(password))
+                .memberPassword(passwordEncoder.encode(memberPassword))
                 .build();
     }
 }

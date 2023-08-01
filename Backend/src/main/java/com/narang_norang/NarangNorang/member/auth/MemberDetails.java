@@ -33,7 +33,7 @@ public class MemberDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return this.member.getPassword();
+        return this.member.getMemberPassword();
     }
     @Override
     public String getUsername() {

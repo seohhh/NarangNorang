@@ -10,11 +10,11 @@ public class ReadMemberResponse {
 
     private Long memberSeq;
     private String memberId;
-    private String password;
+    private String memberPassword;
 
     public ReadMemberResponse(Member member) {
         this.memberSeq = member.getMemberSeq();
         this.memberId = member.getMemberId();
-        this.password = member.getPassword();
+        this.memberPassword = member.getMemberPassword();
     }
 }

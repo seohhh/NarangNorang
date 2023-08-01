@@ -10,6 +10,7 @@ import Contents from './pages/Contents';
 import Test from './pages/Test';
 
 function App() {
+
   return (
     <BrowserRouter>
       <Nav></Nav>
@@ -18,7 +19,7 @@ function App() {
           <Route path="/" element={<Main />} />
           <Route path="/contents" element={<Contents />} />
           <Route path="/album" element={<Album />} />
-          <Route path="/login" element={<Login />} />
+          <Route is path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/test" element={<Test />} />
         </Routes>

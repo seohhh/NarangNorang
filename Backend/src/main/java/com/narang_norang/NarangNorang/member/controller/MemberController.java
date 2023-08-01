@@ -56,4 +56,9 @@ public class MemberController {
 
         return ResponseEntity.ok(new ReadMemberResponse(member));
     }
+
+    @GetMapping("/{memberId}")
+    public ResponseEntity<Boolean> checkMemberIdDuplicate(@PathVariable String memberId) {
+        return ResponseEntity.ok(memberService.checkMemberIdDuplicate(memberId));
+    }
 }
