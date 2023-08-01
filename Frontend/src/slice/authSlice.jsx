@@ -32,17 +32,25 @@ const authSlice = createSlice({
 
 export const { loginSuccess, loginFailure, logoutSuccess } = authSlice.actions
 
-export const signUp = (member_Id, password) => async (dispatch) => {
-  try {
-    const response = await axios.post('/member', { member_Id, password })
-    console.log(response)
-  } catch (error) {
-    console.log(error)
-  }
+export const signUp = (member_id, password, member_name, member_nickname, member_email, member_phone) => async (dispatch) => {
+  axios({
+    method: 'POST',
+    url: 'api/v1/member',
+    data: {member_id, password, member_name, member_nickname, member_email, member_phone}
+  })
+  .then((res) => {
+    console.log(res)
+    // const user = response.data
+    // dispatch(signupSuccess(user))
+  })
+  .catch((err) => {
+    console.log(member_id, password, member_name, member_nickname, member_email, member_phone)
+    console.log(err)
+  })
 }
 
 
-export const login = (member_id, password) => async (dispatch) => {
+export const login = (memberId, password) => async (dispatch) => {
   try {
     // API 요청을 보내는 부분
     const response = await axios.post('/auth/login', { member_id, password })

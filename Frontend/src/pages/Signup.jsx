@@ -3,7 +3,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { Form, Button } from 'react-bootstrap';
 import { useDispatch } from 'react-redux';
 import { signUp } from "../slice/authSlice";
-
+import axios from 'axios';
 
 function Signup() {
   const [inputId, setInputId] = useState('');
