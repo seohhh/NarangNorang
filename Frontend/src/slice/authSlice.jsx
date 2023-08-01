@@ -31,14 +31,23 @@ const authSlice = createSlice({
 
 export const { loginSuccess, loginFailure, logoutSuccess } = authSlice.actions
 
-export const signUp = (memberId, password) => async (dispatch) => {
-  try {
-    const response = await axios.post('/member', { memberId, password })
-    console.log(response)
-  } catch (error) {
-    console.log(error)
-  }
+export const signUp = (member_id, password, member_name, member_nickname, member_email, member_phone) => async (dispatch) => {
+  axios({
+    method: 'POST',
+    url: 'api/v1/member',
+    data: {member_id, password, member_name, member_nickname, member_email, member_phone}
+  })
+  .then((res) => {
+    console.log(res)
+    // const user = response.data
+    // dispatch(signupSuccess(user))
+  })
+  .catch((err) => {
+    console.log(member_id, password, member_name, member_nickname, member_email, member_phone)
+    console.log(err)
+  })
 }
+
 
 export const login = (memberId, password) => async (dispatch) => {
   try {
