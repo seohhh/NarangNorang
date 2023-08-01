@@ -36,11 +36,11 @@ public class AuthController {
     public ResponseEntity<LoginMemberResponse> login(@RequestBody
                                                          @ApiParam(value = "로그인 정보", required = true)LoginMemberRequest loginMemberRequest) {
         String memberId = loginMemberRequest.getMemberId();
-        String password = loginMemberRequest.getPassword();
+        String password = loginMemberRequest.getMemberPassword();
 
         Member member = memberService.getMemberByMemberId(memberId);
 
-        if (passwordEncoder.matches(password, member.getPassword())) {
+        if (passwordEncoder.matches(password, member.getMemberPassword())) {
             return ResponseEntity.ok(new LoginMemberResponse(200, "Success", JwtTokenUtil.getToken(memberId)));
         }
 

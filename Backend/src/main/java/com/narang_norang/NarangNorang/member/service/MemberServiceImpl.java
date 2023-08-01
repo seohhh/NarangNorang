@@ -29,4 +29,9 @@ public class MemberServiceImpl implements MemberService {
         Member member = memberRepository.findByMemberId(memberId).get();
         return member;
     }
+
+    @Override
+    public boolean checkMemberIdDuplicate(String memberId) {
+        return memberRepository.existsByMemberId(memberId);
+    }
 }
