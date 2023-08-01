@@ -1,6 +1,7 @@
 package com.narang_norang.NarangNorang.member.domain.dto.request;
 
 import com.narang_norang.NarangNorang.member.domain.entity.Member;
+import com.narang_norang.NarangNorang.member.domain.entity.MemberGrade;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,12 +13,19 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class CreateMemberRequest {
 
     private String memberId;
-    private String password;
+    private String memberPassword;
+    private String memberEmail;
+    private String memberName;
+    private String memberNickname;
 
     public Member toMember(PasswordEncoder passwordEncoder) {
         return Member.builder()
                 .memberId(memberId)
-                .password(passwordEncoder.encode(password))
+                .memberPassword(passwordEncoder.encode(memberPassword))
+                .memberEmail(memberEmail)
+                .memberName(memberName)
+                .memberNickname(memberNickname)
+                .memberGrade(MemberGrade.MEMBER)
                 .build();
     }
 }

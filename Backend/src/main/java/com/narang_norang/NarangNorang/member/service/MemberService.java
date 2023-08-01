@@ -7,4 +7,5 @@ public interface MemberService {
 
     Member createMember(CreateMemberRequest createMemberRequest);
     Member getMemberByMemberId(String memberId);
+    boolean checkMemberIdDuplicate(String memberId);
 }

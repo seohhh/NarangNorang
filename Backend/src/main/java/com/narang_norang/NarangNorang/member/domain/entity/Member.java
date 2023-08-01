@@ -18,7 +18,11 @@ public class Member {
     @Column(name = "member_seq")
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long memberSeq;
-
+    @Column(unique = true)
     private String memberId;
-    private String password;
+    private String memberPassword;
+    private String memberEmail;
+    private String memberName;
+    private String memberNickname;
+    private MemberGrade memberGrade;
 }
