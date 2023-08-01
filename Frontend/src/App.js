@@ -7,10 +7,8 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Album from './pages/Album';
 import Contents from './pages/Contents';
-import Test from './pages/Test';
 
 function App() {
-
   return (
     <BrowserRouter>
       <Nav></Nav>
@@ -21,7 +19,6 @@ function App() {
           <Route path="/album" element={<Album />} />
           <Route is path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/test" element={<Test />} />
         </Routes>
       </div>
     </BrowserRouter>
