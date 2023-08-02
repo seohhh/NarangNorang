@@ -7,7 +7,7 @@ import Col from 'react-bootstrap/Col';
 import axios from 'axios';
 
 
-axios.defaults.baseURL = 'http://localhost:8080/api/v1/'
+axios.defaults.baseURL = 'http://3.36.126.169:8080/api/v1/'
 
 function SignupForm() {
   const dispatch = useDispatch()
