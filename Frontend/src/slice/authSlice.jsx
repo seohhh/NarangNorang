@@ -50,10 +50,10 @@ export const signUp = (memberId, memberPassword, memberName, memberNickname, mem
 }
 
 
-export const login = (member_id, password) => async (dispatch) => {
+export const login = (memberId, memberPassword) => async (dispatch) => {
   try {
     // API 요청을 보내는 부분
-    const response = await axios.post('/auth/login', { member_id, password })
+    const response = await axios.post('/auth/login', { memberId, memberPassword })
     // 로그인 성공
     console.log('로그인 성공')
     const user = response.data
