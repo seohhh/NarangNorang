@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import mainImage from "../assets/mainImage.png";
+// import mainImage from "../assets/mainImage.png";
 
 // styled-components를 사용하여 그라데이션 배경을 갖는 컨테이너 컴포넌트 생성
 const GradientBackground = styled.div`
@@ -20,11 +20,11 @@ const MainContent = styled.div`
   width: 100%; /* 부모 컨테이너에 가로 영역 전체 사용 */
 `;
 
-const MainImage = styled.img`
-  flex: 1; /* 이미지 부분이 화면 가로 방향을 반반으로 차지 */
-  max-width: 50%; /* 이미지는 반반으로 차지하도록 설정 */
-  height: auto;
-`;
+// const MainImage = styled.img`
+//   flex: 1; /* 이미지 부분이 화면 가로 방향을 반반으로 차지 */
+//   max-width: 50%; /* 이미지는 반반으로 차지하도록 설정 */
+//   height: auto;
+// `;
 
 const TextContent = styled.div`
   flex: 1; /* 텍스트 부분이 화면 가로 방향을 반반으로 차지 */
@@ -43,7 +43,7 @@ function Main() {
           <br />
           <h1>아이와 함께 즐거운 추억을 쌓아보세요</h1>
         </TextContent>
-        <MainImage src={mainImage} alt="Main Image" /> {/* 오른쪽 영역 */}
+        {/* <MainImage src={mainImage} alt="Main Image" /> 오른쪽 영역 */}
       </MainContent>
     </GradientBackground>
   );
