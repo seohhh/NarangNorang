@@ -9,7 +9,6 @@ import Album from './pages/Album';
 import Contents from './pages/Contents';
 
 function App() {
-
   return (
     <BrowserRouter>
       <Nav></Nav>
