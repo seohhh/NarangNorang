@@ -54,6 +54,7 @@ export const login = (memberId, memberPassword) => async (dispatch) => {
   try {
     // API 요청을 보내는 부분
     const response = await axios.post('/auth/login', { memberId, memberPassword })
+    console.log(response)
     // 로그인 성공
     console.log('로그인 성공')
     const user = response.data
