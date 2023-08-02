@@ -12,8 +12,8 @@ axios.defaults.baseURL = 'http://3.36.126.169:8080/api/v1/'
 function SignupForm() {
   const dispatch = useDispatch()
   const [idValidation, setIdValidation] = useState('')
-  const [passwordConfirm, setPasswordConfirm] = useState(true)
-  const [passwordValidation, setPasswordValidation] = useState(true)
+  const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [passwordValidation, setPasswordValidation] = useState('')
   const [formData, setFormData] = useState({
     member_id: '',
     password: '',
