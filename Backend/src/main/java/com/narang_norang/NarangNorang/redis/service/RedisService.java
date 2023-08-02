@@ -11,7 +11,7 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class RedisService {
 
-    private final RedisTemplate redisTemplate;
+    private final RedisTemplate<String, String> redisTemplate;
 
 
     public void setValues(String key, String value) {
@@ -30,7 +30,7 @@ public class RedisService {
         redisTemplate.opsForSet().add(key, values);
     }
 
-    public Set getSets(String key) {
+    public Set<String> getSets(String key) {
         return redisTemplate.opsForSet().members(key);
     }
 }
