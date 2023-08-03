@@ -1,7 +1,7 @@
 import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import React, { Component } from 'react';
-import UserVideoComponent from '../components/UserVideoComponent';
+import VideoRoomComponent from '../components/VideoRoomComponent';
 
 // const OPENVIDU_SERVER_URL = "https://3.36.126.169:8443/";
 const OPENVIDU_SERVER_URL = "http://localhost:8080/";
@@ -287,21 +287,21 @@ class Test extends Component {
 
                         {this.state.mainStreamManager !== undefined ? (
                             <div id="main-video" className="col-md-6">
-                                <UserVideoComponent streamManager={this.state.mainStreamManager} />
+                                <VideoRoomComponent streamManager={this.state.mainStreamManager} />
 
                             </div>
                         ) : null}
                         <div id="video-container" className="col-md-6">
                             {this.state.publisher !== undefined ? (
                                 <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                                    <UserVideoComponent
+                                    <VideoRoomComponent
                                         streamManager={this.state.publisher} />
                                 </div>
                             ) : null}
                             {this.state.subscribers.map((sub, i) => (
                                 <div key={sub.id} className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(sub)}>
                                     <span>{sub.id}</span>
-                                    <UserVideoComponent streamManager={sub} />
+                                    <VideoRoomComponent streamManager={sub} />
                                 </div>
                             ))}
                         </div>

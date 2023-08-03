@@ -15,6 +15,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @EnableWebSecurity
@@ -62,6 +65,29 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 
                 .cors();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+
+        configuration.addAllowedOrigin("http://localhost:3000");
+        configuration.addAllowedOrigin("https://i9c208.p.ssafy.io:3000");
+        configuration.addAllowedOrigin("https://i9c208.p.ssafy.io");
+        configuration.addAllowedOrigin("http://i9c208.p.ssafy.io:3000");
+        configuration.addAllowedOrigin("http://i9c208.p.ssafy.io");
+        configuration.addAllowedOrigin("https://3.36.126.169:3000");
+        configuration.addAllowedOrigin("https://3.36.126.169");
+        configuration.addAllowedOrigin("http://3.36.126.169:3000");
+        configuration.addAllowedOrigin("http://3.36.126.169");
+        configuration.addAllowedHeader("*");
+        configuration.addAllowedMethod("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", configuration);
+
+        return source;
     }
 
 }
