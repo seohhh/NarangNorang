@@ -6,7 +6,7 @@ import UserVideoComponent from '../components/UserVideoComponent';
 import './Room.css';
 
 
-const APPLICATION_SERVER_URL = 'http://i9c208.p.ssafy.io:8080/'
+const APPLICATION_SERVER_URL = 'http://localhost:8080/'
 
 class Room extends Component {
     constructor(props) {
@@ -445,14 +445,18 @@ class Room extends Component {
 
     async createSession(sessionId) {
         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
-            headers: { 'Content-Type': 'application/json', },
+            headers: { 'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+        },
         });
         return response.data; // The sessionId
     }
 
     async createToken(sessionId) {
         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-            headers: { 'Content-Type': 'application/json', },
+            headers: { 'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+        },
         });
         return response.data; // The token
     }
