@@ -328,6 +328,10 @@ class Test extends Component {
      */
     async getToken() {
         const sessionId = await this.createSession(this.state.mySessionId);
+        //console.log(sessionId);
+        this.setState({
+            mySessionId: sessionId
+        });
         return await this.createToken(sessionId);
     }
 
