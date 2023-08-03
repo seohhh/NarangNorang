@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import mainImg from "../assets/mainImg.png";
 import PlayImg from "../assets/mainPlayImg.PNG";
+import { Link } from "react-router-dom";
 // import { Button } from "react-bootstrap";
 
 // styled-components를 사용하여 그라데이션 배경을 갖는 컨테이너 컴포넌트 생성
@@ -62,7 +63,7 @@ function Main() {
           <h1><span style={color}>나랑노랑</span>에서</h1>
           <h1>아이와 함께 즐거운 추억을 쌓아보세요</h1>
           <br/><br /><br />
-          <Button>방만들기 →</Button>
+          <Link to="/room"><Button>방만들기 →</Button></Link>
         </div>
         <MainImage src={mainImg} alt="mainImg" />
       </Container>
