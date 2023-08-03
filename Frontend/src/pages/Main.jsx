@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import { Button } from "react-bootstrap"; // React Bootstrap에서 가져온 Navbar와 Nav 컴포넌트
+import { Link } from "react-router-dom"
 // import mainImage from "../assets/mainImage.png";
 
 // styled-components를 사용하여 그라데이션 배경을 갖는 컨테이너 컴포넌트 생성
@@ -42,6 +44,8 @@ function Main() {
           <h1>나랑노랑에서</h1>
           <br />
           <h1>아이와 함께 즐거운 추억을 쌓아보세요</h1>
+          <Link to="/room"><Button variant="outline-warning">방만들기</Button></Link>
+
         </TextContent>
         {/* <MainImage src={mainImage} alt="Main Image" /> 오른쪽 영역 */}
       </MainContent>

@@ -10,6 +10,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Album from './pages/Album';
 import Contents from './pages/Contents';
+import Room from './pages/Room';
 
 const Wrapper = styled.div`
   font-family: Pretendard-Regular;
@@ -28,6 +29,7 @@ function App() {
             <Route path="/album" element={<Album />} />
             <Route is path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
+            <Route path="/room" element={<Room />} />
             {/* <Route path="/test" element={<VideoRoom />} /> */}
           </Routes>
         </div>
