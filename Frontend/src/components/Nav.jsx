@@ -1,5 +1,5 @@
 import React from "react";
-import { Navbar, Nav } from "react-bootstrap"; // React Bootstrap에서 가져온 Navbar와 Nav 컴포넌트
+import { Navbar, Nav, Button } from "react-bootstrap"; // React Bootstrap에서 가져온 Navbar와 Nav 컴포넌트
 import { Link } from "react-router-dom"; // react-router-dom에서 가져온 Link 컴포넌트
 import styled from "styled-components"; // styled-components를 가져옴
 import logo from "../assets/logo.png"; // 로고 이미지 파일의 경로를 설정
@@ -41,8 +41,8 @@ function CustomNavbar() {
             {/* 커스텀 스타일의 링크 컴포넌트들 */}
             <NavLink to="/">홈 </NavLink>
             <NavLink to="/contents"> 컨텐츠 소개 </NavLink>
-            <NavLink to="/login">로그인 </NavLink>
             <NavLink to="/signup">회원가입 </NavLink>
+            <NavLink to="/login"><Button variant="light">로그인</Button></NavLink>
           </Nav>
           </div>
         </Navbar.Collapse>
