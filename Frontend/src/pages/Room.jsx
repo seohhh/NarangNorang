@@ -6,7 +6,7 @@ import UserVideoComponent from '../components/UserVideoComponent';
 import './Room.css';
 
 
-const APPLICATION_SERVER_URL = 'http://localhost:8080/'
+const APPLICATION_SERVER_URL = 'http://i9c208.p.ssafy.io:8080/'
 
 class Room extends Component {
     constructor(props) {
