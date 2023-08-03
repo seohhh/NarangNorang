@@ -4,6 +4,7 @@ import java.util.Map;
 
 import javax.annotation.PostConstruct;
 
+import com.narang_norang.NarangNorang.util.RandomNumberUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -45,8 +46,17 @@ public class OpenViduController {
 	@PostMapping("/api/sessions")
 	public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
 			throws OpenViduJavaClientException, OpenViduHttpException {
-		SessionProperties properties = SessionProperties.fromJson(params).build();
+		SessionProperties properties;
+		if (params.get("customSessionId").equals("create")){
+			String customSessionId = RandomNumberUtil.getRandomNumber();
+			properties = new SessionProperties.Builder()
+					.customSessionId(customSessionId)
+					.build();
+		} else {
+			properties = SessionProperties.fromJson(params).build();
+		}
 		Session session = openvidu.createSession(properties);
+		System.out.println(session.getSessionId());
 		return new ResponseEntity<>(session.getSessionId(), HttpStatus.OK);
 	}
 
