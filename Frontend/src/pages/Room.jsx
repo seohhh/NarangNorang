@@ -445,14 +445,18 @@ class Room extends Component {
 
     async createSession(sessionId) {
         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions', { customSessionId: sessionId }, {
-            headers: { 'Content-Type': 'application/json', },
+            headers: { 'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+        },
         });
         return response.data; // The sessionId
     }
 
     async createToken(sessionId) {
         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-            headers: { 'Content-Type': 'application/json', },
+            headers: { 'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*',
+        },
         });
         return response.data; // The token
     }
