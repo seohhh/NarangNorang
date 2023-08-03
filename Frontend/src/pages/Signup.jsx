@@ -170,19 +170,6 @@ function SignupForm() {
         </Col>
       </Form.Group>
 
-      <Form.Group as={Row} className="mb-3" controlId="member_phone">
-        <Form.Label column sm="2">핸드폰 번호</Form.Label>
-        <Col sm="10">
-          <Form.Control
-            type="tel"
-            name="member_phone"
-            value={formData.member_phone}
-            placeholder='전화번호'
-            onChange={(e) => setFormData({ ...formData, member_phone: e.target.value })}
-          />
-        </Col>
-      </Form.Group>
-
         <Button type="submit">회원가입</Button>
       </Form>
     </>
