@@ -84,6 +84,7 @@ class Test extends Component {
                 session: this.OV.initSession(),
             },
             () => {
+                //console.log(this.state.session);
                 var mySession = this.state.session;
 
                 // --- 3) Specify the actions when events take place in the session ---
@@ -267,7 +268,7 @@ class Test extends Component {
                 {this.state.session !== undefined ? (
                     <div id="session">
                         <div id="session-header">
-                            <h1 id="session-title">{mySessionId}</h1>
+                            <h1 id="session-title">{this.state.mySessionId}</h1>
                             <input
                                 className="btn btn-large btn-danger"
                                 type="button"
@@ -340,6 +341,7 @@ class Test extends Component {
             headers: { 'Authorization': 'Basic EncodeBase64(OPENVIDUAPP:<MY_SECRET>)',
                 'Content-Type': 'application/json'},
         });
+        //console.log(response.data);
         return response.data; // The sessionId
     }
 
@@ -347,6 +349,7 @@ class Test extends Component {
         const response = await axios.post(OPENVIDU_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
             headers: { 'Content-Type': 'application/json', },
         });
+        //console.log(response.data);
         return response.data; // The token
     }
 }
