@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Nav from './components/Nav';
 import './App.css'
@@ -19,10 +19,12 @@ const Wrapper = styled.div`
   `;
 
 function App() {
+  const location = useLocation();
+  const isNavVisible = !(location.pathname === '/login' || location.pathname === '/signup');
+
   return (
     <Wrapper>
-      <BrowserRouter>
-        <Nav></Nav>
+        {isNavVisible && <Nav />}
         <div>
           <Routes>
             <Route path="/" element={<Main />} />
@@ -35,7 +37,6 @@ function App() {
             {/* <Route path="/test" element={<VideoRoom />} /> */}
           </Routes>
         </div>
-      </BrowserRouter>
     </Wrapper>
   );
 }
