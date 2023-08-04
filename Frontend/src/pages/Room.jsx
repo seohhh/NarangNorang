@@ -14,7 +14,7 @@ class Room extends Component {
 
         // These properties are in the state's component in order to re-render the HTML whenever their values change
         this.state = {
-            mySessionId: 'SessionA',
+            mySessionId: undefined,
             myUserName: 'Participant' + Math.floor(Math.random() * 100),
             session: undefined,
             mainStreamManager: undefined,  // Main video of the page. Will be the 'publisher' or one of the 'subscribers'
@@ -33,32 +33,30 @@ class Room extends Component {
 
     componentDidMount() {
         window.addEventListener('beforeunload', this.onbeforeunload);
-
         const sessionIdFromUrl = new URLSearchParams(window.location.search).get('sessionId');
-        console.log(sessionIdFromUrl);
-
-        if (!sessionIdFromUrl) {
+        const tokenFromUrl = new URLSearchParams(window.location.search).get('token');
+        const realToken = 'wss://i9c208.p.ssafy.io?sessionId=' + sessionIdFromUrl + '&token=' + tokenFromUrl;
+        console.log(realToken, "wj기!!!!!!");
+        if (!tokenFromUrl) {
             this.joinSession();
         }
 
         else {
             // 세션 아이디가 URL 매개변수로 전달된 경우
-            this.setState({
-            mySessionId: sessionIdFromUrl });
             // await this.createToken(sessionIdFromUrl);
 
             // --- 1) Get an OpenVidu object ---
-
             this.OV = new OpenVidu();
 
             // --- 2) Init a session ---
-
             this.setState(
                 {
                     session: this.OV.initSession(),
                 },
                 () => {
+                    console.log(this.state.mySessionId, "바로ewsdfrs여기");
                     var mySession = this.state.session;
+                    console.log(mySession, "휴!")
 
                     // --- 3) Specify the actions when events take place in the session ---
 
@@ -91,10 +89,10 @@ class Room extends Component {
                     // --- 4) Connect to the session with a valid user token ---
 
                     // Get a token from the OpenVidu deployment
-                    this.createToken(sessionIdFromUrl).then((token) => {
+                    this.inputToken(realToken).then((token) => {
                         // First param is the token got from the OpenVidu deployment. Second param can be retrieved by every user on event
                         // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-                        mySession.connect(token, { clientData: this.state.myUserName })
+                        mySession.connect(token, { lx: this.state.myUserName })
                             .then(async () => {
 
                                 // --- 5) Get your own camera stream ---
@@ -333,12 +331,12 @@ class Room extends Component {
 
     render() {
         const mySessionId = this.state.mySessionId;
-        const sessionIdFromUrl = new URLSearchParams(window.location.search).get('sessionId');
-        const myUserName = this.state.myUserName
+        // const sessionIdFromUrl = new URLSearchParams(window.location.search).get('sessionId');
+        // const myUserName = this.state.myUserName
 
         return (
             <div className="container">
-                {sessionIdFromUrl != null ? (
+                {/* {sessionIdFromUrl != null ? (
                     <div id="join">
                         <div id="img-div">
                             <img src="resources/images/openvidu_grey_bg_transp_cropped.png" alt="OpenVidu logo" />
@@ -374,7 +372,7 @@ class Room extends Component {
                             </form>
                         </div>
                     </div>
-                ) : null}
+                ) : null} */}
 
                 {this.state.session !== undefined ? (
                     <div id="session">
@@ -440,6 +438,9 @@ class Room extends Component {
      */
     async getToken() {
         const sessionId = await this.createSession(this.state.mySessionId);
+        this.setState({
+            mySessionId:sessionId
+        });
         return await this.createToken(sessionId);
     }
 
@@ -454,7 +455,13 @@ class Room extends Component {
         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
             headers: { 'Content-Type': 'application/json', },
         });
+        console.log(response.data, "여기!!")
         return response.data; // The token
+    }
+
+    async inputToken(token) {
+        
+        return token; // The token
     }
 }
 
