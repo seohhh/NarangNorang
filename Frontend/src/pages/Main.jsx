@@ -3,6 +3,8 @@ import styled from "styled-components";
 import mainImg from "../assets/mainImg.png";
 import PlayImg from "../assets/mainPlayImg.PNG";
 import { Link } from "react-router-dom";
+import { Fade } from "react-awesome-reveal";
+
 // import { Button } from "react-bootstrap";
 
 // styled-components를 사용하여 그라데이션 배경을 갖는 컨테이너 컴포넌트 생성
@@ -60,10 +62,10 @@ function Main() {
     <GradientBackground>
       <Container>
         <div class="align-self-center"> {/* 왼쪽 영역 */}
-          <h1><span style={color}>나랑노랑</span>에서</h1>
+          <Fade cascade damping={0.2}><h1><span style={color}>나랑노랑</span>에서</h1>
           <h1>아이와 함께 즐거운 추억을 쌓아보세요</h1>
           <br/><br /><br />
-          <Link to="/room"><Button>방만들기 →</Button></Link>
+          <Link to="/room"><Button>방만들기 →</Button></Link></Fade>
         </div>
         <MainImage src={mainImg} alt="mainImg" />
       </Container>
