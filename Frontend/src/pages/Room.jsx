@@ -34,23 +34,24 @@ class Room extends Component {
     componentDidMount() {
         window.addEventListener('beforeunload', this.onbeforeunload);
         const sessionIdFromUrl = new URLSearchParams(window.location.search).get('sessionId');
-        const tokenFromUrl = new URLSearchParams(window.location.search).get('token');
-        const realToken = 'wss://i9c208.p.ssafy.io?sessionId=' + sessionIdFromUrl + '&token=' + tokenFromUrl;
-        console.log(realToken, "wj기!!!!!!");
-        if (!tokenFromUrl) {
+        // const tokenFromUrl = new URLSearchParams(window.location.search).get('token');
+        // const realToken = 'wss://i9c208.p.ssafy.io?sessionId=' + sessionIdFromUrl + '&token=' + tokenFromUrl;
+        console.log(sessionIdFromUrl, "wj기!!!!!!");
+        if (!sessionIdFromUrl) {
             this.joinSession();
         }
 
         else {
             // 세션 아이디가 URL 매개변수로 전달된 경우
             // await this.createToken(sessionIdFromUrl);
-
+            
             // --- 1) Get an OpenVidu object ---
             this.OV = new OpenVidu();
 
             // --- 2) Init a session ---
             this.setState(
-                {
+                {   
+                    mySessionId: sessionIdFromUrl,
                     session: this.OV.initSession(),
                 },
                 () => {
@@ -89,7 +90,7 @@ class Room extends Component {
                     // --- 4) Connect to the session with a valid user token ---
 
                     // Get a token from the OpenVidu deployment
-                    this.inputToken(realToken).then((token) => {
+                    this.createToken(sessionIdFromUrl).then((token) => {
                         // First param is the token got from the OpenVidu deployment. Second param can be retrieved by every user on event
                         // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
                         mySession.connect(token, { lx: this.state.myUserName })
@@ -459,10 +460,10 @@ class Room extends Component {
         return response.data; // The token
     }
 
-    async inputToken(token) {
+    // async inputToken(token) {
         
-        return token; // The token
-    }
+    //     return token; // The token
+    // }
 }
 
 export default Room;

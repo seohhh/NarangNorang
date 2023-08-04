@@ -1,4 +1,7 @@
 import React from 'react'
+import bgcolor from "../assets/bgcolor.jpg"
+
+
 
 function Album() {
     return(
