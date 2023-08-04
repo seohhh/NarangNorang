@@ -3,65 +3,46 @@ import "./UserVideo.css";
 
 // import libraries
 import * as poseDetection from "@tensorflow-models/pose-detection";
-import "@tensorflow/tfjs-core";
+import * as tf from "@tensorflow/tfjs-core";
 // Register WebGL backend.
 import "@tensorflow/tfjs-backend-webgl";
 import "@mediapipe/pose";
 
 const MainVideoComponent = (props) => {
-  const POINTS = [11, 12, 13, 14, 15, 16, 23, 24, 25, 26, 27, 28];
+  const POINTS = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
   const CONNECTION = [
-    //   [0, 1],
-    //   [0, 4],
-    //   [1, 2],
-    //   [2, 3],
-    //   [3, 7],
-    //   [4, 5],
-    //   [5, 6],
-    //   [6, 8],
-    //   [9, 10],
+    [5, 6],
+    [5, 7],
+    [5, 11],
+    [6, 8],
+    [6, 12],
+    [7, 9],
+    [8, 10],
     [11, 12],
     [11, 13],
-    [11, 23],
     [12, 14],
-    [14, 16],
-    [12, 24],
     [13, 15],
-    // [15, 17],
-    // [16, 18],
-    // [16, 20],
-    // [15, 17],
-    // [15, 19],
-    // [15, 21],
-    // [16, 22],
-    // [17, 19],
-    // [18, 20],
-    [23, 25],
-    [23, 24],
-    [24, 26],
-    [25, 27],
-    [26, 28],
-    // [27, 29],
-    // [28, 30],
-    // [27, 31],
-    // [28, 32],
-    // [29, 31],
-    // [30, 32],
+    [14, 16],
   ];
-
+  const COLORS = ["White", "Gray", "Blue", "Red"];
   const videoRef = createRef();
   const canvasRef = createRef();
 
   const estimationConfig = {
+    // maxPoses: 4,
+    // flipHorizontal: false, // 좌우 반전
+
     maxPoses: 4,
+    flipHorizontal: false,
+    scoreThreshold: 0.5,
+    nmsRadius: 100,
   };
-  const scoreThreshold = 0.65;
+  const scoreThreshold = 0.5;
 
   let showSkeleton = false;
   let rafId;
 
   let detector;
-
   let video, videoWidth, videoHeight;
   let canvas, ctx;
 
@@ -72,6 +53,8 @@ const MainVideoComponent = (props) => {
 
   const handleSkeletonClick = async () => {
     showSkeleton = !showSkeleton;
+
+    console.log("skeleton click", showSkeleton);
 
     if (showSkeleton) {
       if (detector) {
@@ -95,18 +78,27 @@ const MainVideoComponent = (props) => {
   };
 
   const loadDetector = async () => {
-    const model = poseDetection.SupportedModels.BlazePose;
+    const model = poseDetection.SupportedModels.PoseNet;
     const detectorConfig = {
-      runtime: "mediapipe",
-      modelType: "full", // lite, full, heavy
-      solutionPath: "https://cdn.jsdelivr.net/npm/@mediapipe/pose",
+      // smaller, faster, less accurate
+      //   architecture: "MobileNetV1",
+      //   outputStride: 16,
+      //   inputResolution: { width: 640, height: 480 },
+      //   multiplier: 0.75,
+
+      // larger, slower, more accurate
+      architecture: "ResNet50",
+      outputStride: 16,
+      inputResolution: { width: 257, height: 200 },
+      quantBytes: 4,
     };
     return await poseDetection.createDetector(model, detectorConfig);
   };
 
   const detectPose = async () => {
+    let poses = null;
     if (detector) {
-      await detector.estimatePoses(video, estimationConfig);
+      poses = await detector.estimatePoses(video, estimationConfig);
     }
 
     if (showSkeleton) {
@@ -123,7 +115,7 @@ const MainVideoComponent = (props) => {
       renderPose();
     }
 
-    console.log(detector.poses);
+    console.log(poses);
   };
 
   const renderPose = async () => {
@@ -141,21 +133,24 @@ const MainVideoComponent = (props) => {
 
     ctx.drawImage(video, 0, 0, videoWidth, videoHeight);
 
-    for (const pose of poses) {
-      drawPose(pose);
+    for (var i = 0; i < poses.length; i++) {
+      const pose = poses[i];
+      if (pose.score >= estimationConfig.scoreThreshold) {
+        drawPose(pose, COLORS[i % COLORS.length]);
+      }
     }
   };
 
-  const drawPose = (pose) => {
+  const drawPose = (pose, color) => {
     if (pose.keypoints != null) {
-      drawKeypoints(pose.keypoints);
-      drawSkeleton(pose.keypoints, pose.id);
+      drawKeypoints(pose.keypoints, color);
+      drawSkeleton(pose.keypoints, pose.id, color);
     }
   };
 
-  const drawKeypoints = (keypoints) => {
+  const drawKeypoints = (keypoints, color) => {
     ctx.fillStyle = "Black";
-    ctx.strokeStyle = "White";
+    ctx.strokeStyle = color;
     ctx.lineWidth = 4;
 
     for (const i of POINTS) {
@@ -172,8 +167,8 @@ const MainVideoComponent = (props) => {
     }
   };
 
-  const drawSkeleton = (keypoints, poseId) => {
-    const color = "White";
+  const drawSkeleton = (keypoints, poseId, color) => {
+    // const color = "White";
     ctx.fillStyle = color;
     ctx.strokeStyle = color;
     ctx.lineWidth = 7;
@@ -205,7 +200,8 @@ const MainVideoComponent = (props) => {
     const main = async () => {
       detector = await loadDetector();
     };
-    main();
+    // main();
+    tf.setBackend("webgpu").then(() => main());
   }, []);
 
   return (
