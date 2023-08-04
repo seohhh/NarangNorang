@@ -20,7 +20,7 @@ const ImgContent = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #FFEC81;
-  width: 60vw;
+  width: 55vw;
 `
 
 const TextContent = styled.div`
@@ -28,10 +28,11 @@ const TextContent = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 40vw;
+  width: 45vw;
 `;
 
 const LoginForm = styled(Form)`
+  width: 80%;
   padding: 50px 20px 20px 20px;
 `;
 
