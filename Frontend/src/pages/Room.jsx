@@ -24,9 +24,6 @@ class Room extends Component {
 
         this.joinSession = this.joinSession.bind(this);
         this.leaveSession = this.leaveSession.bind(this);
-        // this.switchCamera = this.switchCamera.bind(this);
-        // this.handleChangeSessionId = this.handleChangeSessionId.bind(this);
-        // this.handleChangeUserName = this.handleChangeUserName.bind(this);
         this.handleMainVideoStream = this.handleMainVideoStream.bind(this);
         this.onbeforeunload = this.onbeforeunload.bind(this);
     }
@@ -34,17 +31,13 @@ class Room extends Component {
     componentDidMount() {
         window.addEventListener('beforeunload', this.onbeforeunload);
         const sessionIdFromUrl = new URLSearchParams(window.location.search).get('sessionId');
-        // const tokenFromUrl = new URLSearchParams(window.location.search).get('token');
-        // const realToken = 'wss://i9c208.p.ssafy.io?sessionId=' + sessionIdFromUrl + '&token=' + tokenFromUrl;
         console.log(sessionIdFromUrl, "wj기!!!!!!");
         if (!sessionIdFromUrl) {
+            console.log("joinSession")
             this.joinSession();
         }
 
         else {
-            // 세션 아이디가 URL 매개변수로 전달된 경우
-            // await this.createToken(sessionIdFromUrl);
-            
             // --- 1) Get an OpenVidu object ---
             this.OV = new OpenVidu();
 
@@ -90,7 +83,7 @@ class Room extends Component {
                     // --- 4) Connect to the session with a valid user token ---
 
                     // Get a token from the OpenVidu deployment
-                    this.createToken(sessionIdFromUrl).then((token) => {
+                    this.urlToken().then((token) => {
                         // First param is the token got from the OpenVidu deployment. Second param can be retrieved by every user on event
                         // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
                         mySession.connect(token, { lx: this.state.myUserName })
@@ -422,21 +415,7 @@ class Room extends Component {
     }
 
 
-    /**
-     * --------------------------------------------
-     * GETTING A TOKEN FROM YOUR APPLICATION SERVER
-     * --------------------------------------------
-     * The methods below request the creation of a Session and a Token to
-     * your application server. This keeps your OpenVidu deployment secure.
-     *
-     * In this sample code, there is no user control at all. Anybody could
-     * access your application server endpoints! In a real production
-     * environment, your application server must identify the user to allow
-     * access to the endpoints.
-     *
-     * Visit https://docs.openvidu.io/en/stable/application-server to learn
-     * more about the integration of OpenVidu in your application server.
-     */
+    // 방 만들기로 접속 시 실행
     async getToken() {
         const sessionId = await this.createSession(this.state.mySessionId);
         this.setState({
@@ -456,14 +435,33 @@ class Room extends Component {
         const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
             headers: { 'Content-Type': 'application/json', },
         });
-        console.log(response.data, "여기!!")
         return response.data; // The token
     }
 
-    // async inputToken(token) {
-        
-    //     return token; // The token
-    // }
+    // url로 접속 시 실행
+    async urlToken() {
+        const sessionId = await this.createUrlSession(this.state.mySessionId);
+        this.setState({
+            mySessionId:sessionId
+        });
+        return await this.createUrlToken(sessionId);
+    }
+
+    async createUrlSession(sessionId) {
+        const response = await axios.post(APPLICATION_SERVER_URL + 'api/urlSessions', { customSessionId: sessionId }, {
+            headers: { 'Content-Type': 'application/json', },
+        });
+        return response.data; // The sessionId
+    }
+
+    async createUrlToken(sessionId) {
+        const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
+            headers: { 'Content-Type': 'application/json', },
+        });
+        console.log(response.data, "여기2222!!")
+        return response.data; // The token
+    }
+
 }
 
 export default Room;
