@@ -64,8 +64,8 @@ be-build:  # JOB 이름
 
 # 전역 변수 설정
 variables:
-  FE_IMAGE_NAME: $DOCKER_HUB_NAME/front:latest   # FE 이미지 이름
-  BE_IMAGE_NAME: $DOCKER_HUB_NAME/back:latest   # BE 이미지 이름
+  FE_IMAGE_NAME: $DOCKER_HUB_NAME/fe:latest   # FE 이미지 이름
+  BE_IMAGE_NAME: $DOCKER_HUB_NAME/be:latest   # BE 이미지 이름
 
 fe-package:   # JOB 이름
   # 사용될 이미지 설정
@@ -83,7 +83,7 @@ fe-package:   # JOB 이름
     - docker login -u $DOCKER_HUB_ID --password $DOCKER_HUB_PW   # Docker Hub에 로그인
   # 실행될 script 설정
   script:
-    - docker build -t $FE_IMAGE_NAME .   # fe에 있는 Dockerfile로 build
+    - docker build -t $FE_IMAGE_NAME Frontend/.   # fe에 있는 Dockerfile로 build
     - docker push $FE_IMAGE_NAME   # DockerHub에 image push
   # script가 실행된 후 수행 될 script
   after_script:
@@ -113,7 +113,7 @@ be-package:  # JOB 이름
     - docker login -u $DOCKER_HUB_ID --password $DOCKER_HUB_PW   # Docker Hub에 로그인
   # 실행될 script 설정
   script:
-    - docker build -t $BE_IMAGE_NAME .   # be에 있는 Dockerfile로 build
+    - docker build -t $BE_IMAGE_NAME Backend/.   # be에 있는 Dockerfile로 build
     - docker push $BE_IMAGE_NAME   # DockerHub에 image push
   # script가 실행된 후 수행 될 script
   after_script:
