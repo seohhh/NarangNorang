@@ -1,0 +1,77 @@
+package com.narang_norang.NarangNorang.member.service;
+
+import com.narang_norang.NarangNorang.member.domain.dto.request.CreateMemberRequest;
+import com.narang_norang.NarangNorang.member.domain.dto.request.UpdateMemberRequest;
+import com.narang_norang.NarangNorang.member.domain.dto.response.UpdateMemberResponse;
+import com.narang_norang.NarangNorang.member.domain.entity.Member;
+import com.narang_norang.NarangNorang.member.exception.ErrorCode;
+import com.narang_norang.NarangNorang.member.exception.NotFoundException;
+import com.narang_norang.NarangNorang.member.repository.MemberRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import java.util.Optional;
+
+@Service("memberService")
+public class MemberServiceImpl implements MemberService {
+
+    @Autowired
+    MemberRepository memberRepository;
+
+    @Autowired
+    PasswordEncoder passwordEncoder;
+
+    @Override
+    public Member createMember(CreateMemberRequest createMemberRequest) {
+        Member member = createMemberRequest.toMember(passwordEncoder);
+
+        return memberRepository.save(member);
+    }
+
+    @Override
+    public Member getMemberByMemberId(String memberId) {
+        Member member = memberRepository.findByMemberId(memberId).get();
+        return member;
+    }
+
+    @Override
+    public boolean checkMemberIdDuplicate(String memberId) {
+        return memberRepository.existsByMemberId(memberId);
+    }
+
+    @Override
+    public UpdateMemberResponse updateMember(String memberId, UpdateMemberRequest updateMemberRequest) {
+        Optional<Member> member = memberRepository.findByMemberId(memberId);
+
+        isExistId(member, memberId);
+
+        member.get()
+                .update(passwordEncoder,
+                        updateMemberRequest.getMemberPassword(),
+                        updateMemberRequest.getMemberNickname(),
+                        updateMemberRequest.getMemberEmail(),
+                        updateMemberRequest.getMemberName());
+
+        return new UpdateMemberResponse(member.get());
+    }
+
+    @Override
+    public boolean deleteMember(String memberId) {
+        Optional<Member> member = memberRepository.findByMemberId(memberId);
+
+        isExistId(member, memberId);
+
+        memberRepository.delete(member.get());
+
+        return true;
+    }
+
+    public void isExistId(Optional<Member> memberOpt, String loginRequest) {
+        if (memberOpt.isEmpty()) {
+            throw new NotFoundException(loginRequest, ErrorCode.NOT_FOUND);
+        }
+    }
+
+}
