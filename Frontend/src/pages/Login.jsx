@@ -33,6 +33,7 @@ const TextContent = styled.div`
 `;
 
 const LoginForm = styled(Form)`
+  width: 80%;
   padding: 50px 20px 20px 20px;
 `;
 
