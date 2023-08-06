@@ -6,8 +6,9 @@ axios.defaults.baseURL = 'http://3.36.126.169:8080/api/v1'
 const authSlice = createSlice({
   name: 'auth',
   initialState : {
-    isLoggedin: false,
-    user: null,
+    isLoggedin: sessionStorage.getItem('isLoggedin') === 'true',
+    user: JSON.parse(sessionStorage.getItem('user')) || null,
+    token: null,
     error : null,
   },
   reducers: {
@@ -15,17 +16,25 @@ const authSlice = createSlice({
       state.isLoggedin = true
       state.user = action.payload
       state.error = null
-      console.log(state.isLoggedin)
+      state.token = action.payload.accessToken
+      console.log(state.token)
+      sessionStorage.setItem('isLoggedin', 'true');
+      sessionStorage.setItem('user', JSON.stringify(action.payload));
     },
     loginFailure(state, action) {
       state.isLoggedin = false
       state.user = null
       state.error = action.payload
+      sessionStorage.removeItem('isLoggedin');
+      sessionStorage.removeItem('user');
     },
     logoutSuccess(state) {
       state.isLoggedin = false
       state.user = null
       state.error = null
+      state.token = null
+      sessionStorage.removeItem('isLoggedin');
+      sessionStorage.removeItem('user');
     }
   },
 });
@@ -66,12 +75,15 @@ export const login = (memberId, memberPassword) => async (dispatch) => {
   }
 }
 
-export const logout = () => async (dispatch) => {
+export const logout = (token) => async (dispatch) => {
   try {
     // API 요청을 보내는 부분
-    // const response = await axios.post('/api/logout')
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const response = await axios.post('/auth/logout', null, {headers})
     // 로그아웃 성공
-    // const user = response.data
+    console.log(response)
     console.log('로그아웃')
     dispatch(logoutSuccess())
   } catch (error) {
