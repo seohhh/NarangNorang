@@ -31,7 +31,7 @@ fe-build:   # JOB 이름
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
-      - Frontend/*
+      - frontend/**/*
 
 be-build:  # JOB 이름
   # 사용될 이미지 설정
@@ -59,7 +59,7 @@ be-build:  # JOB 이름
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
-      - Backend/*
+      - backend/**/*
 
 
 # 전역 변수 설정
@@ -95,7 +95,7 @@ fe-package:   # JOB 이름
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
-      - Frontend/*
+      - frontend/**/*
 
 be-package:  # JOB 이름
   # 사용될 이미지 설정
@@ -125,7 +125,7 @@ be-package:  # JOB 이름
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
-      - Backend/*
+      - backend/**/*
 
 
 fe-deploy:   # JOB 이름
@@ -153,7 +153,7 @@ fe-deploy:   # JOB 이름
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
-      - Frontend/*
+      - frontend/**/*
 
 be-deploy:   # JOB 이름
   # stage 설정
@@ -180,4 +180,4 @@ be-deploy:   # JOB 이름
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
-      - Backend/*
+      - backend/**/*
