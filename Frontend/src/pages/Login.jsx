@@ -20,15 +20,16 @@ const ImgContent = styled.div`
   justify-content: center;
   align-items: center;
   background-color: #FFEC81;
-  width: 55vw;
+  width: 45vw;
 `
 
 const TextContent = styled.div`
+  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 45vw;
+  width: 55vw;
 `;
 
 const LoginForm = styled(Form)`
@@ -126,9 +127,9 @@ function Login() {
           <Button type="submit" onClick={onClickLogin} style={{ width: "100%", backgroundColor: "#fff9be", color: "#000", borderColor: "#fff9be" }}>
             로그인
           </Button>
-          <div style={{ display: "flex", flexDirection: "column", marginBottom: "1rem" }}>
+          <div style={{ display: "flex", flexDirection: "column", margin: "1rem 0" }}>
             <NavLink to="/"><span>메인으로 돌아가기</span></NavLink>
-            <NavLink to="/signup"><span>회원이 아니신가요? 회원가입</span></NavLink>
+            <NavLink to="/signup"><span>회원이 아니신가요? <span style={{color: "#FFE600"}}>회원가입</span></span></NavLink>
           </div>
         </LoginForm>
       </TextContent>
