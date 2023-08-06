@@ -10,7 +10,7 @@ import logo from "../assets/logo.png"; // 로고 이미지 파일의 경로를 �
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: #FFF9BE;
+  background-color:transparent;
   padding: 35px 80px;
 `
 
