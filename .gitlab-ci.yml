@@ -21,7 +21,7 @@ fe-build:   # JOB 이름
   artifacts:
     # 보관이 이루어질 경로 설정
     paths:
-      - frontend/node_modules
+      - Frontend/node_modules
     # 유효기간 설정
     expire_in: 1 days
   # JOB 수행 조건 설정
@@ -44,7 +44,7 @@ be-build:  # JOB 이름
   # 실행될 script 설정
   script:
     - cd Backend
-    - gradle bootJar
+    - ./gredlew bootJar
   # artifacts 설정 (bulld를 통해 생성된 파일을 job artifacts에 보관하여 다음에 수행되는 JOB에서 가져다 활용할 수 있게 도와줌)
   artifacts:
     # 보관이 이루어질 경로 설정
@@ -59,7 +59,7 @@ be-build:  # JOB 이름
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
-      - Backend/**/*
+      - backend/**/*
 
 
 # 전역 변수 설정
@@ -83,7 +83,7 @@ fe-package:   # JOB 이름
     - docker login -u $DOCKER_HUB_ID --password $DOCKER_HUB_PW   # Docker Hub에 로그인
   # 실행될 script 설정
   script:
-    - docker build -t $FE_IMAGE_NAME frontend/kkini/.   # fe에 있는 Dockerfile로 build
+    - docker build -t $FE_IMAGE_NAME Frontend/.   # fe에 있는 Dockerfile로 build
     - docker push $FE_IMAGE_NAME   # DockerHub에 image push
   # script가 실행된 후 수행 될 script
   after_script:
@@ -113,7 +113,7 @@ be-package:  # JOB 이름
     - docker login -u $DOCKER_HUB_ID --password $DOCKER_HUB_PW   # Docker Hub에 로그인
   # 실행될 script 설정
   script:
-    - docker build -t $BE_IMAGE_NAME --build-arg db_id=$DB_ID --build-arg db_pw=$DB_PW --build-arg acs_key=$AWS_ACCESS_KEY --build-arg scr_key=$AWS_SECRET_KEY --build-arg jwt_key=$JWT_SECRET_KEY Backend/.   # be에 있는 Dockerfile로 build
+    - docker build -t $BE_IMAGE_NAME Backend/.   # be에 있는 Dockerfile로 build
     - docker push $BE_IMAGE_NAME   # DockerHub에 image push
   # script가 실행된 후 수행 될 script
   after_script:
