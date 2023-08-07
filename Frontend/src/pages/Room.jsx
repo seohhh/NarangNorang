@@ -2,6 +2,7 @@ import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import React, { Component } from 'react';
 import UserVideoComponent from '../components/UserVideoComponent';
+import Game1 from '../components/Game1';
 
 import './Room.css';
 
@@ -338,6 +339,7 @@ class Room extends Component {
 
         return (
             <div className="container">
+                <Game1 />
                 {sessionIdFromUrl != null ? (
                     <div id="join">
                         <div id="img-div">
