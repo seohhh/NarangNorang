@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import React, { useState, useEffect } from "react";
+import styled from "styled-components";
+import { useDispatch } from "react-redux";
 import { signUp } from "../slice/authSlice";
 import { Form, Button } from 'react-bootstrap';
 import { Link } from "react-router-dom";
@@ -54,72 +55,85 @@ function Signup() {
   const [passwordConfirm, setPasswordConfirm] = useState('')
   const [passwordValidation, setPasswordValidation] = useState('')
   const [formData, setFormData] = useState({
-    member_id: '',
-    password: '',
-    confirm_password: '',
-    member_name: '',
-    member_nickname: '',
-    member_email: '',
-    member_phone: '',
+    member_id: "",
+    password: "",
+    confirm_password: "",
+    member_name: "",
+    member_nickname: "",
+    member_email: "",
+    member_phone: "",
   });
 
   const passwordCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
   const handleSubmit = async (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // 비밀번호 유효성 검사
     if (!passwordCheck.test(formData.password)) {
-      setPasswordValidation(false)
+      setPasswordValidation(false);
     } else {
-      setPasswordValidation(true)
+      setPasswordValidation(true);
     }
 
     // 비밀번호 입력 확인
     if (formData.password !== formData.confirm_password) {
-      setPasswordConfirm(false)
+      setPasswordConfirm(false);
     } else {
-      setPasswordConfirm(true)
+      setPasswordConfirm(true);
     }
 
     if (passwordConfirm && passwordValidation) {
-      dispatch(signUp(formData.member_id, formData.password, formData.member_name, formData.member_nickname, formData.member_email, formData.member_phone))
+      dispatch(
+        signUp(
+          formData.member_id,
+          formData.password,
+          formData.member_name,
+          formData.member_nickname,
+          formData.member_email,
+          formData.member_phone
+        )
+      );
     }
-  }
+  };
 
   // 아이디 중복 검사
   const idCheckHandler = (e) => {
-    console.log(formData.member_id)
     axios({
-        method : 'Get',
-        url : `member/${formData.member_id}`
+      method: "Get",
+      url: `member/${formData.member_id}`,
     })
-    .then((res) => {
-      console.log(res)
-      if (res.data === false) {
-        setIdValidation(true)
-      } else (
-        setIdValidation(false)
-      )
+      .then((res) => {
+        if (res.data === false) {
+          setIdValidation(true);
+        } else setIdValidation(false);
       })
-    .catch((err) => {
-      console.log(err)
-    })
-  }
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
   // 데이터 입력시 변경된 데이터 저장
   useEffect(() => {
-    setFormData({...formData,
-      member_id : formData.member_id,
-      password : formData.password,
-      confirm_password : formData.confirm_password,
-      member_name : formData.member_name,
-      member_nickname : formData.member_nickname,
-      member_email : formData.member_email,
-      member_phone : formData.member_phone,
-  })
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [formData.member_id, formData.password, formData.confirm_password, formData.member_name, formData.member_nickname, formData.member_email, formData.member_phone,]);
-  
+    setFormData({
+      ...formData,
+      member_id: formData.member_id,
+      password: formData.password,
+      confirm_password: formData.confirm_password,
+      member_name: formData.member_name,
+      member_nickname: formData.member_nickname,
+      member_email: formData.member_email,
+      member_phone: formData.member_phone,
+    });
+  }, [
+    formData.member_id,
+    formData.password,
+    formData.confirm_password,
+    formData.member_name,
+    formData.member_nickname,
+    formData.member_email,
+    formData.member_phone,
+  ]);
+
   return (
     <Container>
       <ImgContent>
