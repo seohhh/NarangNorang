@@ -2,6 +2,7 @@ import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import React, { Component } from 'react';
 import UserVideoComponent from '../components/UserVideoComponent';
+import MainVideoComponent from '../components/MainVideoComponent';
 
 import './Room.css';
 
@@ -398,7 +399,7 @@ class Room extends Component {
 
                         {this.state.mainStreamManager !== undefined ? (
                             <div id="main-video" className="col-md-6">
-                                <UserVideoComponent streamManager={this.state.mainStreamManager} />
+                                <MainVideoComponent streamManager={this.state.mainStreamManager} />
 
                             </div>
                         ) : null}
