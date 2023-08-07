@@ -1,4 +1,4 @@
-package com.narang_norang.NarangNorang.redis.service;
+package com.narang_norang.NarangNorang.redis.test.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

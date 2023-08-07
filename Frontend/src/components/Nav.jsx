@@ -1,16 +1,16 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Navbar, Nav, Button } from "react-bootstrap"; // React Bootstrap에서 가져온 Navbar와 Nav 컴포넌트
+import { Button } from "react-bootstrap"; // React Bootstrap에서 가져온 Navbar와 Nav 컴포넌트
 import { Link } from "react-router-dom"; // react-router-dom에서 가져온 Link 컴포넌트
 import styled from "styled-components"; // styled-components를 가져옴
 import logo from "../assets/logo.png"; // 로고 이미지 파일의 경로를 설정
-// import { logout } from "../slice/authSlice";
+import { logout } from "../slice/authSlice";
 
 
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
-  background-color: #FFF9BE;
+  background-color:transparent;
   padding: 35px 80px;
 `
 
@@ -23,10 +23,12 @@ const NavLink = styled(Link)`
 // 컴포넌트를 정의하는 함수
 function CustomNavbar() {
   const isLoggedin = useSelector(state => state.login.isLoggedin);
-  // const dispatch = useDispatch()
+  const dispatch = useDispatch()
+  const token = useSelector(state => state.login.token);
+  const userId = useSelector(state => state.login.userId);
 
-  // const handleLogout = () => {
-  //   dispatch(logout())}
+  const handleLogout = () => {
+    dispatch(logout(token))}
 
   return (
     <Wrapper class="container">
@@ -41,12 +43,14 @@ function CustomNavbar() {
       </div>
       <div class="align-self-center">
         <NavLink to="/contents">컨텐츠 소개</NavLink>
-        <NavLink to="/album">앨범</NavLink>
-        <NavLink to="/signup">회원가입</NavLink>
+        <NavLink to={`/album/${userId}`}>앨범</NavLink>
+        {isLoggedin ?
+          <NavLink to={`/mypage/${userId}`}>마이페이지</NavLink>
+          : <NavLink to="/signup">회원가입</NavLink>}
       </div>
       <div class="align-self-center">
         {isLoggedin ? 
-          <Button variant="light" >로그아웃</Button>
+          <Button variant="light" onClick={handleLogout}>로그아웃</Button>
           : <NavLink to="/login"><Button variant="light">로그인</Button></NavLink>}
       </div>
     </Wrapper>

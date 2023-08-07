@@ -2,11 +2,12 @@ import { OpenVidu } from 'openvidu-browser';
 import axios from 'axios';
 import React, { Component } from 'react';
 import UserVideoComponent from '../components/UserVideoComponent';
+import MainVideoComponent from '../components/MainVideoComponent';
 
 import './Room.css';
 
 
-const APPLICATION_SERVER_URL = 'http://localhost:8080/'
+const APPLICATION_SERVER_URL = 'http://3.36.126.169:8080/'
 
 class Room extends Component {
     constructor(props) {
@@ -333,6 +334,7 @@ class Room extends Component {
 
     render() {
         const mySessionId = this.state.mySessionId;
+        console.log(this.state)
         const sessionIdFromUrl = new URLSearchParams(window.location.search).get('sessionId');
         const myUserName = this.state.myUserName
 
@@ -398,7 +400,7 @@ class Room extends Component {
 
                         {this.state.mainStreamManager !== undefined ? (
                             <div id="main-video" className="col-md-6">
-                                <UserVideoComponent streamManager={this.state.mainStreamManager} />
+                                <MainVideoComponent streamManager={this.state.mainStreamManager} />
 
                             </div>
                         ) : null}

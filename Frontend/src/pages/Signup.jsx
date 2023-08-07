@@ -2,67 +2,58 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { signUp } from "../slice/authSlice";
-import { Form, Button } from "react-bootstrap";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-import axios from "axios";
-import signupImage from "../assets/loginImage.png"; // 회원가입 이미지 import
+import { Form, Button } from 'react-bootstrap';
+import { Link } from "react-router-dom";
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import axios from 'axios';
+import styled from "styled-components";
+import loginImg from "../assets/loginImg.png";
 
-axios.defaults.baseURL = "http://3.36.126.169:8080/api/v1";
 
-const GradientBackground = styled.div`
-  background: linear-gradient(to bottom, #fff9be, #ffffff);
-  min-height: 100vh;
+axios.defaults.baseURL = 'http://3.36.126.169:8080/api/v1'
+
+const Container = styled.div`
   display: flex;
-  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+`
+
+const ImgContent = styled.div`
+  display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
-`;
-
-const MainContent = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 800px;
-  width: 100%;
-  gap: 20px;
-`;
-
-const MainImage = styled.img`
-  flex: 1;
-  max-width: 50%;
-  height: 400px;
-`;
+  background-color: #FFEC81;
+  width: 45vw;
+`
 
 const TextContent = styled.div`
-  flex: 1;
+  background-color: white;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-`;
+  width: 55vw;
+`
 
-const SignupFormContainer = styled.div`
-  max-width: 500px;
-  width: 100%;
+const SignupForm = styled(Form)`
   padding: 50px 20px 20px 20px;
-  border-radius: 8px;
-  background-color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  height: 500px;
-`;
+`
 
-const StyledFormLabelContainer = styled.div`
-  text-align: left;
-  padding: 0px 0px 0px 10px;
-`;
+const NavLink = styled(Link)`
+  text-decoration: none;
+  color: grey;
+  margin-bottom: 5px;
+`
 
-function SignupForm() {
-  const dispatch = useDispatch();
-  const [idValidation, setIdValidation] = useState("");
-  const [passwordConfirm, setPasswordConfirm] = useState("");
-  const [passwordValidation, setPasswordValidation] = useState("");
+
+function Signup() {
+  const dispatch = useDispatch()
+  const [idValidation, setIdValidation] = useState('')
+  const [passwordConfirm, setPasswordConfirm] = useState('')
+  const [passwordValidation, setPasswordValidation] = useState('')
   const [formData, setFormData] = useState({
     member_id: "",
     password: "",
@@ -144,106 +135,115 @@ function SignupForm() {
   ]);
 
   return (
-    <GradientBackground>
-      <MainContent>
-        <MainImage src={signupImage} alt="Signup Image" />
-        <TextContent>
-          <SignupFormContainer>
-            <div>
-              <p>회원가입을 환영합니다.</p>
-            </div>
-            <Form onSubmit={handleSubmit}>
-              <Form.Group as={Row} className="mb-3" controlId="member_name">
-                <Form.Label column sm="2">
-                  이름
-                </Form.Label>
-                <Col sm="10">
-                  <Form.Control
-                    type="text"
-                    name="member_name"
-                    value={formData.member_name}
-                    placeholder="이름을 입력하세요"
-                    onChange={(e) =>
-                      setFormData({ ...formData, member_name: e.target.value })
-                    }
-                  />
-                </Col>
-              </Form.Group>
+    <Container>
+      <ImgContent>
+        <Link to="/"><img src={loginImg} alt="LoginImage" /></Link>
+      </ImgContent>
+      <TextContent>
+        <SignupForm>
+          <div style={{marginBottom: "3rem"}}>
+            <h1><span style={{color: "#FFE600"}}>나랑노랑</span>에 오신것을 환영합니다.</h1>
+          </div>
+          <Form onSubmit={handleSubmit}>
+            <Form.Group as={Row} className="mb-3" controlId="member_name">
+              <Form.Label column sm="3">이름</Form.Label>
+              <Col sm="9">
+                <Form.Control
+                  type="text"
+                  name="member_name"
+                  value={formData.member_name}
+                  placeholder='이름을 입력하세요'
+                  onChange={(e) => setFormData({ ...formData, member_name: e.target.value })}
+                />
+              </Col>
+            </Form.Group>
 
-              <Form.Group as={Row} className="mb-3" controlId="member_id">
-                <Form.Label column sm="2">
-                  아이디
-                </Form.Label>
-                <Col sm="10">
-                  <Form.Control
-                    type="text"
-                    name="member_id"
-                    value={formData.member_id}
-                    placeholder="아이디를 입력하세요"
-                    onChange={(e) =>
-                      setFormData({ ...formData, member_id: e.target.value })
-                    }
-                  />
-                </Col>
-              </Form.Group>
-              <Button variant="primary" type="button" onClick={idCheckHandler}>
-                아이디 중복 확인
-              </Button>
-              {idValidation === true ? (
-                <Form.Text className="text-muted">
-                  사용 가능한 아이디입니다
-                </Form.Text>
-              ) : idValidation === false ? (
-                <Form.Text className="text-muted">
-                  사용 불가능한 아이디입니다
-                </Form.Text>
-              ) : null}
+            <Form.Group as={Row} className="mb-3" controlId="member_id">
+              <Form.Label column sm="3">아이디</Form.Label>
+              <Col sm="5">
+                <Form.Control
+                  type="text"
+                  name="member_id"
+                  value={formData.member_id}
+                  placeholder='아이디를 입력하세요'
+                  onChange={(e) => setFormData({ ...formData, member_id: e.target.value })}
+                />
+                {idValidation===true
+                    ? <Form.Text className="text-muted">사용 가능한 아이디입니다</Form.Text>
+                    : (idValidation===false ? <Form.Text className="text-muted">사용 불가능한 아이디입니다</Form.Text> : null)}
+              </Col>
+              <Col sm="4">
+                <Button variant="primary" type="button" onClick={idCheckHandler}
+                  style={{ width: "100%", backgroundColor: "#fff9be", color: "#000", borderColor: "#fff9be" }}>아이디 중복 확인</Button>
+              </Col>
+            </Form.Group>
 
-              <Form.Group as={Row} className="mb-3" controlId="member_email">
-                <Form.Label column sm="2">
-                  이메일
-                </Form.Label>
-                <Col sm="10">
-                  <Form.Control
-                    type="email"
-                    name="member_email"
-                    value={formData.member_email}
-                    placeholder="이메일을 입력하세요"
-                    onChange={(e) =>
-                      setFormData({ ...formData, member_email: e.target.value })
-                    }
-                  />
-                </Col>
-              </Form.Group>
+          <Form.Group as={Row} className="mb-3" controlId="password">
+            <Form.Label column sm="3">비밀번호</Form.Label>
+              <Col sm="9">
+              <Form.Control
+                type="password"
+                name="password"
+                value={formData.password}
+                placeholder='비밀번호를 입력하세요'
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                />
+              {passwordValidation===false 
+                ? <Form.Text className="text-muted">영문, 숫자, 특수기호 조합으로 8-20자리 이상 입력해주세요</Form.Text> : null}
+            </Col>
+          </Form.Group>
 
-              <Form.Group as={Row} className="mb-3" controlId="member_nickname">
-                <Form.Label column sm="2">
-                  닉네임
-                </Form.Label>
-                <Col sm="10">
-                  <Form.Control
-                    type="text"
-                    name="member_nickname"
-                    value={formData.member_nickname}
-                    placeholder="닉네임을 입력하세요"
-                    onChange={(e) =>
-                      setFormData({
-                        ...formData,
-                        member_nickname: e.target.value,
-                      })
-                    }
-                  />
-                </Col>
-              </Form.Group>
+          <Form.Group as={Row} className="mb-3" controlId="confirm_password">
+            <Form.Label column sm="3">비밀번호 확인</Form.Label>
+              <Col sm="9">
+              <Form.Control
+                type="password"
+                name="confirm_password"
+                value={formData.confirm_password}
+                placeholder='비밀번호 한 번 더 입력하세요'
+                onChange={(e) => setFormData({ ...formData, confirm_password: e.target.value })}
+              />
+              {passwordConfirm===false 
+                ? <Form.Text className="text-muted">비밀번호를 확인하세요</Form.Text> : null}
+              </Col>
+          </Form.Group>
 
-              <Button type="submit">회원가입</Button>
+          <Form.Group as={Row} className="mb-3" controlId="member_email">
+            <Form.Label column sm="3">이메일</Form.Label>
+            <Col sm="9">
+              <Form.Control
+                type="email"
+                name="member_email"
+                value={formData.member_email}
+                placeholder='이메일을 입력하세요'
+                onChange={(e) => setFormData({ ...formData, member_email: e.target.value })}
+              />
+            </Col>
+          </Form.Group>
 
-            </Form>
-          </SignupFormContainer>
-        </TextContent>
-      </MainContent>
-    </GradientBackground>
+          <Form.Group as={Row} className="mb-3" controlId="member_nickname">
+            <Form.Label column sm="3">닉네임</Form.Label>
+            <Col sm="9">
+              <Form.Control
+                type="text"
+                name="member_nickname"
+                value={formData.member_nickname}
+                placeholder='닉네임을 입력하세요'
+                onChange={(e) => setFormData({ ...formData, member_nickname: e.target.value })}
+              />
+            </Col>
+          </Form.Group>
+
+            <Button type="submit" style={{ width: "100%", backgroundColor: "#fff9be", color: "#000", borderColor: "#fff9be" }}>회원가입</Button>
+          </Form>
+          <div style={{ display: "flex", flexDirection: "column", margin: "1rem 0" }}>
+            <NavLink to="/"><span>메인으로 돌아가기</span></NavLink>
+            <NavLink to="/login"><span>이미 아이디가 있으신가요? <span style={{color: "#FFE600"}}>로그인</span></span></NavLink>
+          </div>
+        </SignupForm>
+      </TextContent>
+    </Container>
   );
 }
 
-export default SignupForm;
+export default Signup;
