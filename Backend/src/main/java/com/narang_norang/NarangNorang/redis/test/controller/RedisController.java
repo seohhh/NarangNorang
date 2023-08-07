@@ -1,5 +1,9 @@
 package com.narang_norang.NarangNorang.redis.test.controller;
 
+import com.narang_norang.NarangNorang.redis.room.domain.dto.MakeRoomRequest;
+import com.narang_norang.NarangNorang.redis.room.domain.dto.MakeRoomResponse;
+import com.narang_norang.NarangNorang.redis.room.domain.entity.Room;
+import com.narang_norang.NarangNorang.redis.room.service.RoomService;
 import com.narang_norang.NarangNorang.redis.test.service.RedisService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -18,6 +22,9 @@ public class RedisController {
     private RedisService redisService;
 
     @Autowired
+    private RoomService roomService;
+
+    @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
     @PostMapping("/redisTest")
@@ -34,5 +41,12 @@ public class RedisController {
         ValueOperations<String, String> vop = redisTemplate.opsForValue();
         String value = vop.get(key);
         return new ResponseEntity<>(value, HttpStatus.OK);
+    }
+
+    @PostMapping("/redisTest/room")
+    public ResponseEntity<MakeRoomResponse> createRoom(@RequestBody MakeRoomRequest makeRoomRequest) {
+        Room room = roomService.createRoom(makeRoomRequest);
+
+        return ResponseEntity.ok(new MakeRoomResponse(room));
     }
 }
