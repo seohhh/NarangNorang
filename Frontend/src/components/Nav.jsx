@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Navbar, Nav, Button } from "react-bootstrap"; // React Bootstrap에서 가져온 Navbar와 Nav 컴포넌트
+import { Button } from "react-bootstrap"; // React Bootstrap에서 가져온 Navbar와 Nav 컴포넌트
 import { Link } from "react-router-dom"; // react-router-dom에서 가져온 Link 컴포넌트
 import styled from "styled-components"; // styled-components를 가져옴
 import logo from "../assets/logo.png"; // 로고 이미지 파일의 경로를 설정
