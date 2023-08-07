@@ -28,7 +28,6 @@ fe-build:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -57,7 +56,6 @@ be-build:  # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -94,7 +92,6 @@ fe-package:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -125,7 +122,6 @@ be-package:  # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -154,7 +150,6 @@ fe-deploy:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -182,7 +177,6 @@ be-deploy:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
