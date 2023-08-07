@@ -11,10 +11,12 @@ import lombok.NoArgsConstructor;
 public class MakeRoomRequest {
 
     private String roomId;
+    private String hostname;
 
     public Room toRoom() {
         return Room.builder()
                 .roomId(roomId)
+                .hostname(hostname)
                 .build();
     }
 }
