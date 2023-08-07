@@ -18,7 +18,7 @@ public class Member {
 
     @Id
     @Column(name = "member_seq")
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long memberSeq;
     @Column(unique = true)
     private String memberId;
