@@ -28,7 +28,6 @@ fe-build:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -57,7 +56,6 @@ be-build:  # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -66,8 +64,8 @@ be-build:  # JOB 이름
 
 # 전역 변수 설정
 variables:
-  FE_IMAGE_NAME: $DOCKER_HUB_NAME/fe:latest   # FE 이미지 이름
-  BE_IMAGE_NAME: $DOCKER_HUB_NAME/be:latest   # BE 이미지 이름
+  FE_IMAGE_NAME: $DOCKER_HUB_NAME/front:latest   # FE 이미지 이름
+  BE_IMAGE_NAME: $DOCKER_HUB_NAME/back:latest   # BE 이미지 이름
 
 fe-package:   # JOB 이름
   # 사용될 이미지 설정
@@ -94,7 +92,6 @@ fe-package:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -125,7 +122,6 @@ be-package:  # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -154,7 +150,6 @@ fe-deploy:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -182,7 +177,6 @@ be-deploy:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
