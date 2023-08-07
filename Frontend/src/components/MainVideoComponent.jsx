@@ -59,6 +59,7 @@ const MainVideoComponent = (props) => {
     }
 
     const main = async () => {
+      // eslint-disable-next-line
       detector = await userpose.loadDetector();
       console.log(await userpose.detectPose(video));
     };
