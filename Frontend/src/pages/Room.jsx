@@ -334,6 +334,7 @@ class Room extends Component {
 
     render() {
         const mySessionId = this.state.mySessionId;
+        console.log(this.state)
         const sessionIdFromUrl = new URLSearchParams(window.location.search).get('sessionId');
         const myUserName = this.state.myUserName
 
@@ -400,7 +401,7 @@ class Room extends Component {
 
                         {this.state.mainStreamManager !== undefined ? (
                             <div id="main-video" className="col-md-6">
-                                <UserVideoComponent streamManager={this.state.mainStreamManager} />
+                                <MainVideoComponent streamManager={this.state.mainStreamManager} />
 
                             </div>
                         ) : null}

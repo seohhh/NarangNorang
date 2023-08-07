@@ -6,26 +6,37 @@ axios.defaults.baseURL = 'http://3.36.126.169:8080/api/v1'
 const authSlice = createSlice({
   name: 'auth',
   initialState : {
+    // isLoggedin: sessionStorage.getItem('isLoggedin') === 'true',
     isLoggedin: false,
-    user: null,
+    user: JSON.parse(sessionStorage.getItem('user')) || null,
+    userId: null,
+    token: null,
     error : null,
   },
   reducers: {
     loginSuccess(state, action) {
       state.isLoggedin = true
-      state.user = action.payload
+      state.user = action.payload[0]
       state.error = null
-      console.log(state.isLoggedin)
+      state.token = action.payload[0].accessToken
+      state.userId = action.payload[1]
+      sessionStorage.setItem('isLoggedin', 'true');
+      sessionStorage.setItem('user', JSON.stringify(action.payload[0]));
     },
     loginFailure(state, action) {
       state.isLoggedin = false
       state.user = null
       state.error = action.payload
+      sessionStorage.removeItem('isLoggedin');
+      sessionStorage.removeItem('user');
     },
     logoutSuccess(state) {
       state.isLoggedin = false
       state.user = null
       state.error = null
+      state.token = null
+      sessionStorage.removeItem('isLoggedin');
+      sessionStorage.removeItem('user');
     }
   },
 });
@@ -54,10 +65,9 @@ export const login = (memberId, memberPassword) => async (dispatch) => {
   try {
     // API 요청을 보내는 부분
     const response = await axios.post('/auth/login', { memberId, memberPassword })
-    console.log(response)
     // 로그인 성공
-    console.log('로그인 성공')
-    const user = response.data
+    console.log('로그인 성공', response.data)
+    const user = [response.data, memberId] 
     dispatch(loginSuccess(user))
   } catch (error) {
     // 로그인 실패
@@ -66,18 +76,19 @@ export const login = (memberId, memberPassword) => async (dispatch) => {
   }
 }
 
-export const logout = () => async (dispatch) => {
+export const logout = (token) => async (dispatch) => {
   try {
     // API 요청을 보내는 부분
-    // const response = await axios.post('/api/logout')
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    const response = await axios.post('/auth/logout', null, {headers})
     // 로그아웃 성공
-    // const user = response.data
-    console.log('로그아웃')
+    console.log('로그아웃 성공', response)
     dispatch(logoutSuccess())
   } catch (error) {
     // 로그인 실패
-    console.log('로그아웃 실패')
-    console.log(error)
+    console.log('로그아웃 실패', error)
   }
 }
 
