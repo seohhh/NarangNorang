@@ -333,6 +333,7 @@ class Room extends Component {
 
     render() {
         const mySessionId = this.state.mySessionId;
+        console.log(this.state)
         const sessionIdFromUrl = new URLSearchParams(window.location.search).get('sessionId');
         const myUserName = this.state.myUserName
 
