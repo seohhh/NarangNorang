@@ -3,7 +3,7 @@ import axios from "axios";
 import React, { Component } from "react";
 import UserVideoComponent from "../components/UserVideoComponent";
 import ToolbarComponent from "../components/ToolbarComponent";
-
+import Game1 from "../components/Game1";
 import "./Room.css";
 
 const APPLICATION_SERVER_URL = "http://3.36.126.169:8080/";
@@ -435,6 +435,7 @@ class Room extends Component {
     const myUserName = this.state.myUserName;
     return (
       <div className="container">
+        <Game1/>
         <ToolbarComponent
           audioOn={this.state.audioOn}
           videoOn={this.state.videoOn}
