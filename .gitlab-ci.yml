@@ -11,7 +11,7 @@ fe-build:   # JOB 이름
   stage: build
   # tag 설정 (수행이 이루어질 GitLab-Runner tag 등록)
   tags:
-    - Gitlab-Runner
+    - gitlab-runner
   # 실행될 script 설정
   script:
     - cd Frontend
@@ -28,7 +28,6 @@ fe-build:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -41,7 +40,7 @@ be-build:  # JOB 이름
   stage: build
   # tag 설정 (수행이 이루어질 GitLab-Runner tag 등록)
   tags:
-    - Gitlab-Runner
+    - gitlab-runner
   # 실행될 script 설정
   script:
     - cd Backend
@@ -57,7 +56,6 @@ be-build:  # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -66,8 +64,8 @@ be-build:  # JOB 이름
 
 # 전역 변수 설정
 variables:
-  FE_IMAGE_NAME: $DOCKER_HUB_NAME/fe:latest   # FE 이미지 이름
-  BE_IMAGE_NAME: $DOCKER_HUB_NAME/be:latest   # BE 이미지 이름
+  FE_IMAGE_NAME: $DOCKER_HUB_NAME/front:latest   # FE 이미지 이름
+  BE_IMAGE_NAME: $DOCKER_HUB_NAME/back:latest   # BE 이미지 이름
 
 fe-package:   # JOB 이름
   # 사용될 이미지 설정
@@ -76,7 +74,7 @@ fe-package:   # JOB 이름
   stage: package
   # tag 설정 (수행이 이루어질 GitLab-Runner tag 등록)
   tags:
-    - Gitlab-Runner
+    - gitlab-runner
   # service 설정 (설정한 image가 작업이 이루어지는 동안 실행되는 docker 이미지)
   services:
     - docker:dind
@@ -94,7 +92,6 @@ fe-package:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -107,7 +104,7 @@ be-package:  # JOB 이름
   stage: package
   # tag 설정 (수행이 이루어질 GitLab-Runner tag 등록)
   tags:
-    - Gitlab-Runner
+    - gitlab-runner
   # service 설정 (설정한 image가 작업이 이루어지는 동안 실행되는 docker 이미지)
   services:
     - docker:dind
@@ -125,7 +122,6 @@ be-package:  # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -137,7 +133,7 @@ fe-deploy:   # JOB 이름
   stage: deploy
   # tag 설정 (수행이 이루어질 GitLab-Runner tag 등록)
   tags:
-    - Gitlab-Runner
+    - gitlab-runner
   # script가 실행 전 수행 될 script
   before_script:
     - docker login -u $DOCKER_HUB_ID --password $DOCKER_HUB_PW   # Docker Hub에 로그인
@@ -154,7 +150,6 @@ fe-deploy:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:
@@ -165,7 +160,7 @@ be-deploy:   # JOB 이름
   stage: deploy
   # tag 설정 (수행이 이루어질 GitLab-Runner tag 등록)
   tags:
-    - Gitlab-Runner
+    - gitlab-runner
   # script가 실행 전 수행 될 script
   before_script:
     - docker login -u $DOCKER_HUB_ID --password $DOCKER_HUB_PW   # Docker Hub에 로그인
@@ -182,7 +177,6 @@ be-deploy:   # JOB 이름
   only:
     # JOB이 수행 될 branch 설정
     refs:
-      - develop
       - master
     # JOB이 수행될 폴더 경로 설정
     changes:

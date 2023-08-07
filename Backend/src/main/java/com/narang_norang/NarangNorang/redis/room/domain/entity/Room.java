@@ -1,6 +1,7 @@
-package com.narang_norang.NarangNorang.room.domain.entity;
+package com.narang_norang.NarangNorang.redis.room.domain.entity;
 
 
+import com.narang_norang.NarangNorang.member.domain.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
@@ -15,9 +16,8 @@ import java.util.List;
 public class Room {
 
     @Id
-    @Indexed
     private String roomId;
 
-    private int roomMemberCount;
-    private List<String> roomNicknames;
+    private String hostname;
+
 }
