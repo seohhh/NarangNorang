@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.redis.core.index.Indexed;
 
 @RedisHash(value = "room", timeToLive = 3600000)
 @Builder
@@ -11,8 +12,8 @@ import org.springframework.data.annotation.Id;
 public class Room {
 
     @Id
-    private String roomId;
-
+    @Indexed
+    private String roomCode;
     private String hostname;
 
 }
