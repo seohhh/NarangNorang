@@ -4,7 +4,10 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import java.time.LocalDateTime;
 
 @RedisHash(value = "picture", timeToLive = 3600)
@@ -13,12 +16,17 @@ import java.time.LocalDateTime;
 public class Picture {
 
     @Id
-    private String roomId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long pictureSeq;
 
-    @Id
+    @Indexed
+    private String roomCode;
+
+    @Indexed
     private String nickname;
 
     private String pictureUrl;
 
     private LocalDateTime time;
+
 }
