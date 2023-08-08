@@ -74,7 +74,6 @@ const Game = () => {
         <video
           style={{ width: '100%', height: 'auto' }}
           autoPlay
-          muted
           playsInline
           onEnded={handleMusicEnded}
 
