@@ -432,7 +432,6 @@ class Room extends Component {
     const sessionIdFromUrl = new URLSearchParams(window.location.search).get(
       "sessionId"
     );
-    const myUserName = this.state.myUserName;
     return (
       <div className="container">
         <Game1/>
