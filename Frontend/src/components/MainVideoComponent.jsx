@@ -24,7 +24,7 @@ const MainVideoComponent = (props) => {
   // 스켈레톤 표시 버튼 클릭 핸들러
 const handleSkeletonClick = async () => {
   setShowCanvas(!showCanvas); // 캔버스 표시 상태 토글 (켜거나 끔)
-
+  console.log("show", showCanvas)
   if (showCanvas) {
     if (detector) {
       // 감지기가 이미 로드되어 있을 경우
@@ -87,7 +87,7 @@ const handleDetectClick = async () => {
           <canvas ref={canvasRef} width={videoDimensions.width} height={videoDimensions.height}></canvas>
           <video autoPlay={true} ref={videoRef} width={videoDimensions.width} height={videoDimensions.height} />
           <div>
-            <button onClick={handleSkeletonClick}>showSkeleton</button> {/* 스켈레톤 표시 버튼 */}
+            <button onClick={handleSkeletonClick}>엑스레이 모드</button> {/* 스켈레톤 표시 버튼 */}
             <button onClick={handleDetectClick}>detectPose</button> {/* 포즈 감지 버튼 */}
             <p>{JSON.parse(props.streamManager.stream.connection.data).clientData}</p>
           </div>

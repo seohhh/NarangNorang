@@ -92,7 +92,7 @@ const renderPose = async () => {
 
 const renderResult = async () => {
   let poses = null;
-  let color = "Black";
+  let color = "White";
 
   if (detector != null) {
     poses = await detector.estimatePoses(video, estimationConfig);
