@@ -6,6 +6,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.Objects;
 
 @Entity
 @Builder
@@ -17,11 +19,24 @@ public class Photo {
     @Column(name = "album_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long photoSeq;
-    @OneToMany
+    @ManyToOne
     @JoinColumn(name="memberSeq")
     private Long memberSeq;
     private String photoUrl;
     private String photoContent;
-    private String photoDate;
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "created_at")
+    private Date photoDate;
+
+    public void update(String photoContent) {
+        if (!Objects.isNull(photoContent)) {
+            this.photoContent = photoContent;
+        }
+    }
+
+    @PrePersist
+    public void prePersist() {
+        photoDate = new Date();
+    }
 
 }
