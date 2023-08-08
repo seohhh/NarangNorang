@@ -16,7 +16,7 @@ public class RedisTemplateTest {
 
     @Test
     void testStrings() {
-        // given
+//         given
 //        ValueOperations<String, String> valueOperations = redisTemplate.opsForValue();
 //        String key = "stringKey";
 //
