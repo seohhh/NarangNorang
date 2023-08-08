@@ -64,8 +64,7 @@ function Main() {
             <h1>
               <span style={color}>나랑노랑</span>에서
             </h1>
-            <h1>아이와 함께 즐거운 추억을 쌓아보세요</h1>
-            <br /><br /><br />
+            <h1 style={{ marginBottom: "50px"}}>아이와 함께 즐거운 추억을 쌓아보세요</h1>
             {isLoggedin ? (
               <Link to="/room">
                 <Button>방만들기 →</Button>

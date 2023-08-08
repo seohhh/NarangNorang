@@ -9,6 +9,7 @@ const authSlice = createSlice({
     // isLoggedin: sessionStorage.getItem('isLoggedin') === 'true',
     isLoggedin: false,
     user: JSON.parse(sessionStorage.getItem('user')) || null,
+    userNickname: null,
     userId: null,
     token: null,
     error : null,
@@ -17,6 +18,7 @@ const authSlice = createSlice({
     loginSuccess(state, action) {
       state.isLoggedin = true
       state.user = action.payload[0]
+      state.userNickname = action.payload[0].memberNickname
       state.error = null
       state.token = action.payload[0].accessToken
       state.userId = action.payload[1]
@@ -35,6 +37,8 @@ const authSlice = createSlice({
       state.user = null
       state.error = null
       state.token = null
+      state.userNickname = null
+      state.userId = null
       sessionStorage.removeItem('isLoggedin');
       sessionStorage.removeItem('user');
     }
@@ -66,7 +70,7 @@ export const login = (memberId, memberPassword) => async (dispatch) => {
     // API 요청을 보내는 부분
     const response = await axios.post('/auth/login', { memberId, memberPassword })
     // 로그인 성공
-    console.log('로그인 성공', response.data)
+    console.log('로그인 성공', response.data.memberNickname)
     const user = [response.data, memberId] 
     dispatch(loginSuccess(user))
   } catch (error) {
