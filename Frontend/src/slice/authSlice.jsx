@@ -46,7 +46,7 @@ export const { loginSuccess, loginFailure, logoutSuccess } = authSlice.actions
 export const signUp = (memberId, memberPassword, memberName, memberNickname, memberEmail) => async (dispatch) => {
   axios({
     method: 'POST',
-    url: 'member',
+    url: '/member',
     data: {memberId, memberPassword, memberName, memberNickname, memberEmail}
   })
   .then((res) => {

@@ -8,15 +8,13 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class MakeRoomRequest {
-
+public class RoomResponse {
     private String roomCode;
     private String hostname;
 
-    public Room toRoom() {
-        return Room.builder()
-                .roomCode(roomCode)
-                .hostname(hostname)
-                .build();
+    public RoomResponse(Room room) {
+        this.roomCode = room.getRoomCode();
+        this.hostname = room.getHostname();
     }
+
 }

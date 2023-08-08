@@ -15,6 +15,7 @@ import Album from './pages/Album';
 import Mypage from './pages/Mypage';
 import Room from './pages/Room';
 import Contents from './components/ContentsComponent';
+import Waiting from './pages/Waiting';
 
 const Wrapper = styled.div`
   background-image: url(${bgImg});
@@ -27,12 +28,16 @@ const Wrapper = styled.div`
 
 function App() {
   const location = useLocation();
-  const isNavVisible = !(location.pathname === '/login' || location.pathname === '/signup');
+  const isNavVisible = !(location.pathname === '/login' || location.pathname === '/signup' ||
+                          location.pathname.startsWith('/waiting/'));
   const isMainPage = location.pathname === '/';
   const isLoggedIn = useSelector(state => state.login.isLoggedin);
-  console.log(isLoggedIn)
+  const isWaitingPage = location.pathname.startsWith('/waiting/');
+  const shouldShowBackground = isMainPage && !isWaitingPage;
+
   return (
-    <Wrapper isMain={isMainPage}>
+    <Wrapper ismain={{isMainPage}}
+      style={{ backgroundImage: shouldShowBackground ? `url(${bgMain})` : (isWaitingPage ? 'none' : `url(${bgImg})`) }}>
       {isNavVisible && <Nav />}
       <div>
         <Routes>
@@ -43,6 +48,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route path="/room" element={<Room />} />
           <Route path="/mypage/:userId" element={<Mypage />} />
+          <Route path="/waiting/:sessionId" element={<Waiting />} />
           {/* <Route path="/test" element={<VideoRoom />} /> */}
         </Routes>
       </div>

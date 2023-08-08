@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { useDispatch } from "react-redux";
 import { signUp } from "../slice/authSlice";
@@ -37,7 +37,7 @@ const TextContent = styled.div`
   width: 55vw;
 `
 
-const SignupForm = styled(Form)`
+const SignupForm = styled.div`
   padding: 50px 20px 20px 20px;
 `
 
@@ -47,35 +47,52 @@ const NavLink = styled(Link)`
   margin-bottom: 5px;
 `
 
-
 function Signup() {
   const dispatch = useDispatch()
   const [idValidation, setIdValidation] = useState('')
   const [passwordConfirm, setPasswordConfirm] = useState('')
   const [passwordValidation, setPasswordValidation] = useState('')
-  const [formData, setFormData] = useState({
-    member_id: "",
-    password: "",
-    confirm_password: "",
-    member_name: "",
-    member_nickname: "",
-    member_email: "",
-    member_phone: "",
-  });
+
+  const [member_id, setMemberId] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirm_password, setConfirmPassword] = useState('')
+  const [member_name, setMemberName] = useState('')
+  const [member_nickname, setMemberNickname] = useState('')
+  const [member_email, setMemberEmail] = useState('')
+
+  const handleMemberId = (e) => {
+    setMemberId(e.target.value);
+  };
+  const handlePassword = (e) => {
+    setPassword(e.target.value);
+  };
+  const handleConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+  };
+  const handleMemberName = (e) => {
+    setMemberName(e.target.value);
+  };
+  const handleMemberNickname = (e) => {
+    setMemberNickname(e.target.value);
+  };
+  const handleMemberEmail = (e) => {
+    setMemberEmail(e.target.value);
+  };
+
 
   const passwordCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     // 비밀번호 유효성 검사
-    if (!passwordCheck.test(formData.password)) {
+    if (!passwordCheck.test(password)) {
       setPasswordValidation(false);
     } else {
       setPasswordValidation(true);
     }
 
     // 비밀번호 입력 확인
-    if (formData.password !== formData.confirm_password) {
+    if (password !== confirm_password) {
       setPasswordConfirm(false);
     } else {
       setPasswordConfirm(true);
@@ -84,12 +101,11 @@ function Signup() {
     if (passwordConfirm && passwordValidation) {
       dispatch(
         signUp(
-          formData.member_id,
-          formData.password,
-          formData.member_name,
-          formData.member_nickname,
-          formData.member_email,
-          formData.member_phone
+          member_id,
+          password,
+          member_name,
+          member_nickname,
+          member_email,
         )
       );
     }
@@ -99,7 +115,7 @@ function Signup() {
   const idCheckHandler = (e) => {
     axios({
       method: "Get",
-      url: `member/${formData.member_id}`,
+      url: `/member/${member_id}`,
     })
       .then((res) => {
         if (res.data === false) {
@@ -110,28 +126,6 @@ function Signup() {
         console.log(err);
       });
   };
-
-  // 데이터 입력시 변경된 데이터 저장
-  useEffect(() => {
-    setFormData({
-      ...formData,
-      member_id: formData.member_id,
-      password: formData.password,
-      confirm_password: formData.confirm_password,
-      member_name: formData.member_name,
-      member_nickname: formData.member_nickname,
-      member_email: formData.member_email,
-      member_phone: formData.member_phone,
-    });
-  }, [
-    formData.member_id,
-    formData.password,
-    formData.confirm_password,
-    formData.member_name,
-    formData.member_nickname,
-    formData.member_email,
-    formData.member_phone,
-  ]);
 
   return (
     <Container>
@@ -150,9 +144,9 @@ function Signup() {
                 <Form.Control
                   type="text"
                   name="member_name"
-                  value={formData.member_name}
+                  value={member_name}
                   placeholder='이름을 입력하세요'
-                  onChange={(e) => setFormData({ ...formData, member_name: e.target.value })}
+                  onChange={handleMemberName}
                 />
               </Col>
             </Form.Group>
@@ -163,9 +157,9 @@ function Signup() {
                 <Form.Control
                   type="text"
                   name="member_id"
-                  value={formData.member_id}
+                  value={member_id}
                   placeholder='아이디를 입력하세요'
-                  onChange={(e) => setFormData({ ...formData, member_id: e.target.value })}
+                  onChange={handleMemberId}
                 />
                 {idValidation===true
                     ? <Form.Text className="text-muted">사용 가능한 아이디입니다</Form.Text>
@@ -177,62 +171,61 @@ function Signup() {
               </Col>
             </Form.Group>
 
-          <Form.Group as={Row} className="mb-3" controlId="password">
-            <Form.Label column sm="3">비밀번호</Form.Label>
-              <Col sm="9">
-              <Form.Control
-                type="password"
-                name="password"
-                value={formData.password}
-                placeholder='비밀번호를 입력하세요'
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                />
-              {passwordValidation===false 
-                ? <Form.Text className="text-muted">영문, 숫자, 특수기호 조합으로 8-20자리 이상 입력해주세요</Form.Text> : null}
-            </Col>
-          </Form.Group>
-
-          <Form.Group as={Row} className="mb-3" controlId="confirm_password">
-            <Form.Label column sm="3">비밀번호 확인</Form.Label>
-              <Col sm="9">
-              <Form.Control
-                type="password"
-                name="confirm_password"
-                value={formData.confirm_password}
-                placeholder='비밀번호 한 번 더 입력하세요'
-                onChange={(e) => setFormData({ ...formData, confirm_password: e.target.value })}
-              />
-              {passwordConfirm===false 
-                ? <Form.Text className="text-muted">비밀번호를 확인하세요</Form.Text> : null}
+            <Form.Group as={Row} className="mb-3" controlId="password">
+              <Form.Label column sm="3">비밀번호</Form.Label>
+                <Col sm="9">
+                <Form.Control
+                  type="password"
+                  name="password"
+                  value={password}
+                  placeholder='비밀번호를 입력하세요'
+                  onChange={handlePassword}
+                  />
+                {passwordValidation===false 
+                  ? <Form.Text className="text-muted">영문, 숫자, 특수기호 조합으로 8-20자리 이상 입력해주세요</Form.Text> : null}
               </Col>
-          </Form.Group>
+            </Form.Group>
 
-          <Form.Group as={Row} className="mb-3" controlId="member_email">
-            <Form.Label column sm="3">이메일</Form.Label>
-            <Col sm="9">
-              <Form.Control
-                type="email"
-                name="member_email"
-                value={formData.member_email}
-                placeholder='이메일을 입력하세요'
-                onChange={(e) => setFormData({ ...formData, member_email: e.target.value })}
-              />
-            </Col>
-          </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId="confirm_password">
+              <Form.Label column sm="3">비밀번호 확인</Form.Label>
+                <Col sm="9">
+                <Form.Control
+                  type="password"
+                  name="confirm_password"
+                  value={confirm_password}
+                  placeholder='비밀번호 한 번 더 입력하세요'
+                  onChange={handleConfirmPassword}
+                />
+                {passwordConfirm===false 
+                  ? <Form.Text className="text-muted">비밀번호를 확인하세요</Form.Text> : null}
+                </Col>
+            </Form.Group>
 
-          <Form.Group as={Row} className="mb-3" controlId="member_nickname">
-            <Form.Label column sm="3">닉네임</Form.Label>
-            <Col sm="9">
-              <Form.Control
-                type="text"
-                name="member_nickname"
-                value={formData.member_nickname}
-                placeholder='닉네임을 입력하세요'
-                onChange={(e) => setFormData({ ...formData, member_nickname: e.target.value })}
-              />
-            </Col>
-          </Form.Group>
+            <Form.Group as={Row} className="mb-3" controlId="member_email">
+              <Form.Label column sm="3">이메일</Form.Label>
+              <Col sm="9">
+                <Form.Control
+                  type="email"
+                  name="member_email"
+                  value={member_email}
+                  placeholder='이메일을 입력하세요'
+                  onChange={handleMemberEmail}
+                />
+              </Col>
+            </Form.Group>
 
+            <Form.Group as={Row} className="mb-3" controlId="member_nickname">
+              <Form.Label column sm="3">닉네임</Form.Label>
+              <Col sm="9">
+                <Form.Control
+                  type="text"
+                  name="member_nickname"
+                  value={member_nickname}
+                  placeholder='닉네임을 입력하세요'
+                  onChange={handleMemberNickname}
+                />
+              </Col>
+            </Form.Group>
             <Button type="submit" style={{ width: "100%", backgroundColor: "#fff9be", color: "#000", borderColor: "#fff9be" }}>회원가입</Button>
           </Form>
           <div style={{ display: "flex", flexDirection: "column", margin: "1rem 0" }}>
