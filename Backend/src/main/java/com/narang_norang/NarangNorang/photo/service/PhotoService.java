@@ -1,7 +1,6 @@
 package com.narang_norang.NarangNorang.photo.service;
 
 import com.narang_norang.NarangNorang.photo.domain.dto.request.UpdatePhotoContentRequest;
-import com.narang_norang.NarangNorang.photo.domain.dto.request.UploadPhotoRequest;
 import com.narang_norang.NarangNorang.photo.domain.dto.response.UpdatePhotoContentResponse;
 import com.narang_norang.NarangNorang.photo.domain.entity.Photo;
 

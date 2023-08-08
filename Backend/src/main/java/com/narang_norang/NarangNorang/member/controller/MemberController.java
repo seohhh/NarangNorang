@@ -9,7 +9,6 @@ import com.narang_norang.NarangNorang.member.domain.dto.response.UpdateMemberRes
 import com.narang_norang.NarangNorang.member.domain.entity.Member;
 import com.narang_norang.NarangNorang.member.service.MemberService;
 import io.swagger.annotations.*;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
