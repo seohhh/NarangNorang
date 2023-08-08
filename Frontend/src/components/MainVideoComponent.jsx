@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import userpose from "../utils/userpose";
+import POSE from "../utils/POSE";
 import "./UserVideo.css";
 
 import * as tf from "@tensorflow/tfjs-core";
@@ -24,6 +25,10 @@ const MainVideoComponent = (props) => {
     setShowCanvas(!showCanvas);
 
     if (showCanvas) {
+      if(!detector) {
+        console.log("Detector not ready yet.");
+        detector = await userpose.loadDetector();
+      }
       if (detector) {
         canvas.width = video.width;
         canvas.height = video.height;
@@ -34,22 +39,21 @@ const MainVideoComponent = (props) => {
         // ctx.scale(-1, 1);
 
         userpose.startRender(video, ctx);
-      } else {
-        console.log("Detector not ready yet.");
-        detector = await userpose.loadDetector();
-      }
+      } 
     } else {
       userpose.stopRender();
     }
   };
 
   const handleDetectClick = async () => {
+    if(!detector) {
+      console.log("Detector not ready yet.");
+      detector = await userpose.loadDetector();
+    }
     if (detector) {
       const poses = await userpose.detectPose(video);
       console.log(poses);
-    } else {
-      console.log("Detector not ready yet.");
-      detector = await userpose.loadDetector();
+      console.log("computeScore", userpose.computeScore(POSE[0], poses[0].keypoints));
     }
   };
 
