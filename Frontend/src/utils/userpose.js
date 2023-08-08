@@ -92,13 +92,14 @@ const renderPose = async () => {
 
 const renderResult = async () => {
   let poses = null;
-  let color = "White";
+  let color = "Black";
 
   if (detector != null) {
     poses = await detector.estimatePoses(video, estimationConfig);
   }
 
-  ctx.drawImage(video, 0, 0, video.width, video.height);
+  // ctx.drawImage(video, 0, 0, video.width, video.height);
+  ctx.clearRect(0, 0, video.width, video.height);
 
   for (var i = 0; i < poses.length; i++) {
     const pose = poses[i];
@@ -116,7 +117,7 @@ const drawPose = (ctx, pose, color) => {
 };
 
 const drawKeypoints = (ctx, keypoints, color) => {
-  ctx.fillStyle = "Black";
+  ctx.fillStyle = "White";
   ctx.strokeStyle = color;
   ctx.lineWidth = 4;
 
