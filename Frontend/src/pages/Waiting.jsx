@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { Form, Button } from "react-bootstrap";
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { login } from "../slice/authSlice";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
@@ -20,11 +20,11 @@ const Container = styled.div`
   width: 95vw;
   height: 90vh;
   border-radius: 40px;
-  box-shadow: 0 0 20px -10px rgba(0, 0, 0, 2);
+  box-shadow: 0 0 20px -13px rgba(0, 0, 0, 2);
 `
 
 const Content = styled.div`
-  width: 500px;
+  width: 450px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -43,6 +43,14 @@ function Waiting() {
   const [inputId, setInputId] = useState("");
   const [inputPw, setInputPw] = useState("");
   const dispatch = useDispatch();
+  const navigate = useNavigate ();
+
+  const isLoggedin = sessionStorage.getItem('isLoggedin')
+  useEffect(() => {
+    if (isLoggedin === 'true') {
+      navigate(`/room?sessionId=${sessionId}`)
+    }
+  }, [isLoggedin, navigate, sessionId]);
 
   const handleInputId = (e) => {
     setInputId(e.target.value);
@@ -57,12 +65,15 @@ function Waiting() {
     dispatch(login(inputId, inputPw));
   };
 
+  const onClickJoin = (e) => {
+    navigate(`/room?sessionId=${sessionId}`);
+  }
 
   return(
     <Wrapper>
       <Container>
         <Content>
-          <img src={logo} alt="logo" style={{ width: "300px" }}/>
+          <Link to="/"><img src={logo} alt="logo" style={{ width: "240px", marginBottom: "15px"}}/></Link>
           <Form.Group className="mb-3" controlId="formBasicEmail" style={{ width: "100%" }}>
             <Form.Label>아이디</Form.Label>
             <Form.Control
@@ -83,9 +94,10 @@ function Waiting() {
           <Button type="submit" onClick={onClickLogin} style={{ width: "100%", backgroundColor: "#fff9be", color: "#000", borderColor: "#fff9be" }}>
             로그인
           </Button>
-          <Button type="submit" variant="outline-warning" style={{ width: "100%", marginTop: "10px" }}>
+          <Button type="submit" onClick={onClickJoin} variant="outline-secondary" style={{ width: "100%", margin: "10px" }}>
             손님으로 참여하기
           </Button>
+          <NavLink to="/signup"><span>회원이 아니신가요? <span style={{color: "#FFE600"}}>회원가입</span></span></NavLink>
         </Content>
       </Container>
     </Wrapper>
