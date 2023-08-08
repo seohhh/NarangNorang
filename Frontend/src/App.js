@@ -36,7 +36,7 @@ function App() {
   const shouldShowBackground = isMainPage && !isWaitingPage;
 
   return (
-    <Wrapper isMain={isMainPage}
+    <Wrapper ismain={{isMainPage}}
       style={{ backgroundImage: shouldShowBackground ? `url(${bgMain})` : (isWaitingPage ? 'none' : `url(${bgImg})`) }}>
       {isNavVisible && <Nav />}
       <div>
