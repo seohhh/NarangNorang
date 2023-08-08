@@ -2,11 +2,13 @@ package com.narang_norang.NarangNorang.photo.domain.dto.response;
 
 import com.narang_norang.NarangNorang.photo.domain.entity.Photo;
 
+import java.util.Date;
+
 public class UpdatePhotoContentResponse {
     private Long photoSeq;
     private String photoUrl;
     private String photoContent;
-    private String photoDate;
+    private Date photoDate;
 
     public UpdatePhotoContentResponse(Photo photo) {
         this.photoSeq = photo.getPhotoSeq();
