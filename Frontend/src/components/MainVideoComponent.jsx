@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
-import userpose from "../utils/userpose"; // 사용자 포즈 탐지 유틸리티
+import userpose from "../utils/userpose";
+import POSE from "../utils/POSE";
 import "./UserVideo.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
 
