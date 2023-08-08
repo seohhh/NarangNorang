@@ -21,7 +21,7 @@ fe-build:   # JOB 이름
   artifacts:
     # 보관이 이루어질 경로 설정
     paths:
-      - Frontend
+      - Frontend/node_modules
     # 유효기간 설정
     expire_in: 1 days
   # JOB 수행 조건 설정
