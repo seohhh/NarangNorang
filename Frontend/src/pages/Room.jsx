@@ -23,6 +23,7 @@ class Room extends Component {
       OV: undefined,
       videoOn: undefined,
       audioOn: undefined,
+      join: false,
     };
 
     this.joinSession = this.joinSession.bind(this);
@@ -142,8 +143,10 @@ class Room extends Component {
     e.preventDefault();
     var mySession = this.state.session;
     var publisher = this.state.publisher;
-
     // --- 6) Publish your stream ---
+    this.setState({
+      join: true,
+    })
 
     mySession.publish(publisher);
     // Obtain the current video device in use
@@ -432,18 +435,24 @@ class Room extends Component {
     const sessionIdFromUrl = new URLSearchParams(window.location.search).get(
       "sessionId"
     );
+    const join = this.state.join;
+    
     return (
       <div className="container">
-        <Game1/>
-        <ToolbarComponent
-          audioOn={this.state.audioOn}
-          videoOn={this.state.videoOn}
-          camStatusChanged={this.camStatusChanged}
-          micStatusChanged={this.micStatusChanged}
-          leaveSession={this.leaveSession}
-          publisher={this.state.publisher}
-        />
-        {sessionIdFromUrl != null ? (
+        {sessionIdFromUrl === null || join === true ? (
+        <div>
+          <Game1 />
+          <ToolbarComponent
+            audioOn={this.state.audioOn}
+            videoOn={this.state.videoOn}
+            camStatusChanged={this.camStatusChanged}
+            micStatusChanged={this.micStatusChanged}
+            leaveSession={this.leaveSession}
+            publisher={this.state.publisher}
+          />
+        </div>
+      ) : null}
+        {(sessionIdFromUrl != null) && (join === false) ? (
           <div id="join">
             <div id="img-div">
               <img
