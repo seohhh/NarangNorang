@@ -2,6 +2,7 @@ import React from "react";
 // import { useLocation } from 'react-router-dom';
 import PhotoComponent from "../components/PhotoComponent";
 import styled from "styled-components";
+import Footer from "../components/Footer";
 
 const Wrapper = styled.div`
   display: flex;
@@ -25,14 +26,17 @@ function Album() {
   // console.log(location)
 
   return (
-    <Wrapper>
-      <h1>ALBUM</h1>
-      <Container>
-        {ImgLst.map((imgSrc, index) => (
-          <PhotoComponent key={index} imgSrc={imgSrc} />
-        ))}
-      </Container>
-    </Wrapper>
+    <>
+      <Wrapper>
+        <h1>ALBUM</h1>
+        <Container>
+          {ImgLst.map((imgSrc, index) => (
+            <PhotoComponent key={index} imgSrc={imgSrc} />
+          ))}
+        </Container>
+      </Wrapper>
+      <Footer />
+    </>
   );
 }
 
