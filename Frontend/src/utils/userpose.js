@@ -22,10 +22,9 @@ const CONNECTION = [
 ];
 // const COLORS = ["White", "Gray", "Blue", "Red"];
 const estimationConfig = {
-  // maxPoses: 4,
   // flipHorizontal: false, // 좌우 반전
 
-  maxPoses: 4,
+  maxPoses: 3,
   flipHorizontal: false,
   scoreThreshold: 0.5,
   nmsRadius: 100,
@@ -98,7 +97,8 @@ const renderResult = async () => {
     poses = await detector.estimatePoses(video, estimationConfig);
   }
 
-  ctx.drawImage(video, 0, 0, video.width, video.height);
+  // ctx.drawImage(video, 0, 0, video.width, video.height);
+  ctx.clearRect(0, 0, video.width, video.height);
 
   for (var i = 0; i < poses.length; i++) {
     const pose = poses[i];
@@ -116,7 +116,7 @@ const drawPose = (ctx, pose, color) => {
 };
 
 const drawKeypoints = (ctx, keypoints, color) => {
-  ctx.fillStyle = "Black";
+  ctx.fillStyle = "White";
   ctx.strokeStyle = color;
   ctx.lineWidth = 4;
 
@@ -156,5 +156,50 @@ const drawSkeleton = (ctx, keypoints, poseId, color) => {
   });
 };
 
-const exportObj = { loadDetector, detectPose, startRender, stopRender };
+const computeScore = (keypoints1, keypoints2) => {
+  console.log("keypoints", keypoints1, keypoints2);
+  const normPoints1 = normVector(keypoints1);
+  console.log("norm1", normPoints1);
+  const normPoints2 = normVector(keypoints2);
+  console.log("norm2", normPoints2);
+
+  let scoreSum = 0;
+  let similarity = 0;
+  for (var i = 0; i < normPoints2.length; i++) {
+    scoreSum += normPoints2[i].score;
+
+    similarity +=
+      normPoints2[i].score *
+      (normPoints1[i].x * normPoints2[i].x +
+        normPoints1[i].y * normPoints2[i].y);
+  }
+
+  return similarity / scoreSum;
+};
+
+const normVector = (keypoints) => {
+  let normPoints = [];
+
+  for (const con of CONNECTION) {
+    const mod = Math.sqrt(
+      Math.pow(keypoints[con[0]].x - keypoints[con[1]].x, 2) +
+        Math.pow(keypoints[con[0]].y - keypoints[con[1]].y, 2)
+    );
+    normPoints.push({
+      x: (keypoints[con[0]].x - keypoints[con[1]].x) / mod,
+      y: (keypoints[con[0]].y - keypoints[con[1]].y) / mod,
+      score: keypoints[con[0]].score * keypoints[con[1]].score,
+    });
+  }
+
+  return normPoints;
+};
+
+const exportObj = {
+  loadDetector,
+  detectPose,
+  startRender,
+  stopRender,
+  computeScore,
+};
 export default exportObj;

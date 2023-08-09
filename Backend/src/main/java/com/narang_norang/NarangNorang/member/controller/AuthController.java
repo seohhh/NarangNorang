@@ -47,10 +47,10 @@ public class AuthController {
         Member member = memberService.getMemberByMemberId(memberId);
 
         if (passwordEncoder.matches(password, member.getMemberPassword())) {
-            return ResponseEntity.ok(new LoginMemberResponse(200, "Success", JwtTokenUtil.getToken(memberId)));
+            return ResponseEntity.ok(new LoginMemberResponse(200, "Success", JwtTokenUtil.getToken(memberId), member.getMemberNickname()));
         }
 
-        return ResponseEntity.status(401).body(new LoginMemberResponse(401, "Invalid Password", null));
+        return ResponseEntity.status(401).body(new LoginMemberResponse(401, "Invalid Password", null, null));
     }
 
 

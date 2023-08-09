@@ -13,10 +13,12 @@ public class LoginMemberResponse {
     private Integer statusCode;
     private String message;
     private String accessToken;
+    private String memberNickname;
 
-    public LoginMemberResponse(Integer statusCode, String message, String accessToken) {
+    public LoginMemberResponse(Integer statusCode, String message, String accessToken, String memberNickname) {
         this.statusCode = statusCode;
         this.message = message;
         this.accessToken = accessToken;
+        this.memberNickname = memberNickname;
     }
 }
