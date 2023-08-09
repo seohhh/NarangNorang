@@ -7,7 +7,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.Date;
+import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
@@ -22,22 +22,16 @@ public class Photo {
     private Long photoSeq;
     @ManyToOne(targetEntity = Member.class)
     @JoinColumn(name="member_seq")
-    private Long memberSeq;
+    private Member member;
+    private String photoFilename;
     private String photoUrl;
     private String photoContent;
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "photo_date")
-    private Date photoDate;
+    private String photoDate;
 
-    public void update(String photoContent) {
+    public void updateContent(String photoContent) {
         if (!Objects.isNull(photoContent)) {
             this.photoContent = photoContent;
         }
-    }
-
-    @PrePersist
-    public void prePersist() {
-        photoDate = new Date();
     }
 
 }

@@ -14,4 +14,6 @@ public interface MemberService {
     UpdateMemberResponse updateMember(String memberId, UpdateMemberRequest updateMemberRequest);
 
     boolean deleteMember(String memberId);
+
+    Member getMemberByMemberSeq(Long memberSeq);
 }

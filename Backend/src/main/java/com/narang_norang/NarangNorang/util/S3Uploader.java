@@ -1,5 +1,6 @@
 package com.narang_norang.NarangNorang.util;
 
+import com.amazonaws.SdkClientException;
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
@@ -21,23 +22,34 @@ public class S3Uploader {
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public String uploadFiles(MultipartFile multipartFile, String dirName) throws IOException {
+    public String[] uploadFiles(MultipartFile multipartFile, String dirName) throws IOException {
         File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
         return upload(uploadFile, dirName);
     }
 
-    public String upload(File uploadFile, String filePath) {
-        String fileName = filePath + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
-        String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드
+    public String[] upload(File uploadFile, String filePath) {
+        // texts[0] = fileName , texts[1] = uploadImageUrl
+        String[] texts = new String[2];
+        texts[0] = filePath + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
+        texts[1] = putS3(uploadFile, texts[0]); // s3로 업로드
         removeNewFile(uploadFile);
-        return uploadImageUrl;
+        return texts;
     }
 
     // S3로 업로드
     private String putS3(File uploadFile, String fileName) {
         amazonS3Client.putObject(new PutObjectRequest(bucket, fileName, uploadFile).withCannedAcl(CannedAccessControlList.PublicRead));
         return amazonS3Client.getUrl(bucket, fileName).toString();
+    }
+
+    // S3의 이미지 삭제
+    public void deleteFile(String fileName) throws IOException {
+        try {
+            amazonS3Client.deleteObject(bucket, fileName);
+        } catch (SdkClientException e) {
+            throw new IOException("Error deleteing file from S3", e);
+        }
     }
 
     // 로컬에 저장된 이미지 지우기
