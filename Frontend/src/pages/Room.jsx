@@ -15,7 +15,7 @@ class Room extends Component {
 
     // 값이 변경될 때 html에 재렌더링 해야하는 값을 할당
     this.state = {
-      mySessionId: "SessionA",
+      mySessionId: "",
       myUserName: "Participant" + Math.floor(Math.random() * 100),
       session: undefined,
       mainStreamManager: undefined, // 크게 띄울 화면
@@ -41,9 +41,12 @@ class Room extends Component {
   componentDidMount() {
     window.addEventListener("beforeunload", this.onbeforeunload);
 
-    const sessionIdFromUrl = new URLSearchParams(window.location.search).get(
-      "sessionId"
-    );
+    const urlParams = new URLSearchParams(window.location.search);
+    const sessionIdFromUrl = urlParams.get("sessionId");
+    const nicknameFromUrl = urlParams.get("nickname");
+
+    console.log(sessionIdFromUrl, "세션아이디 체크")
+    console.log(nicknameFromUrl, "닉네임 체크")
 
     // url로 들어오지 않고 방만들기 버튼을 클릭한 경우 -> host
     if (!sessionIdFromUrl) {
@@ -452,7 +455,7 @@ class Room extends Component {
             publisher={this.state.publisher}
           />
         </div>
-      ) : null}
+        ) : null}
         {(sessionIdFromUrl != null) && (join === false) ? (
           <div id="join">
             <div id="img-div">
