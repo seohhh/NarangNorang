@@ -1,5 +1,6 @@
 package com.narang_norang.NarangNorang.photo.domain.entity;
 
+import com.narang_norang.NarangNorang.member.domain.entity.Member;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,16 +17,16 @@ import java.util.Objects;
 @Getter
 public class Photo {
     @Id
-    @Column(name = "album_seq")
+    @Column(name = "photo_seq")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long photoSeq;
-    @ManyToOne
-    @JoinColumn(name="memberSeq")
+    @ManyToOne(targetEntity = Member.class)
+    @JoinColumn(name="member_seq")
     private Long memberSeq;
     private String photoUrl;
     private String photoContent;
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "created_at")
+    @Column(name = "photo_date")
     private Date photoDate;
 
     public void update(String photoContent) {

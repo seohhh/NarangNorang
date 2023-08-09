@@ -11,7 +11,6 @@ import java.util.Optional;
 @Repository
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
-    @Query(value ="SELECT p FROM Photo p JOIN FETCH Member m WHERE m.member_id = :memberId")
     List<Photo> findByMemberSeq(Long memberSeq);
 
     Optional<Photo> findByPhotoSeq(Long photoSeq);
