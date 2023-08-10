@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import userpose from "../utils/userpose";
 // import POSE from "../utils/POSE";
-import "./UserVideo.css";
+import "./MainVideoComponent.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
 
 const MainVideoComponent = (props) => {

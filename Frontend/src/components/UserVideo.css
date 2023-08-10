@@ -1,31 +1,4 @@
-.streamcomponent {
-  position: relative; /* 비디오와 캔버스의 위치 기준점 */
-}
-
-video {
-    /* top: 0;
-    left: 0; */
-    width: 100%;
-    height: 100%;
-    /* float: left; */
-    height: 480px; /* 높이 지정 */
-    cursor: pointer;
-    z-index: 1; /* 쌓임 순서 조정 */
-    object-fit: fill;
-}
-
-canvas {
-    position: absolute; /* 절대 위치 */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: auto;
-    height: 480px; /* 높이 지정 */
-    z-index: 2; /* 쌓임 순서 조정 */
-
-}
-.streamcomponent div {
-    position: absolute;
+.streamcomponent{
     background: #f8f8f8;
     padding-left: 5px;
     padding-right: 5px;
@@ -34,6 +7,7 @@ canvas {
     border-bottom-right-radius: 4px;
     z-index: 2;
 }
+
 p{
     margin: 0;
 }
