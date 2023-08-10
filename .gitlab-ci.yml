@@ -171,6 +171,7 @@ be-deploy:   # JOB 이름
     - docker login -u $DOCKER_HUB_ID --password $DOCKER_HUB_PW   # Docker Hub에 로그인
   # 실행될 script 설정
   script:
+    - cd /home/ubuntu
     - docker rm -f back || true   # 기존에 존재하던 Container 삭제
     - docker rmi $BE_IMAGE_NAME || true   # 기존에 존재하던 이미지 삭제
     - docker pull $BE_IMAGE_NAME   # DockerHub에서 이미지 가져오기
