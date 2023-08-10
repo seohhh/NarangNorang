@@ -57,22 +57,19 @@ function CustomRoom() {
 
   // const myUserNameFromUrl = urlParams.get("nickname");
 
-  const hostNickname = useSelector((state) => state.login.user.memberNickname)
+  const hostNickname = useSelector((state) => state.login.userNickname)
 
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
-
-    
-    console.log("hostname : " + JSON.stringify(hostNickname))
     // url 확인
     joinSession();
 
     // 나가기
     return () => {
-      console.log("나간다", window);
       window.removeEventListener("beforeunload", onbeforeunload);
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onbeforeunload = (event) => {
