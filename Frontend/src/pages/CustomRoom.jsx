@@ -18,26 +18,25 @@ import videoOffIcon from "../assets/icon/videoOff.png";
 import audioOnIcon from "../assets/icon/audioOn.png";
 import audioOffIcon from "../assets/icon/audioOff.png";
 
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@mui/material/DialogContent';
-import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4"
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
 
 
 const APPLICATION_SERVER_URL = "http://3.36.126.169:8080/";
 
 const IntroMp4 = styled.video`
-  width:100%; 
-  height:100%;
+  width: 100%;
+  height: 100%;
   position: absolute;
   top: 0;
   left: 0;
 `;
 
 const IntroDialogContent = styled(DialogContent)`
-  height:700px;
-`
-
+  height: 700px;
+`;
 
 function CustomRoom() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -71,38 +70,36 @@ function CustomRoom() {
 
     // 나가기
     return () => {
-      console.log("나간다", window)
+      console.log("나간다", window);
       window.removeEventListener("beforeunload", onbeforeunload);
-    } 
+    };
   }, []);
-
 
   const onbeforeunload = (event) => {
     leaveSession();
-  }
+  };
 
   const joinSession = async () => {
     const OV = new OpenVidu();
 
-    const mySession = OV.initSession()
-    setSession(mySession)
+    const mySession = OV.initSession();
+    setSession(mySession);
 
-    mySession.on('streamCreated', (event) => {
+    mySession.on("streamCreated", (event) => {
       const subscriber = mySession.subscribe(event.stream, undefined);
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
 
-    mySession.on('streamDestroyed', (event) => {
+    mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager);
     });
 
-    mySession.on('exception', (exception) => {
+    mySession.on("exception", (exception) => {
       console.warn(exception);
     });
-    
 
-    mySession.on('signal:intro', (event) => {
-      setGameStart(true)
+    mySession.on("signal:intro", (event) => {
+      setGameStart(true);
 
       setTimeout(() => {
         closeIntroModal()
@@ -128,31 +125,34 @@ function CustomRoom() {
         videoSource: undefined,
         publishAudio: true,
         publishVideo: true,
-        resolution: '640x480',
+        resolution: "640x480",
         frameRate: 30,
-        insertMode: 'APPEND',
+        insertMode: "APPEND",
         mirror: true,
       });
       if (sessionIdFromUrl === null) {
         mySession.publish(newpublisher);
-        setJoin(true)
+        setJoin(true);
       }
 
-      setVideoOn(false)
-      setAudioOn(false)
-      setMainStreamManager(newpublisher)
-      setPublisher(newpublisher)
-      console.log(newpublisher, "newpublisher")
-
+      setVideoOn(false);
+      setAudioOn(false);
+      setMainStreamManager(newpublisher);
+      setPublisher(newpublisher);
+      console.log(newpublisher, "newpublisher");
     } catch (error) {
-      console.log('There was an error connecting to the session:', error.code, error.message);
+      console.log(
+        "There was an error connecting to the session:",
+        error.code,
+        error.message
+      );
     }
-  }
+  };
 
   const guestJoinSession = (e) => {
     e.preventDefault();
 
-    session.publish(publisher)
+    session.publish(publisher);
 
     setJoin(true);
     // // Obtain the current video device in use
@@ -179,10 +179,10 @@ function CustomRoom() {
     //   .catch((error) => {
     //     console.error("에러 발생:", error);
     //   });
-  }
+  };
 
-  const getToken = async(mySessionId) => {
-    console.log(mySessionId, "마이 세션아이디")
+  const getToken = async (mySessionId) => {
+    console.log(mySessionId, "마이 세션아이디");
     if (mySessionId === null) {
       const createSessionId = await createSession(mySessionId);
       return await createToken(createSessionId);
@@ -190,7 +190,7 @@ function CustomRoom() {
     return await createToken(mySessionId);
   };
 
-  const createSession = async(sessionId) => {
+  const createSession = async (sessionId) => {
     const response = await axios.post(
       APPLICATION_SERVER_URL + "api/sessions",
       { customSessionId: sessionId },
@@ -204,7 +204,7 @@ function CustomRoom() {
     return response.data; // The sessionId
   };
 
-  const createToken = async(sessionId) => {
+  const createToken = async (sessionId) => {
     const response = await axios.post(
       APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
       {},
@@ -215,7 +215,7 @@ function CustomRoom() {
         },
       }
     );
-    console.log(response.data, "크리에이트토큰")
+    console.log(response.data, "크리에이트토큰");
     return response.data; // The token
   };
 
@@ -233,31 +233,29 @@ function CustomRoom() {
     setMainStreamManager(undefined);
     setPublisher(undefined);
 
-    navigate("/")
-  }
+    navigate("/");
+  };
 
   const camStatusChanged = () => {
-
     if (videoOn) {
-      setVideoOn(false)
+      setVideoOn(false);
     } else {
-      setVideoOn(true)
+      setVideoOn(true);
     }
     // setVideoOn(!videoOn);
-    
+
     if (publisher) {
       publisher.publishVideo(videoOn);
     }
-  }
+  };
 
   const micStatusChanged = () => {
-
     setAudioOn(!audioOn);
 
     if (publisher) {
       publisher.publishAudio(audioOn);
     }
-  }
+  };
 
   const deleteSubscriber = (streamManager) => {
     let removedSubscribers = subscribers;
@@ -266,32 +264,32 @@ function CustomRoom() {
       removedSubscribers.splice(index, 1);
       setSubscribers(removedSubscribers);
     }
-  }
+  };
 
   // main 화면 변경
   const handleMainVideoStream = (stream) => {
     if (mainStreamManager !== stream) {
       setMainStreamManager(stream);
     }
-  }
-
+  };
 
   const displayEvery = () => {
-    session.signal({
-      data: "인트로 영상 버튼",
-      to: [],
-      type: 'intro'
-    })
-      .then(() => { })
-      .catch(() => { })
-  }
+    session
+      .signal({
+        data: "인트로 영상 버튼",
+        to: [],
+        type: "intro",
+      })
+      .then(() => {})
+      .catch(() => {});
+  };
 
   const closeIntroModal = () => {
-    setGameStart(false)
-  }
+    setGameStart(false);
+  };
 
   return (
-    <div>
+    <div style={{display: "flex", flexFlow: "column-reverse wrap", alignContent: "center"}}>
       {sessionIdFromUrl === null || join === true ? (
         <div>
           <Game1 />
@@ -317,11 +315,10 @@ function CustomRoom() {
         <IntroDialogContent>
           <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
         </IntroDialogContent>
-
       </Dialog>
 
       {/* 초대링크로 접속한 경우: 입장 대기실 */}
-      {(sessionIdFromUrl != null) && (join === false) ? (
+      {sessionIdFromUrl != null && join === false ? (
         <div id="wrapper">
           <div id="container">
             <h3 style={{ marginBottom: "20px" }}> 입장 대기실 </h3>
@@ -347,7 +344,7 @@ function CustomRoom() {
               </div>
               <div style={{ width: "40vw" }} className="center">
                 <div className="center">
-                  <p style={{ fontSize: "30px"}}>참여할 준비가 되셨나요?</p>
+                  <p style={{ fontSize: "30px" }}>참여할 준비가 되셨나요?</p>
                   <div id="button">
                     <input
                       type="button"
@@ -384,37 +381,36 @@ function CustomRoom() {
         </div>
         ) : null } */}
 
-      {(mainStreamManager !== undefined) && (join === true) ? (
+      {mainStreamManager !== undefined && join === true ? (
         <div id="main-video" className="col-md-6">
-          <MainVideoComponent
-            streamManager={mainStreamManager}
-          />
+          <MainVideoComponent streamManager={mainStreamManager} />
         </div>
       ) : null}
       <div id="video-container" className="col-md-6">
-        {/* {this.state.publisher !== undefined ? (
-                          <div className="stream-container col-md-6 col-xs-6" onClick={() => this.handleMainVideoStream(this.state.publisher)}>
-                              <UserVideoComponent
-                                  streamManager={this.state.publisher} />
-                          </div>
-                      ) : null} */}
-      
-      {sessionIdFromUrl === null || join === true ? (
-        <div>
-          {subscribers.map((sub, i) => (
-            <div
-              key={sub.id}
-              className="stream-container col-md-6 col-xs-6"
-              onClick={() => handleMainVideoStream(sub)}
-            >
-              <span>{sub.id}</span>
-              <UserVideoComponent streamManager={sub} />
-            </div>
-          ))}
-        </div>
-      ) : null}
+        {publisher !== undefined ? (
+          <div
+            className="stream-container"
+            onClick={() => this.handleMainVideoStream(publisher)}
+          >
+            <UserVideoComponent streamManager={publisher} />
+          </div>
+        ) : null}
 
-      </div>          
+        {sessionIdFromUrl === null || join === true ? (
+          <div style={{display: "flex", flexDirection: "row",}}>
+            {subscribers.map((sub, i) => (
+              <div
+                key={sub.id}
+                className="stream-container"
+                onClick={() => handleMainVideoStream(sub)}
+              >
+                <span>{sub.id}</span>
+                <UserVideoComponent streamManager={sub} />
+              </div>
+            ))}
+          </div>
+        ) : null}
+      </div>
     </div>
   );
 }
