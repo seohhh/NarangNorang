@@ -174,7 +174,7 @@ be-deploy:   # JOB 이름
     - docker rm -f back || true   # 기존에 존재하던 Container 삭제
     - docker rmi $BE_IMAGE_NAME || true   # 기존에 존재하던 이미지 삭제
     - docker pull $BE_IMAGE_NAME   # DockerHub에서 이미지 가져오기
-    - docker run --env-file /home/ubuntu/my_env.list --name back -p 8080:8080 -d $BE_IMAGE_NAME   # Container 생성 및 실행
+    - docker run --env-file /Backend/my_env.list --name back -p 8080:8080 -d $BE_IMAGE_NAME   # Container 생성 및 실행
   # script가 실행된 후 수행 될 script
   after_script:
     - docker logout   # DockerHub 로그아웃
