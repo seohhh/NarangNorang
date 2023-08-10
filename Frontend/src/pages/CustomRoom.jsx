@@ -366,38 +366,23 @@ function CustomRoom() {
         </div>
       ) : null}
 
-      {/* {session !== undefined ? (
-        <div id="session">
-          <div id="session-header">
-            <h1 id="session-title">{sessionId}</h1>
-            <input
-              className="btn btn-large btn-danger"
-              type="button"
-              id="buttonLeaveSession"
-              onClick={leaveSession}
-              value="leave"
-            />
-          </div>
-        </div>
-        ) : null } */}
-
       {mainStreamManager !== undefined && join === true ? (
         <div id="main-video" className="col-md-6">
           <MainVideoComponent streamManager={mainStreamManager} />
         </div>
       ) : null}
       <div id="video-container" className="col-md-6">
-        {publisher !== undefined ? (
+        { join === true && publisher !== undefined ? (
           <div
             className="stream-container"
-            onClick={() => this.handleMainVideoStream(publisher)}
+            onClick={() => handleMainVideoStream(publisher)}
           >
             <UserVideoComponent streamManager={publisher} />
           </div>
         ) : null}
 
-        {sessionIdFromUrl === null && join === true ? (
-          <div style={{display: "flex", flexDirection: "row",}}>
+        { join === true ? (
+          <div style={{ display: "flex", flexDirection: "row"}}>
             {subscribers.map((sub, i) => (
               <div
                 key={sub.id}
