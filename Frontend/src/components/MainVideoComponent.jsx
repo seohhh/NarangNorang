@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import userpose from "../utils/userpose";
 // import POSE from "../utils/POSE";
+import html2canvas from "html2canvas";
 import "./MainVideoComponent.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
+import axios from "axios";
+
+const BASE_URL = 'https://i9c208.p.ssafy.io/api/v1'
 
 const MainVideoComponent = (props) => {
   const videoRef = useRef(); // 비디오 요소 참조 생성
@@ -85,6 +89,44 @@ const handleDetectClick = async () => {
     };
   });
 
+  const handleCapture = async () => {
+    if (!videoRef.current) return;
+
+    try {
+      const video = videoRef.current;
+      const canvas = await html2canvas(video, { scale: 2 });
+      canvas.toBlob((blob) => {
+        if (blob !== null) {
+
+          let file = new File([blob], "캡쳐.png", { type: blob.type })
+
+          const header = {header: {"Content-Type": "multipart/form-data"}}
+          const data = {
+            images: file,
+            roomCode: props.streamManager.stream.session.sessionId,
+            subscriberId: 123
+          }
+
+          axios.post(BASE_URL + '/album/capture', {data}, {header})
+          .then((response) => {
+            console.log(response)
+            console.log(file)
+          })
+          .catch((error) => {
+            console.log(error)
+            console.log(file)
+          })
+          console.log(props.streamManager.stream.session.sessionId)
+        }
+      });
+    } catch (error) {
+      console.error("Error converting div to image:", error);
+    }
+  };
+
+
+  
+
   // 컴포넌트 렌더링
   return (
     <div>
@@ -96,6 +138,7 @@ const handleDetectClick = async () => {
             <span style={{position:"absolute", top:"0px", left:"0"}}>{JSON.parse(props.streamManager.stream.connection.data).clientData}</span>
             <button onClick={handleSkeletonClick}>엑스레이 모드</button> {/* 스켈레톤 표시 버튼 */}
             <button onClick={handleDetectClick}>detectPose</button> {/* 포즈 감지 버튼 */}
+            <button onClick={handleCapture}>지금 이 순간!</button>
           </div>
         </div>
       ) : null}
