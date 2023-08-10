@@ -91,7 +91,7 @@ const handleDetectClick = async () => {
       {props.streamManager !== undefined ? (
         <div className="streamcomponent">
           <canvas ref={canvasRef} width={videoDimensions.width} height={videoDimensions.height}></canvas>
-          <video style={{position:"absolute", zIndex:0}} autoPlay={true} ref={videoRef} width={videoDimensions.width} height={videoDimensions.height} />
+          <video autoPlay={true} ref={videoRef} width={videoDimensions.width} height={videoDimensions.height} />
           <div>
             <span style={{position:"absolute", top:"0px", left:"0"}}>{JSON.parse(props.streamManager.stream.connection.data).clientData}</span>
             <button onClick={handleSkeletonClick}>엑스레이 모드</button> {/* 스켈레톤 표시 버튼 */}
