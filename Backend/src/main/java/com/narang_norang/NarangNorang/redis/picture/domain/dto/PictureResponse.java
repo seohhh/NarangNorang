@@ -4,6 +4,7 @@ import com.narang_norang.NarangNorang.redis.picture.domain.entity.Picture;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDateTime;
 
@@ -16,17 +17,26 @@ public class PictureResponse {
 
     private String roomCode;
 
-    private String nickname;
+    private Long subscriberId;
 
-    private String pictureUrl;
+    private String pictureName;
 
-    private LocalDateTime time;
+    private String pictureContentType;
+
+    private byte[] pictureData;
+
+    private Long pictureSize;
+
+    private LocalDateTime pictureTime;
 
     public PictureResponse(Picture picture) {
         this.pictureSeq = picture.getPictureSeq();
         this.roomCode = picture.getRoomCode();
-        this.nickname = picture.getNickname();
-        this.pictureUrl = picture.getPictureUrl();
-        this.time = picture.getTime();
+        this.subscriberId = picture.getSubscriberId();
+        this.pictureName = picture.getPictureName();
+        this.pictureContentType = picture.getPictureContentType();
+        this.pictureData = picture.getPictureData();
+        this.pictureSize = picture.getPictureSize();
+        this.pictureTime = picture.getPictureTime();
     }
 }

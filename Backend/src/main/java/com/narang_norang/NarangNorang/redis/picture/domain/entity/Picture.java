@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,10 +24,16 @@ public class Picture {
     private String roomCode;
 
     @Indexed
-    private String nickname;
+    private Long subscriberId;
 
-    private String pictureUrl;
+    private String pictureName;
 
-    private LocalDateTime time;
+    private String pictureContentType;
+
+    private byte[] pictureData;
+
+    private Long pictureSize;
+
+    private LocalDateTime pictureTime;
 
 }
