@@ -44,3 +44,7 @@
   bottom: 20px;
   left: 35%;
 }
+
+#toolbar-container {
+  position: fixed;
+}

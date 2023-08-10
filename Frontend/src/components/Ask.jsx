@@ -1,6 +1,6 @@
 import { useState, React } from "react";
 import styled from "styled-components";
-import ask from "../assets/ask.svg";
+import askIcon from "../assets/icon/ask.png";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 
 const Askbutton = styled.div`
@@ -29,7 +29,7 @@ function Ask() {
     <>
       <Askbutton onClick={handleShow}>
         <span style={{ paddingRight: "5px" }}>문의하기</span>
-        <AskImg src={ask} alt="askImg" />
+        <AskImg src={askIcon} alt="ask" />
       </Askbutton>
       <Modal
         size="lg"
