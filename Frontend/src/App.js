@@ -13,9 +13,9 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Album from './pages/Album';
 import Mypage from './pages/Mypage';
-import Room from './pages/Room';
 import Contents from './components/ContentsComponent';
 import Waiting from './pages/Waiting';
+import CustomRoom from "./pages/CustomRoom";
 
 const Wrapper = styled.div`
   background-image: url(${bgImg});
@@ -29,15 +29,15 @@ const Wrapper = styled.div`
 function App() {
   const location = useLocation();
   const isNavVisible = !(location.pathname === '/login' || location.pathname === '/signup' ||
-                          location.pathname.startsWith('/waiting/'));
+                          location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room'));
   const isMainPage = location.pathname === '/';
   const isLoggedIn = useSelector(state => state.login.isLoggedin);
-  const isWaitingPage = location.pathname.startsWith('/waiting/');
-  const shouldShowBackground = isMainPage && !isWaitingPage;
+  const noBackground = (location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room'));
+  const shouldShowBackground = isMainPage && !noBackground;
 
   return (
     <Wrapper ismain={{isMainPage}}
-      style={{ backgroundImage: shouldShowBackground ? `url(${bgMain})` : (isWaitingPage ? 'none' : `url(${bgImg})`) }}>
+      style={{ backgroundImage: shouldShowBackground ? `url(${bgMain})` : (noBackground ? 'none' : `url(${bgImg})`) }}>
       {isNavVisible && <Nav />}
       <div>
         <Routes>
@@ -46,7 +46,7 @@ function App() {
           <Route path="/album/:userId" element={isLoggedIn ? <Album /> : <Navigate to="/login" />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/room" element={<Room />} />
+          <Route path="/room" element={<CustomRoom />} />
           <Route path="/mypage/:userId" element={<Mypage />} />
           <Route path="/waiting/:sessionId" element={<Waiting />} />
           {/* <Route path="/test" element={<VideoRoom />} /> */}
