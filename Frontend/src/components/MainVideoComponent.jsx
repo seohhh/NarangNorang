@@ -65,6 +65,8 @@ const handleDetectClick = async () => {
       props.streamManager.addVideoElement(videoRef.current);
     }
 
+    console.log(props)
+
     // 메타데이터 로드 이벤트 리스너 추가 (비디오 크기를 가져오기 위해)
     videoRef.current.addEventListener("loadedmetadata", handleVideoMetadataLoaded);
 
@@ -89,11 +91,11 @@ const handleDetectClick = async () => {
       {props.streamManager !== undefined ? (
         <div className="streamcomponent">
           <canvas ref={canvasRef} width={videoDimensions.width} height={videoDimensions.height}></canvas>
-          <video autoPlay={true} ref={videoRef} width={videoDimensions.width} height={videoDimensions.height} />
+          <video style={{position:"absolute", zIndex:0}} autoPlay={true} ref={videoRef} width={videoDimensions.width} height={videoDimensions.height} />
           <div>
+            <span style={{position:"absolute", top:"0px", left:"0"}}>{JSON.parse(props.streamManager.stream.connection.data).clientData}</span>
             <button onClick={handleSkeletonClick}>엑스레이 모드</button> {/* 스켈레톤 표시 버튼 */}
             <button onClick={handleDetectClick}>detectPose</button> {/* 포즈 감지 버튼 */}
-            <p>{JSON.parse(props.streamManager.stream.connection.data).clientData}</p>
           </div>
         </div>
       ) : null}

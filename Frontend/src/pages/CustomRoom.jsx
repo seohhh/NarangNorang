@@ -2,7 +2,8 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+import styled from 'styled-components';
+import { useSelector } from "react-redux";
 
 // component
 import UserVideoComponent from "../components/UserVideoComponent";
@@ -12,18 +13,16 @@ import Game1 from "../components/Game1";
 import "./CustomRoom.css";
 
 // icon
-import videoOn from "../assets/icon/videoOn.png";
-import videoOff from "../assets/icon/videoOff.png";
-import audioOn from "../assets/icon/audioOn.png";
-import audioOff from "../assets/icon/audioOff.png";
+import videoOnIcon from "../assets/icon/videoOn.png";
+import videoOffIcon from "../assets/icon/videoOff.png";
+import audioOnIcon from "../assets/icon/audioOn.png";
+import audioOffIcon from "../assets/icon/audioOff.png";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
-// import { div } from "@tensorflow/tfjs-core";
-// import { div } from "@tensorflow/tfjs-core";
-// import { StaticRegexReplace } from "@tensorflow/tfjs-core";
+
 
 const APPLICATION_SERVER_URL = "http://3.36.126.169:8080/";
 
@@ -42,30 +41,31 @@ const IntroDialogContent = styled(DialogContent)`
 function CustomRoom() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionIdFromUrl = urlParams.get("sessionId");
-  const navigate = useNavigate();
+  const nicknameFromUrl = urlParams.get("nickname");
+  const navigate = useNavigate()
 
-  const [sessionId, setSessionId] = useState(sessionIdFromUrl);
-  const [myUserName, setMyUserName] = useState("");
-  const [session, setSession] = useState(undefined);
-  const [mainStreamManager, setMainStreamManager] = useState(undefined);
-  const [publisher, setPublisher] = useState(undefined);
-  const [subscribers, setSubscribers] = useState([]);
-  const [videoOn, setVideoOn] = useState(undefined);
-  const [audioOn, setAudioOn] = useState(undefined);
-  const [join, setJoin] = useState(false);
-  const [gameStart, setGameStart] = useState(false);
+  const [sessionId, setSessionId] = useState(sessionIdFromUrl)
+  const [myUserName, setMyUserName] = useState(nicknameFromUrl)
+  const [session, setSession] = useState(undefined)
+  const [mainStreamManager, setMainStreamManager] = useState(undefined)
+  const [publisher, setPublisher] = useState(undefined)
+  const [subscribers, setSubscribers] = useState([])
+  const [videoOn, setVideoOn] = useState(undefined)
+  const [audioOn, setAudioOn] = useState(undefined)
+  const [join, setJoin] = useState(false)
+  const [gameStart, setGameStart] = useState(false)  
 
   // const myUserNameFromUrl = urlParams.get("nickname");
+
+  const hostNickname = useSelector((state) => state.login.user.memberNickname)
+
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
 
-    const urlParams = new URLSearchParams(window.location.search);
-    // const sessionIdFromUrl = urlParams.get("sessionId");
-    const myUserNameFromUrl = urlParams.get("nickname");
-
+    
+    console.log("hostname : " + JSON.stringify(hostNickname))
     // url 확인
-    setMyUserName(myUserNameFromUrl);
     joinSession();
 
     // 나가기
@@ -102,14 +102,24 @@ function CustomRoom() {
       setGameStart(true);
 
       setTimeout(() => {
-        closeIntroModal();
-      }, 16500);
-    });
+        closeIntroModal()
+
+      }, 16800)
+    })
+    if (nicknameFromUrl === null) {
+      setMyUserName(hostNickname)
+    }
 
     try {
-      const token = await getToken(sessionId);
-      await mySession.connect(token, { clientData: myUserName });
-      console.log(mySession, "여기");
+      const token = await getToken(sessionId); 
+
+      if (hostNickname !== null) {
+        await mySession.connect(token, { clientData: hostNickname });
+      } else {
+        await mySession.connect(token, { clientData: myUserName });
+      }
+
+      console.log(mySession, "여기")
       let newpublisher = await OV.initPublisherAsync(undefined, {
         audioSource: undefined,
         videoSource: undefined,
@@ -316,24 +326,20 @@ function CustomRoom() {
               <div style={{ width: "35rem", position: "relative" }}>
                 <UserVideoComponent streamManager={mainStreamManager} />
                 <div id="buttongroup">
-                  {!videoOn ? (
-                    <div onClick={camStatusChanged}>
-                      <img src={videoOn} alt="videoOn" />
-                    </div>
-                  ) : (
-                    <div onClick={camStatusChanged}>
-                      <img src={videoOff} alt="videoOff" />
-                    </div>
-                  )}
-                  {!audioOn ? (
-                    <div onClick={micStatusChanged}>
-                      <img src={audioOn} alt="audioOn" />
-                    </div>
-                  ) : (
-                    <div onClick={micStatusChanged}>
-                      <img src={audioOff} alt="audioOff" />
-                    </div>
-                  )}
+                  { !videoOn ?
+                    (<div style={{margin:"5px"}} onClick={camStatusChanged}>
+                      <img src={videoOnIcon} alt="videoOn"/>
+                    </div>) :
+                    (<div style={{margin:"5px"}} onClick={camStatusChanged}>
+                      <img src={videoOffIcon} alt="videoOff"/>
+                    </div>)}
+                  { !audioOn ?
+                    (<div style={{margin:"5px"}} onClick={micStatusChanged}>
+                      <img src={audioOnIcon} alt="audioOn"/>
+                    </div>) :
+                    (<div style={{margin:"5px"}} onClick={micStatusChanged}>
+                      <img src={audioOffIcon} alt="audioOff"/>
+                    </div>)}
                 </div>
               </div>
               <div style={{ width: "40vw" }} className="center">

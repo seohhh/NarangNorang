@@ -6,8 +6,8 @@ axios.defaults.baseURL = 'http://3.36.126.169:8080/api/v1'
 const authSlice = createSlice({
   name: 'auth',
   initialState : {
-    // isLoggedin: sessionStorage.getItem('isLoggedin') === 'true',
-    isLoggedin: false,
+    isLoggedin: sessionStorage.getItem('isLoggedin') === 'true',
+    // isLoggedin: false,
     user: JSON.parse(sessionStorage.getItem('user')) || null,
     userNickname: null,
     userId: null,
