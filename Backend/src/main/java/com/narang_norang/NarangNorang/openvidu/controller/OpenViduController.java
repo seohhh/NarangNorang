@@ -43,14 +43,6 @@ public class OpenViduController {
 	public ResponseEntity<String> initializeSession(@RequestBody(required = false) Map<String, Object> params)
 			throws OpenViduJavaClientException, OpenViduHttpException {
 		SessionProperties properties;
-//		if (params.get("customSessionId").equals("create")){
-//			String customSessionId = RandomNumberUtil.getRandomNumber();
-//			properties = new SessionProperties.Builder()
-//					.customSessionId(customSessionId)
-//					.build();
-//		} else {
-//			properties = SessionProperties.fromJson(params).build();
-//		}
 		String customSessionId = RandomNumberUtil.getRandomNumber();
 		properties = new SessionProperties.Builder()
 				.customSessionId(customSessionId)
@@ -75,21 +67,6 @@ public class OpenViduController {
 		}
 		ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
 		Connection connection = session.createConnection(properties);
-		return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
-	}
-
-	// url로 세션에 접근하는 코드 ex) /join?sessionId=**********
-	@GetMapping("/join")
-	public ResponseEntity<String> getConnection(@PathVariable("sessionId") String sessionId,
-												@RequestBody(required = false) Map<String, Object> params)
-			throws OpenViduJavaClientException, OpenViduHttpException {
-		Session session = openvidu.getActiveSession(sessionId);
-		if (session == null) {
-			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-		}
-		ConnectionProperties properties = ConnectionProperties.fromJson(params).build();
-		Connection connection = session.createConnection(properties);
-		System.out.println(connection.getToken());
 		return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
 	}
 

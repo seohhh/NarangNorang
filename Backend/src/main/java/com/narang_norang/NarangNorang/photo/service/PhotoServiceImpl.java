@@ -20,8 +20,7 @@ import java.util.Optional;
 //@Transactional(readOnly = true)
 public class PhotoServiceImpl implements PhotoService {
 
-    @Autowired
-    PhotoRepository photoRepository;
+    private final PhotoRepository photoRepository;
 
     @Override
 //    @Transactional
