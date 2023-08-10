@@ -9,7 +9,6 @@ import com.narang_norang.NarangNorang.member.domain.dto.response.UpdateMemberRes
 import com.narang_norang.NarangNorang.member.domain.entity.Member;
 import com.narang_norang.NarangNorang.member.service.MemberService;
 import io.swagger.annotations.*;
-import lombok.RequiredArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -62,12 +61,12 @@ public class MemberController {
     }
 
     @GetMapping("/{memberId}")
-    public ResponseEntity<Boolean> checkMemberIdDuplicate(@PathVariable String memberId) {
+    public ResponseEntity<Boolean> checkMemberIdDuplicate(@PathVariable("memberId") final String memberId) {
         return ResponseEntity.ok(memberService.checkMemberIdDuplicate(memberId));
     }
 
     @PutMapping ("/me/{memberId}")
-    @ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
+    @ApiOperation(value = "회원 본인 정보 수정", notes = "로그인한 회원 본인의 정보를 수정한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
@@ -83,7 +82,7 @@ public class MemberController {
     }
 
     @DeleteMapping("/me/{memberId}")
-    @ApiOperation(value = "회원 본인 정보 조회", notes = "로그인한 회원 본인의 정보를 응답한다.")
+    @ApiOperation(value = "회원 본인 정보 삭제", notes = "로그인한 회원 본인의 정보를 응답삭제.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "인증 실패"),

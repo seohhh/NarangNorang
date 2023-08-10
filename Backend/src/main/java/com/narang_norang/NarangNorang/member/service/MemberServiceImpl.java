@@ -68,6 +68,16 @@ public class MemberServiceImpl implements MemberService {
         return true;
     }
 
+    @Override
+    public Member getMemberByMemberSeq(Long memberSeq) {
+        Optional<Member> member = memberRepository.findById(memberSeq);
+        if (member.isEmpty()) {
+            throw new IllegalArgumentException("해당하는 회원이 없습니다.");
+        }
+
+        return member.get();
+    }
+
     public void isExistId(Optional<Member> memberOpt, String loginRequest) {
         if (memberOpt.isEmpty()) {
             throw new NotFoundException(loginRequest, ErrorCode.NOT_FOUND);
