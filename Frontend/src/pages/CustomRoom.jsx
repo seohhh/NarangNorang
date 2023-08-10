@@ -1,20 +1,50 @@
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from 'styled-components';
+
+// component
 import UserVideoComponent from "../components/UserVideoComponent";
 import MainVideoComponent from "../components/MainVideoComponent";
 import ToolbarComponent from "../components/ToolbarComponent";
 import Game1 from "../components/Game1";
 import "./CustomRoom.css";
+
+// icon
+import videoOn from "../assets/icon/videoOn.png";
+import videoOff from "../assets/icon/videoOff.png";
+import audioOn from "../assets/icon/audioOn.png";
+import audioOff from "../assets/icon/audioOff.png";
+
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4"
+
+// import { div } from "@tensorflow/tfjs-core";
 // import { div } from "@tensorflow/tfjs-core";
 // import { StaticRegexReplace } from "@tensorflow/tfjs-core";
 
 const APPLICATION_SERVER_URL = "http://3.36.126.169:8080/";
 
+const IntroMp4 = styled.video`
+  width:100%; 
+  height:100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
+
+const IntroDialogContent = styled(DialogContent)`
+  height:700px;
+`
+
+
 function CustomRoom() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionIdFromUrl = urlParams.get("sessionId");
-  
+  const navigate = useNavigate()
+
   const [sessionId, setSessionId] = useState(sessionIdFromUrl)
   const [myUserName, setMyUserName] = useState("")
   const [session, setSession] = useState(undefined)
@@ -24,9 +54,10 @@ function CustomRoom() {
   const [videoOn, setVideoOn] = useState(undefined)
   const [audioOn, setAudioOn] = useState(undefined)
   const [join, setJoin] = useState(false)
-  const [start, setStart] = useState(false)
-  
+  const [gameStart, setGameStart] = useState(false)  
+
   // const myUserNameFromUrl = urlParams.get("nickname");
+
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -71,21 +102,13 @@ function CustomRoom() {
     });
     
 
-    mySession.on('signal:alert', (event) => {
-      console.log(event.data);
-      alert("게임 시작");
-    })
+    mySession.on('signal:intro', (event) => {
+      setGameStart(true)
 
-    mySession.on('signal:count', (event) => {
-      if (event.data === "true") {
-        setStart(true)
-      } else {
-        setStart(false)
-      }
-    })
+      setTimeout(() => {
+        closeIntroModal()
 
-    mySession.on('signal:check', (event) => {
-      setStart(!start)
+      }, 16500)
     })
 
 
@@ -103,10 +126,13 @@ function CustomRoom() {
         insertMode: 'APPEND',
         mirror: true,
       });
-      mySession.publish(newpublisher);
+      if (sessionIdFromUrl === null) {
+        mySession.publish(newpublisher);
+        setJoin(true)
+      }
 
-      setVideoOn(true)
-      setAudioOn(true)
+      setVideoOn(false)
+      setAudioOn(false)
       setMainStreamManager(newpublisher)
       setPublisher(newpublisher)
       console.log(newpublisher, "newpublisher")
@@ -118,12 +144,10 @@ function CustomRoom() {
 
   const guestJoinSession = (e) => {
     e.preventDefault();
-    var linkerSession = session;
-    var linkedPublisher = publisher;
+
+    session.publish(publisher)
 
     setJoin(true);
-
-    linkerSession.publish(linkedPublisher);
     // // Obtain the current video device in use
     // this.state.OV.getDevices()
     //   .then((devices) => {
@@ -202,11 +226,17 @@ function CustomRoom() {
     setMainStreamManager(undefined);
     setPublisher(undefined);
 
+    navigate("/")
   }
 
   const camStatusChanged = () => {
 
-    setVideoOn(!videoOn);
+    if (videoOn) {
+      setVideoOn(false)
+    } else {
+      setVideoOn(true)
+    }
+    // setVideoOn(!videoOn);
     
     if (publisher) {
       publisher.publishVideo(videoOn);
@@ -238,33 +268,19 @@ function CustomRoom() {
     }
   }
 
-  const displayEvery = () => {
-    // session.signal({
-    //   data: "hi",
-    //   to: [],
-    //   type: "alert",
-    // })
-    // .then(() => {
-    // })
-    // .catch((e) => {})
 
+  const displayEvery = () => {
     session.signal({
-      data: !start,
+      data: "인트로 영상 버튼",
       to: [],
-      type: 'count',
+      type: 'intro'
     })
-    .then(() => {})
-    .catch((e) => {})
+      .then(() => { })
+      .catch(() => { })
   }
 
-  const checkClick = () => {
-    session.signal({
-      data: start,
-      to: [],
-      type: 'check',
-    })
-    .then(() => {})
-    .catch((e) => {})
+  const closeIntroModal = () => {
+    setGameStart(false)
   }
 
   return (
@@ -281,32 +297,65 @@ function CustomRoom() {
             publisher={publisher}
           />
           <button onClick={displayEvery}>버튼</button>
-          <button onClick={checkClick}>check버튼</button>
         </div>
       ) : null}
+
+      <Dialog
+        fullWidth
+        maxWidth={"lg"}
+        open={gameStart}
+        onClose={() => closeIntroModal()}
+        aria-labelledby="form-dialog-title"
+      >
+        <IntroDialogContent>
+          <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
+        </IntroDialogContent>
+
+      </Dialog>
 
       {/* 초대링크로 접속한 경우: 입장 대기실 */}
       {(sessionIdFromUrl != null) && (join === false) ? (
         <div id="wrapper">
-          <div id="container" className="jumbotron vertical-center">
-            <h1> 입장 대기실 </h1>
-            <input
-              type="button"
-              className="btn btn-success"
-              onClick={guestJoinSession}
-              value="입장"
-            />
-            <UserVideoComponent streamManager={mainStreamManager} />
-            <div id="session">
-              <div id="session-header">
-                <h1 id="session-title">{sessionId}</h1>
-                <input
-                  className="btn btn-large btn-danger"
-                  type="button"
-                  id="buttonLeaveSession"
-                  onClick={leaveSession}
-                  value="leave"
-                />
+          <div id="container">
+            <h3 style={{ marginBottom: "20px" }}> 입장 대기실 </h3>
+            <div id="content">
+              <div style={{ width: "35rem", position: "relative" }}>
+                <UserVideoComponent streamManager={mainStreamManager} />
+                <div id="buttongroup">
+                  { !videoOn ?
+                    (<div onClick={camStatusChanged}>
+                      <img src={videoOn} alt="videoOn"/>
+                    </div>) :
+                    (<div onClick={camStatusChanged}>
+                      <img src={videoOff} alt="videoOff"/>
+                    </div>)}
+                  { !audioOn ?
+                    (<div onClick={micStatusChanged}>
+                      <img src={audioOn} alt="audioOn"/>
+                    </div>) :
+                    (<div onClick={micStatusChanged}>
+                      <img src={audioOff} alt="audioOff"/>
+                    </div>)}
+                </div>
+              </div>
+              <div style={{ width: "40vw" }} className="center">
+                <div className="center">
+                  <p style={{ fontSize: "30px"}}>참여할 준비가 되셨나요?</p>
+                  <div id="button">
+                    <input
+                      type="button"
+                      className="button"
+                      onClick={guestJoinSession}
+                      value="입장하기"
+                    />
+                    <input
+                      className="button"
+                      type="button"
+                      onClick={leaveSession}
+                      value="홈으로 가기"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
           </div>
