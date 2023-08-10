@@ -57,7 +57,7 @@ const ToolbarComponent = (props) => {
   }
 
   // 복사
-  const handleCopyClipBoard = async (text: string) => {
+  const handleCopyClipBoard = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
       handleClose()
