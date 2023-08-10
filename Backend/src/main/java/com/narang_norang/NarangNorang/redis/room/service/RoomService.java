@@ -1,17 +1,62 @@
 package com.narang_norang.NarangNorang.redis.room.service;
 
+import com.narang_norang.NarangNorang.redis.room.domain.dto.MakeRoomRequest;
+import com.narang_norang.NarangNorang.redis.room.domain.dto.RoomResponse;
+import com.narang_norang.NarangNorang.redis.room.domain.entity.Room;
 import com.narang_norang.NarangNorang.redis.room.repositoy.RoomRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
-//@Service
-//@RequiredArgsConstructor
+import java.util.Optional;
+
+@Service
+@RequiredArgsConstructor
 public class RoomService {
 
-//    private final RoomRepository roomRepository;
-//    private final RedisTemplate redisTemplate;
+    private final RoomRepository roomRepository;
 
-//    public
+
+    public RoomResponse createRoom(MakeRoomRequest makeRoomRequest) {
+        return new RoomResponse(roomRepository.save(makeRoomRequest.toRoom()));
+    }
+
+
+    public void deleteRoom(String hostname) {
+        Optional<Room> room = roomRepository.findByHostname(hostname);
+        room.ifPresent(roomRepository::delete);
+    }
+
+    public Room findRoomByHostname(String hostname) {
+        Optional<Room> room = roomRepository.findByHostname(hostname);
+
+        if (room.isEmpty()) {
+            throw new IllegalArgumentException("Hostname에 해당하는 방이 없습니다.");
+        }
+
+        return room.get();
+    }
+
+    public Room findRoomByRoomCode(String roomCode) {
+        Optional<Room> room = roomRepository.findByRoomCode(roomCode);
+
+        if (room.isEmpty()) {
+            throw new IllegalArgumentException("Room-Code에 해당하는 방이 없습니다.");
+        }
+
+        return room.get();
+    }
+
+    public boolean isExistRoomByHostname(String hostname) {
+        Optional<Room> room = roomRepository.findByHostname(hostname);
+        // 객체가 있다면 true, 없다면 false
+        return room.isPresent();
+    }
+
+    public boolean isExistRoomByRoomCode(String roomCode) {
+        Optional<Room> room = roomRepository.findByRoomCode(roomCode);
+        // 객체가 있다면 true, 없다면 false
+        return room.isPresent();
+    }
+
 
 }

@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 // import mainImg from "../assets/mainImg.jpg";
 import PlayImg from "../assets/mainPlayImg.PNG";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Fade } from "react-awesome-reveal";
 import ContentsComponent from "../components/ContentsComponent";
@@ -50,6 +51,9 @@ const color = {
 };
 
 function Main() {
+  const isLoggedin = useSelector((state) => state.login.isLoggedin);
+  console.log(isLoggedin)
+
   return (
     <div>
       <Container>
@@ -60,11 +64,16 @@ function Main() {
             <h1>
               <span style={color}>나랑노랑</span>에서
             </h1>
-            <h1>아이와 함께 즐거운 추억을 쌓아보세요</h1>
-            <br /><br /><br />
-            <Link to="/room">
-              <Button>방만들기 →</Button>
-            </Link>
+            <h1 style={{ marginBottom: "50px"}}>아이와 함께 즐거운 추억을 쌓아보세요</h1>
+            {isLoggedin ? (
+              <Link to="/room">
+                <Button>방만들기 →</Button>
+              </Link>
+            ) : (
+              <Link to="/login">
+                <Button>방만들기 →</Button>
+              </Link>
+            )}
           </Fade>
         </div>
       </Container>

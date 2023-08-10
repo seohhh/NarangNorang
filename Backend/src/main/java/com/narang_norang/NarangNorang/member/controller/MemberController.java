@@ -89,7 +89,7 @@ public class MemberController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Boolean> update(@PathVariable("memberId") final String memberId) {
+    public ResponseEntity<Boolean> delete(@PathVariable("memberId") final String memberId) {
 
         return ResponseEntity.ok(memberService.deleteMember(memberId));
     }
