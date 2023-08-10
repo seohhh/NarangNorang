@@ -28,7 +28,7 @@ import java.util.List;
 @Api(value = "사진 API", tags = {"Photo"})
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/album")
+@RequestMapping("/api/v1/album")
 public class PhotoController {
 
     private final PhotoService photoService;
