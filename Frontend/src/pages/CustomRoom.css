@@ -45,9 +45,6 @@
   left: 35%;
 }
 
-
-#video-container {
-  display: flex;
-  flex-direction: row;
-  margin-top: 5rem;
+#toolbar-container {
+  position: fixed;
 }

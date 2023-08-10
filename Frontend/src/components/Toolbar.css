@@ -1,0 +1,13 @@
+.toolbar-container {
+  background-color: white;
+  display: flex;
+  flex-direction: row;
+}
+
+#linkContainer {
+  background-color: #F1F0F0;
+  border-radius: 5px;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+}

@@ -22,6 +22,9 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
 
 const APPLICATION_SERVER_URL = "http://3.36.126.169:8080/";
@@ -182,6 +185,7 @@ function CustomRoom() {
     console.log(mySessionId, "마이 세션아이디");
     if (mySessionId === null) {
       const createSessionId = await createSession(mySessionId);
+      setSessionId(createSessionId)
       return await createToken(createSessionId);
     }
     return await createToken(mySessionId);
@@ -290,14 +294,17 @@ function CustomRoom() {
       {sessionIdFromUrl === null || join === true ? (
         <div>
           <Game1 />
-          <ToolbarComponent
-            audioOn={audioOn}
-            videoOn={videoOn}
-            camStatusChanged={camStatusChanged}
-            micStatusChanged={micStatusChanged}
-            leaveSession={leaveSession}
-            publisher={publisher}
-          />
+          <div style={{ position: "fixed", bottom: "0", display: "flex" }}>
+            <ToolbarComponent
+              audioOn={audioOn}
+              videoOn={videoOn}
+              sessionId={sessionId}
+              camStatusChanged={camStatusChanged}
+              micStatusChanged={micStatusChanged}
+              leaveSession={leaveSession}
+              publisher={publisher}
+            />
+          </div>
           <button onClick={displayEvery}>버튼</button>
         </div>
       ) : null}
