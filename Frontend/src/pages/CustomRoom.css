@@ -9,8 +9,38 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 95vw;
   height: 90vh;
   border-radius: 25px;
   box-shadow: 0 0 20px -13px rgba(0, 0, 0, 2);
+}
+
+#content {
+  display: flex;
+  flex-direction: row;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.button {
+  background-color: #F7DB42;
+  border-radius: 8px;
+  color: white;
+  padding: 8px;
+  border: none;
+  margin: 10px;
+}
+
+#buttongroup {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  bottom: 20px;
+  left: 35%;
 }

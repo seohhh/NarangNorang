@@ -3,12 +3,11 @@
 }
 
 video {
-    position: absolute; /* 절대 위치 */
-    top: 0;
-    left: 0;
+    /* top: 0;
+    left: 0; */
     width: 100%;
-    height: auto;
-    float: left;
+    height: 100%;
+    /* float: left; */
     height: 480px; /* 높이 지정 */
     cursor: pointer;
     z-index: 1; /* 쌓임 순서 조정 */
