@@ -19,6 +19,7 @@ const authSlice = createSlice({
       state.isLoggedin = true
       state.user = action.payload[0]
       state.userNickname = action.payload[0].memberNickname
+      console.log(state.userNickname, "로그인 시 유저닉네임")
       state.error = null
       state.token = action.payload[0].accessToken
       state.userId = action.payload[1]
