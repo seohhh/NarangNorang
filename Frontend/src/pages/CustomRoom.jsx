@@ -48,13 +48,12 @@ function CustomRoom() {
   const [myUserName, setMyUserName] = useState("");
   const [session, setSession] = useState(undefined);
   const [mainStreamManager, setMainStreamManager] = useState(undefined);
-  const [publisher, setPublisher] = useState(undefined);
+  const [publisher, setPublisher] = useState(undefined)
   const [subscribers, setSubscribers] = useState([]);
   const [videoOn, setVideoOn] = useState(undefined);
   const [audioOn, setAudioOn] = useState(undefined);
   const [join, setJoin] = useState(false);
   const [gameStart, setGameStart] = useState(false);
-
   // const myUserNameFromUrl = urlParams.get("nickname");
 
   useEffect(() => {
@@ -314,7 +313,7 @@ function CustomRoom() {
             <h3 style={{ marginBottom: "20px" }}> 입장 대기실 </h3>
             <div id="content">
               <div style={{ width: "35rem", position: "relative" }}>
-                <UserVideoComponent streamManager={mainStreamManager} />
+                <UserVideoComponent streamManager={mainStreamManager} guest={sessionId} />
                 <div id="buttongroup">
                   {!videoOn ? (
                     <div onClick={camStatusChanged}>
@@ -390,7 +389,7 @@ function CustomRoom() {
           </div>
         ) : null}
 
-        {sessionIdFromUrl === null || join === true ? (
+        {sessionIdFromUrl === null && join === true ? (
           <div style={{display: "flex", flexDirection: "row",}}>
             {subscribers.map((sub, i) => (
               <div
