@@ -324,7 +324,7 @@ function CustomRoom() {
             <h3 style={{ marginBottom: "20px" }}> 입장 대기실 </h3>
             <div id="content">
               <div style={{ width: "35rem", position: "relative" }}>
-                <UserVideoComponent streamManager={mainStreamManager} />
+                <UserVideoComponent streamManager={mainStreamManager} guest={sessionId} />
                 <div id="buttongroup">
                   { !videoOn ?
                     (<div style={{margin:"5px"}} onClick={camStatusChanged}>
@@ -396,7 +396,7 @@ function CustomRoom() {
           </div>
         ) : null}
 
-        {sessionIdFromUrl === null || join === true ? (
+        {sessionIdFromUrl === null && join === true ? (
           <div style={{display: "flex", flexDirection: "row",}}>
             {subscribers.map((sub, i) => (
               <div
