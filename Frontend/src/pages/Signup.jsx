@@ -10,7 +10,7 @@ import axios from 'axios';
 import loginImg from "../assets/loginImg.png";
 
 
-axios.defaults.baseURL = 'https://i9c208.p.ssafy.io/'
+axios.defaults.baseURL = 'https://i9c208.p.ssafy.io/api/v1'
 
 const Container = styled.div`
   display: flex;

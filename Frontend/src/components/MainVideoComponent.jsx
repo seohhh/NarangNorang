@@ -1,6 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import userpose from "../utils/userpose";
+// import POSE from "../utils/POSE";
+import html2canvas from "html2canvas";
 import "./MainVideoComponent.css";
+import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
+import axios from "axios";
+
+const BASE_URL = 'https://i9c208.p.ssafy.io/api/v1'
 import * as tf from "@tensorflow/tfjs-core";  // 텐서플로우 JS 라이브러리
 import { useSelector } from "react-redux";
 
@@ -59,10 +65,13 @@ const MainVideoComponent = (props) => {
     }
   };
 
+  // 컴포넌트 마운트 시 실행
   useEffect(() => {
     if (props && !!videoRef) {
       props.streamManager.addVideoElement(videoRef.current);
     }
+
+    console.log(props)
 
     // 메타데이터 로드 이벤트 리스너 추가 (비디오 크기를 가져오기 위해)
     videoRef.current.addEventListener("loadedmetadata", handleVideoMetadataLoaded);
@@ -79,7 +88,7 @@ const MainVideoComponent = (props) => {
 
     return () => {
       userpose.stopRender();
-      
+
       // 컴포넌트 언마운트 시 이벤트 리스너 제거
       // if (videoRef.current) {
       //   videoRef.current.removeEventListener("loadedmetadata", handleVideoMetadataLoaded);
@@ -87,6 +96,45 @@ const MainVideoComponent = (props) => {
     };
   }, [props.streamManager, showCanvas, videoDimensions.width, videoDimensions.height]);
 
+  const handleCapture = async () => {
+    if (!videoRef.current) return;
+
+    try {
+      const video = videoRef.current;
+      const canvas = await html2canvas(video, { scale: 2 });
+      canvas.toBlob((blob) => {
+        if (blob !== null) {
+
+          let file = new File([blob], "캡쳐.png", { type: blob.type })
+
+          const header = {header: {"Content-Type": "multipart/form-data"}}
+          const data = {
+            images: file,
+            roomCode: props.streamManager.stream.session.sessionId,
+            subscriberId: 123
+          }
+
+          axios.post(BASE_URL + '/album/capture', {data}, {header})
+          .then((response) => {
+            console.log(response)
+            console.log(file)
+          })
+          .catch((error) => {
+            console.log(error)
+            console.log(file)
+          })
+          console.log(props.streamManager.stream.session.sessionId)
+        }
+      });
+    } catch (error) {
+      console.error("Error converting div to image:", error);
+    }
+  };
+
+
+
+
+  // 컴포넌트 렌더링
   return (
     <div>
       {props.streamManager !== undefined ? (
@@ -102,8 +150,10 @@ const MainVideoComponent = (props) => {
             width={videoDimensions.width}
             height={videoDimensions.height}
           />
+          <button onClick={handleCapture}>지금 이 순간!</button>
         </div>
-      ) : null}
+
+        ) : null}
     </div>
   );
 };
