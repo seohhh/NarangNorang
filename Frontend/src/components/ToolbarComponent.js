@@ -57,7 +57,6 @@ const ToolbarComponent = (props) => {
     props.leaveSession();
   }
 
-
   // 복사
   const handleCopyClipBoard = async (text: string) => {
     try {
