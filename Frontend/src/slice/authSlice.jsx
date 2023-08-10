@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://3.36.126.169:8080/api/v1'
+axios.defaults.baseURL = 'https://i9c208.p.ssafy.io/api/v1'
 
 const authSlice = createSlice({
   name: 'auth',
