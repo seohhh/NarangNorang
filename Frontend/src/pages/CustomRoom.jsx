@@ -22,6 +22,22 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
+// import Gorilla from '../assets/game/quiz/Gorilla.png';
+// import Elephant from '../assets/game/quiz/Elephant.png';
+// import Eagle from '../assets/game/quiz/Eagle.png';
+// import Frog from '../assets/game/quiz/Frog.png';
+// import Cat from '../assets/game/quiz/Cat.png';
+// import Tiger from '../assets/game/quiz/Tiger.png';
+// import StartMusic from '../assets/game/music/StartMusic.mp3';
+// import UUUU from '../assets/game/music/UUUU.wav';
+// import GorillaMusic from '../assets/game/music/GorillaMusic.wav';
+// import ElephantMusic from '../assets/game/music/ElephantMusic.wav';
+// import GorillaElephantMix from '../assets/game/music/GorillaElephantMix.wav';
+// import EagleMusic from '../assets/game/music/EagleMusic.wav';
+// import FrogMusic from '../assets/game/music/FrogMusic.wav';
+// import EagleFrogMix from '../assets/game/music/EagleFrogMix.wav';
+// import CatMusic from '../assets/game/music/CatMusic.wav';
+// import TigerMusic from '../assets/game/music/TigerMusic.wav';
 
 const APPLICATION_SERVER_URL = "http://3.36.126.169:8080/";
 
@@ -366,38 +382,23 @@ function CustomRoom() {
         </div>
       ) : null}
 
-      {/* {session !== undefined ? (
-        <div id="session">
-          <div id="session-header">
-            <h1 id="session-title">{sessionId}</h1>
-            <input
-              className="btn btn-large btn-danger"
-              type="button"
-              id="buttonLeaveSession"
-              onClick={leaveSession}
-              value="leave"
-            />
-          </div>
-        </div>
-        ) : null } */}
-
       {mainStreamManager !== undefined && join === true ? (
         <div id="main-video" className="col-md-6">
           <MainVideoComponent streamManager={mainStreamManager} />
         </div>
       ) : null}
       <div id="video-container" className="col-md-6">
-        {publisher !== undefined ? (
+        { join === true && publisher !== undefined ? (
           <div
             className="stream-container"
-            onClick={() => this.handleMainVideoStream(publisher)}
+            onClick={() => handleMainVideoStream(publisher)}
           >
             <UserVideoComponent streamManager={publisher} />
           </div>
         ) : null}
 
-        {sessionIdFromUrl === null && join === true ? (
-          <div style={{display: "flex", flexDirection: "row",}}>
+        { join === true ? (
+          <div style={{ display: "flex", flexDirection: "row"}}>
             {subscribers.map((sub, i) => (
               <div
                 key={sub.id}

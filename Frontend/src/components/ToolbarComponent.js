@@ -8,6 +8,8 @@ import VideocamOff from '@material-ui/icons/VideocamOff';
 // import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 import { Modal } from "react-bootstrap";
 import './Toolbar.css';
+import { switchShowCanvas } from "../slice/xraySlice";
+import { useSelector, useDispatch } from "react-redux";
 
 import IconButton from '@material-ui/core/IconButton';
 import copyIcon from '../assets/icon/copy.png';
@@ -22,7 +24,10 @@ import xrayIcon from '../assets/icon/xray.png';
 const ToolbarComponent = (props) => {
   const [audioOn, setAudioOn] = useState(props.audioOn)
   const [videoOn, setVideoOn] = useState(props.videoOn)
-  
+  const dispatch = useDispatch()
+
+  const showCanvas = useSelector((state) => (state.xray.showCanvas))
+  console.log(showCanvas, "useSelector로 확인한 값")
   // 초대링크 모달
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -57,8 +62,12 @@ const ToolbarComponent = (props) => {
     props.leaveSession();
   }
 
+  const clickShowCanvas = () => {
+    dispatch(switchShowCanvas())
+  }
+
   // 복사
-  const handleCopyClipBoard = async (text: string) => {
+  const handleCopyClipBoard = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
       handleClose()
@@ -87,9 +96,9 @@ return (
     <div onClick={handleShow}>
       <img src={inviteIcon} alt="invite" />
     </div>
-    {/* <div onClick={}>
+    <div onClick={clickShowCanvas}>
       <img src={xrayIcon} alt="xray" />
-    </div> */}
+    </div>
     <div onClick={leaveSession}>
       <img src={leaveIcon} alt="leave" />
     </div>
