@@ -22,10 +22,6 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
-
 
 const APPLICATION_SERVER_URL = "http://3.36.126.169:8080/";
 
