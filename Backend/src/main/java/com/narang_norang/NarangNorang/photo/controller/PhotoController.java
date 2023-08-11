@@ -7,21 +7,19 @@ import com.narang_norang.NarangNorang.photo.domain.dto.response.ReadPhotoRespons
 import com.narang_norang.NarangNorang.photo.domain.dto.response.UpdatePhotoContentResponse;
 import com.narang_norang.NarangNorang.photo.domain.entity.Photo;
 import com.narang_norang.NarangNorang.photo.service.PhotoService;
+import com.narang_norang.NarangNorang.redis.picture.domain.dto.GetPictureRequest;
 import com.narang_norang.NarangNorang.redis.picture.domain.dto.PictureResponse;
 import com.narang_norang.NarangNorang.redis.picture.domain.entity.Picture;
-import com.narang_norang.NarangNorang.redis.picture.repository.PictureRepository;
 import com.narang_norang.NarangNorang.redis.picture.service.PictureService;
 import com.narang_norang.NarangNorang.util.S3Uploader;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -49,15 +47,15 @@ public class PhotoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Boolean> uploadPhoto(@RequestParam("memberSeq") Long memberSeq,
-                                               @RequestParam("roomCode") String roomCode,
-                                               @RequestParam("subscriberId") String subscriberId,
-                                               @RequestParam("redisImageSeqs") List<Long> redisImageSeqs) {
+    public ResponseEntity<Boolean> uploadPhoto(@RequestBody GetPictureRequest getPictureRequest) {
         try {
-            List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscriberId);
-            Member member = memberService.getMemberByMemberSeq(memberSeq);
+            List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(getPictureRequest.getRoomCode(),
+                    getPictureRequest.getSubscriberId());
+            System.out.println(pictureList.size());
+            Member member = memberService.getMemberByMemberSeq(getPictureRequest.getMemberSeq());
             for (Picture picture : pictureList) {
-                if (redisImageSeqs.contains((long) picture.getPictureSeq())) {
+                System.out.println(getPictureRequest.getRedisImageSeqs().contains(picture.getPictureSeq().longValue()));
+                if (getPictureRequest.getRedisImageSeqs().contains(picture.getPictureSeq().longValue())) {
                     String[] texts = s3Uploader.uploadFiles(picture, "static/"+member.getMemberId());
                     Photo photo = Photo.builder()
                             .member(member)
@@ -78,7 +76,7 @@ public class PhotoController {
     }
 
     @GetMapping("/capture-list")
-    @ApiOperation(value = "앨범 조회", notes = "로그인한 회원의 앨범을 조회한다.")
+    @ApiOperation(value = "캡처한 사진들 조회", notes = "로그인한 회원의 앨범을 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
@@ -86,9 +84,9 @@ public class PhotoController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<List<PictureResponse>> readPictureByRoomCodeAndSubscribeId(@RequestParam("roomCode") String roomCode,
-                                                                                     @RequestParam("SubscribeId") String subscribeId) {
+                                                                                     @RequestParam("subscriberId") String subscriberId) {
 
-        List<Picture> pictures = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscribeId);
+        List<Picture> pictures = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscriberId);
         List<PictureResponse> pictureResponses = new ArrayList<>();
 
         for (Picture picture :
@@ -162,21 +160,20 @@ public class PhotoController {
     })
     public ResponseEntity<Boolean> uploadCapture(@RequestParam("roomCode") String roomCode,
                                                  @RequestParam("subscriberId") String subscriberId,
-                                               @RequestParam("images") MultipartFile[] multipartFiles) throws IOException {
+                                                 @RequestParam("images") MultipartFile multipartFile) throws IOException {
 
-        for (MultipartFile multipartFile : multipartFiles) {
 
-            Picture picture = Picture.builder()
-                    .roomCode(roomCode)
-                    .subscriberId(subscriberId)
-                    .pictureName(multipartFile.getOriginalFilename())
-                    .pictureContentType(multipartFile.getContentType())
-                    .pictureData(multipartFile.getBytes())
-                    .pictureSize(multipartFile.getSize())
-                    .pictureTime(LocalDateTime.now())
-                    .build();
-            pictureService.savePicture(picture);
-        }
+        Picture picture = Picture.builder()
+                .roomCode(roomCode)
+                .subscriberId(subscriberId)
+                .pictureName(multipartFile.getOriginalFilename())
+                .pictureContentType(multipartFile.getContentType())
+                .pictureData(multipartFile.getBytes())
+                .pictureSize(multipartFile.getSize())
+                .pictureTime(LocalDateTime.now())
+                .build();
+        pictureService.savePicture(picture);
+
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
