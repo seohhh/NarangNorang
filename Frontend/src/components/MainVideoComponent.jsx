@@ -118,7 +118,12 @@ const MainVideoComponent = (props) => {
     }
   };
 
-
+  const handleGetScore = () => {
+    const poseIdx = 0;
+    
+    const score = userpose.getScore(poseIdx, videoRef.current);
+    console.log("similarity score", score);
+  }
 
 
   // 컴포넌트 렌더링
@@ -138,6 +143,7 @@ const MainVideoComponent = (props) => {
             height={videoDimensions.height}
           />
           <button onClick={handleCapture}>지금 이 순간!</button>
+          <button onClick={handleGetScore}>유사도 계산</button>
         </div>
 
         ) : null}

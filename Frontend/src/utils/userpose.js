@@ -3,6 +3,7 @@ import * as poseDetection from "@tensorflow-models/pose-detection";
 // Register WebGL backend.
 import "@tensorflow/tfjs-backend-webgl";
 import "@mediapipe/pose";
+import POSE from "./POSE";
 
 // CONSTANT
 const POINTS = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
@@ -30,6 +31,7 @@ const estimationConfig = {
   nmsRadius: 100,
 };
 const scoreThreshold = 0.5;
+const similarityThreshold = 0.9;
 
 // VARIABLE
 let detector;
@@ -162,12 +164,29 @@ const drawSkeleton = (ctx, keypoints, poseId, color) => {
   });
 };
 
+const getScore = async (poseIdx, videoref) => {
+  const poses = await detectPose(videoref);
+
+  let total = 0;
+  let count = 0;
+  for (const pose of poses) {
+    if (pose.score >= scoreThreshold) {
+      count++;
+      let score = computeScore(POSE[poseIdx], pose.keypoints);
+      total += score > similarityThreshold ? score : 0.5;
+    }
+  }
+
+  if (count === 0) {
+    return 0;
+  } else {
+    return total / count;
+  }
+};
+
 const computeScore = (keypoints1, keypoints2) => {
-  console.log("keypoints", keypoints1, keypoints2);
   const normPoints1 = normVector(keypoints1);
-  console.log("norm1", normPoints1);
   const normPoints2 = normVector(keypoints2);
-  console.log("norm2", normPoints2);
 
   let scoreSum = 0;
   let similarity = 0;
@@ -206,6 +225,6 @@ const exportObj = {
   detectPose,
   startRender,
   stopRender,
-  computeScore,
+  getScore,
 };
 export default exportObj;
