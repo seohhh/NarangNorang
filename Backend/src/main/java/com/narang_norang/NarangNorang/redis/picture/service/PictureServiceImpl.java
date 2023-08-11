@@ -19,9 +19,15 @@ public class PictureServiceImpl implements PictureService {
         return pictureList;
     }
 
+    @Override
     public boolean savePicture(Picture picture) {
         pictureRepository.save(picture);
         return true;
+    }
+
+    @Override
+    public void deletePicture(Picture picture) {
+        pictureRepository.delete(picture);
     }
 
 }
