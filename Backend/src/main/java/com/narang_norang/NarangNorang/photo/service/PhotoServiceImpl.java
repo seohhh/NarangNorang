@@ -23,6 +23,7 @@ public class PhotoServiceImpl implements PhotoService {
     private final PhotoRepository photoRepository;
 
     @Override
+    @Transactional
     public void uploadPhoto(Photo photo) {
         photoRepository.save(photo);
     }
