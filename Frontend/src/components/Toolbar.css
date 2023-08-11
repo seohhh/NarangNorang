@@ -1,0 +1,26 @@
+.toolbar-container {
+  background-color: white;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  z-index: 3;
+}
+
+#linkContainer {
+  background-color: #F1F0F0;
+  border-radius: 5px;
+  padding: 8px 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.icon {
+  width: 55px;
+  margin: 13px;
+}
+
+.iconGroup {
+  display: flex;
+  justify-content: space-between;
+}

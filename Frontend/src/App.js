@@ -43,7 +43,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/contents" element={<Contents />}></Route>
-          <Route path="/album/:userId" element={isLoggedIn ? <Album /> : <Navigate to="/login" />}/>
+          <Route path="/album/:userSeq" element={isLoggedIn ? <Album /> : <Navigate to="/login" />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/room" element={<CustomRoom />} />
