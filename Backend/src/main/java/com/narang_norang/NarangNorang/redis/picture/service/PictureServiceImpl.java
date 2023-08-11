@@ -14,18 +14,16 @@ public class PictureServiceImpl implements PictureService {
 
     private final PictureRepository pictureRepository;
 
+
     public List<Picture> getPictureByRoomCodeAndSubscriberId(String roomCode, String subscriberId) {
-        List<Picture> pictureList = pictureRepository.findAllByRoomCodeAndSubscriberId(roomCode, subscriberId);
-        return pictureList;
+        return pictureRepository.findAllByRoomCodeAndSubscriberId(roomCode, subscriberId);
     }
 
-    @Override
     public boolean savePicture(Picture picture) {
         pictureRepository.save(picture);
         return true;
     }
 
-    @Override
     public void deletePicture(Picture picture) {
         pictureRepository.delete(picture);
     }

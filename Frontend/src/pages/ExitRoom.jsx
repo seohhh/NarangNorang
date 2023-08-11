@@ -20,16 +20,29 @@ function ExitRoom() {
 
 
     const loadRedisImages = () => {
+      console.log(sessionIdFromUrl)
+      console.log(subscriberIdFromUrl)
       const formData = new FormData()
       formData.append('roomCode', sessionIdFromUrl)
       formData.append('subscriberId', subscriberIdFromUrl)
 
-      axios.get('/album/capture-list', formData)
-      .then((res) => {
-          console.log(res)
+      // axios.get('/album/capture-list', formData)
+      // .then((res) => {
+      //     console.log(res)
+      // })
+      // .catch((error) => {
+      //     console.log(error)
+      // })
+      axios({
+        method: 'GET',
+        url: '/album/capture-list',
+        params: { 'roomCode': sessionIdFromUrl, 'subscriberId': subscriberIdFromUrl }
       })
-      .catch((error) => {
-          console.log(error)
+      .then((res) => {
+        console.log(res)
+      })
+      .catch((err) => {
+        console.log(err, sessionIdFromUrl, subscriberIdFromUrl)
       })
     }
 

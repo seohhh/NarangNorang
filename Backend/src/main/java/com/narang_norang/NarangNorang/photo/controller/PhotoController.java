@@ -10,19 +10,16 @@ import com.narang_norang.NarangNorang.photo.service.PhotoService;
 import com.narang_norang.NarangNorang.redis.picture.domain.dto.GetPictureRequest;
 import com.narang_norang.NarangNorang.redis.picture.domain.dto.PictureResponse;
 import com.narang_norang.NarangNorang.redis.picture.domain.entity.Picture;
-import com.narang_norang.NarangNorang.redis.picture.repository.PictureRepository;
 import com.narang_norang.NarangNorang.redis.picture.service.PictureService;
 import com.narang_norang.NarangNorang.util.S3Uploader;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.io.FileUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.Valid;
-import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -161,23 +158,22 @@ public class PhotoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Boolean> uploadCapture(@RequestBody String roomCode,
-                                                 @RequestBody String subscriberId,
-                                               @RequestBody MultipartFile[] multipartFiles) throws IOException {
+    public ResponseEntity<Boolean> uploadCapture(@RequestParam("roomCode") String roomCode,
+                                                 @RequestParam("subscriberId") String subscriberId,
+                                                 @RequestParam("images") MultipartFile multipartFile) throws IOException {
 
-        for (MultipartFile multipartFile : multipartFiles) {
 
-            Picture picture = Picture.builder()
-                    .roomCode(roomCode)
-                    .subscriberId(subscriberId)
-                    .pictureName(multipartFile.getOriginalFilename())
-                    .pictureContentType(multipartFile.getContentType())
-                    .pictureData(multipartFile.getBytes())
-                    .pictureSize(multipartFile.getSize())
-                    .pictureTime(LocalDateTime.now())
-                    .build();
-            pictureService.savePicture(picture);
-        }
+        Picture picture = Picture.builder()
+                .roomCode(roomCode)
+                .subscriberId(subscriberId)
+                .pictureName(multipartFile.getOriginalFilename())
+                .pictureContentType(multipartFile.getContentType())
+                .pictureData(multipartFile.getBytes())
+                .pictureSize(multipartFile.getSize())
+                .pictureTime(LocalDateTime.now())
+                .build();
+        pictureService.savePicture(picture);
+
 
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
