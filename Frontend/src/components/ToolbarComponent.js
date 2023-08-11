@@ -1,18 +1,8 @@
 import React, { useState } from 'react';
-import Mic from '@material-ui/icons/Mic';
-import MicOff from '@material-ui/icons/MicOff';
-import Videocam from '@material-ui/icons/Videocam';
-import VideocamOff from '@material-ui/icons/VideocamOff';
-// import Fullscreen from '@material-ui/icons/Fullscreen';
-// import FullscreenExit from '@material-ui/icons/FullscreenExit';
-// import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
 import { Modal } from "react-bootstrap";
 import './Toolbar.css';
 import { switchShowCanvas } from "../slice/xraySlice";
 import { useSelector, useDispatch } from "react-redux";
-
-
-// import { div, exp } from '@tensorflow/tfjs-core';
 
 // icon
 import inviteIcon from "../assets/icon/invite.png";

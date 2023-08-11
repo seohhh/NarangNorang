@@ -5,10 +5,9 @@ import html2canvas from "html2canvas";
 import "./MainVideoComponent.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const BASE_URL = 'https://i9c208.p.ssafy.io/api/v1'
-import * as tf from "@tensorflow/tfjs-core";  // 텐서플로우 JS 라이브러리
-import { useSelector } from "react-redux";
 
 const MainVideoComponent = (props) => {
   const videoRef = useRef();  // 비디오 요소 참조 생성
@@ -30,10 +29,10 @@ const MainVideoComponent = (props) => {
     });
   };
 
-
+  
   // 컴포넌트 마운트 시 실행
   useEffect(() => {
-
+    
     // 스켈레톤 표시 버튼 클릭 핸들러
     const handleSkeletonClick = async () => {
       if (showCanvas) {
@@ -94,15 +93,15 @@ const MainVideoComponent = (props) => {
         if (blob !== null) {
 
           let file = new File([blob], "캡쳐.png", { type: blob.type })
+          const formData = new FormData()
+          formData.append('images', file)
+          formData.append('roomCode', props.streamManager.stream.session.sessionId)
+          formData.append('subscriberId', 123)
 
           const header = {header: {"Content-Type": "multipart/form-data"}}
-          const data = {
-            images: file,
-            roomCode: props.streamManager.stream.session.sessionId,
-            subscriberId: 123
-          }
+        
 
-          axios.post(BASE_URL + '/album/capture', {data}, {header})
+          axios.post(BASE_URL + '/album/capture', formData, {header})
           .then((response) => {
             console.log(response)
             console.log(file)
