@@ -128,7 +128,7 @@ const MainVideoComponent = (props) => {
   return (
     <div>
       {props.streamManager !== undefined ? (
-        <div className="streamcomponent">
+        <div className="stream-component">
           <canvas
             ref={canvasRef}
             width={videoDimensions.width}

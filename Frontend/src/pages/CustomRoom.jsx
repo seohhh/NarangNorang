@@ -2,7 +2,7 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from 'styled-components';
+import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 // component
@@ -57,23 +57,23 @@ function CustomRoom() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionIdFromUrl = urlParams.get("sessionId");
   const nicknameFromUrl = urlParams.get("nickname");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
-  const [sessionId, setSessionId] = useState(sessionIdFromUrl)
-  const [myUserName, setMyUserName] = useState(nicknameFromUrl)
-  const [session, setSession] = useState(undefined)
-  const [mainStreamManager, setMainStreamManager] = useState(undefined)
-  const [publisher, setPublisher] = useState(undefined)
-  const [subscribers, setSubscribers] = useState([])
-  const [videoOn, setVideoOn] = useState(undefined)
-  const [audioOn, setAudioOn] = useState(undefined)
-  const [join, setJoin] = useState(false)
-  const [gameStart, setGameStart] = useState(false)  
+  const [sessionId, setSessionId] = useState(sessionIdFromUrl);
+  const [myUserName, setMyUserName] = useState(nicknameFromUrl);
+  const [session, setSession] = useState(undefined);
+  const [mainStreamManager, setMainStreamManager] = useState(undefined);
+  const [publisher, setPublisher] = useState(undefined);
+  const [subscribers, setSubscribers] = useState([]);
+  const [videoOn, setVideoOn] = useState(undefined);
+  const [audioOn, setAudioOn] = useState(undefined);
+  const [join, setJoin] = useState(false);
+  const [gameStart, setGameStart] = useState(false);
+  const [isSpeaking, setIsSpeaking] = useState(undefined);
 
   // const myUserNameFromUrl = urlParams.get("nickname");
 
-  const hostNickname = useSelector((state) => state.login.userNickname)
-
+  const hostNickname = useSelector((state) => state.login.userNickname);
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -102,6 +102,16 @@ function CustomRoom() {
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
 
+    mySession.on("publisherStartSpeaking", (event) => {
+      console.log("User " + event.connection.connectionId + " start speaking");
+      setIsSpeaking(true);
+    });
+
+    mySession.on("publisherStopSpeaking", (event) => {
+      console.log("User " + event.connection.connectionId + " stop speaking");
+      setIsSpeaking(false);
+    });
+
     mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager);
     });
@@ -114,16 +124,15 @@ function CustomRoom() {
       setGameStart(true);
 
       setTimeout(() => {
-        closeIntroModal()
-
-      }, 16800)
-    })
+        closeIntroModal();
+      }, 16800);
+    });
     if (nicknameFromUrl === null) {
-      setMyUserName(hostNickname)
+      setMyUserName(hostNickname);
     }
 
     try {
-      const token = await getToken(sessionId); 
+      const token = await getToken(sessionId);
 
       if (hostNickname !== null) {
         await mySession.connect(token, { clientData: hostNickname });
@@ -131,7 +140,7 @@ function CustomRoom() {
         await mySession.connect(token, { clientData: myUserName });
       }
 
-      console.log(mySession, "여기")
+      console.log(mySession, "여기");
       let newpublisher = await OV.initPublisherAsync(undefined, {
         audioSource: undefined,
         videoSource: undefined,
@@ -167,37 +176,13 @@ function CustomRoom() {
     session.publish(publisher);
 
     setJoin(true);
-    // // Obtain the current video device in use
-    // this.state.OV.getDevices()
-    //   .then((devices) => {
-    //     console.log(devices);
-
-    //     var videoDevices = devices.filter(
-    //       (device) => device.kind === "videoinput"
-    //     );
-    //     var currentVideoDeviceId = publisher.stream
-    //       .getMediaStream()
-    //       .getVideoTracks()[0]
-    //       .getSettings().deviceId;
-    //     var currentVideoDevice = videoDevices.find(
-    //       (device) => device.deviceId === currentVideoDeviceId
-    //     );
-    //     this.setState({
-    //       currentVideoDevice: currentVideoDevice,
-    //     });
-
-    //     console.log(videoDevices);
-    //   })
-    //   .catch((error) => {
-    //     console.error("에러 발생:", error);
-    //   });
   };
 
   const getToken = async (mySessionId) => {
     console.log(mySessionId, "마이 세션아이디");
     if (mySessionId === null) {
       const createSessionId = await createSession(mySessionId);
-      setSessionId(createSessionId)
+      setSessionId(createSessionId);
       return await createToken(createSessionId);
     }
     return await createToken(mySessionId);
@@ -235,7 +220,7 @@ function CustomRoom() {
   const leaveSession = () => {
     const mySession = session;
 
-    console.log(publisher)
+    console.log(publisher);
 
     if (mySession) {
       mySession.disconnect();
@@ -249,7 +234,9 @@ function CustomRoom() {
     setPublisher(undefined);
 
     // navigate(`/`);
-    navigate(`/exit?sessionId=${sessionId}&subscriberId=${publisher.stream.connection.connectionId}`);
+    navigate(
+      `/exit?sessionId=${sessionId}&subscriberId=${publisher.stream.connection.connectionId}`
+    );
   };
 
   const camStatusChanged = () => {
@@ -305,85 +292,104 @@ function CustomRoom() {
   };
 
   return (
-    <div style={{backgroundColor: "#F1F0F0"}}>
-      <div style={{display: "flex", flexFlow: "column-reverse wrap", alignContent: "center"}}>
-        <Dialog
-          fullWidth
-          maxWidth={"lg"}
-          open={gameStart}
-          onClose={() => closeIntroModal()}
-          aria-labelledby="form-dialog-title"
-        >
-          <IntroDialogContent>
-            <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
-          </IntroDialogContent>
-        </Dialog>
+    <div className="CustomRoomRoot" style={{ backgroundColor: "#F1F0F0" }}>
+      {/* Intro Dialog */}
+      <Dialog
+        fullWidth
+        maxWidth={"lg"}
+        open={gameStart}
+        onClose={() => closeIntroModal()}
+        aria-labelledby="form-dialog-title"
+      >
+        <IntroDialogContent>
+          <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
+        </IntroDialogContent>
+      </Dialog>
 
-        {/* 초대링크로 접속한 경우: 입장 대기실 */}
-        {sessionIdFromUrl != null && join === false ? (
-          <div id="wrapper">
-            <div id="container">
-              <h3 style={{ marginBottom: "20px" }}> 입장 대기실 </h3>
-              <div id="content">
-                <div style={{ width: "35rem", position: "relative" }}>
-                  <UserVideoComponent streamManager={mainStreamManager} guest={sessionId} />
-                  <div id="buttongroup">
-                    { !videoOn ?
-                      (<div style={{margin:"5px"}} onClick={camStatusChanged}>
-                        <img src={videoOnIcon} alt="videoOn"/>
-                      </div>) :
-                      (<div style={{margin:"5px"}} onClick={camStatusChanged}>
-                        <img src={videoOffIcon} alt="videoOff"/>
-                      </div>)}
-                    { !audioOn ?
-                      (<div style={{margin:"5px"}} onClick={micStatusChanged}>
-                        <img src={audioOnIcon} alt="audioOn"/>
-                      </div>) :
-                      (<div style={{margin:"5px"}} onClick={micStatusChanged}>
-                        <img src={audioOffIcon} alt="audioOff"/>
-                      </div>)}
-                  </div>
-                </div>
-                <div style={{ width: "40vw" }} className="center">
-                  <div className="center">
-                    <p style={{ fontSize: "30px" }}>참여할 준비가 되셨나요?</p>
-                    <div id="button">
-                      <input
-                        type="button"
-                        className="button"
-                        onClick={guestJoinSession}
-                        value="입장하기"
-                      />
-                      <input
-                        className="button"
-                        type="button"
-                        onClick={leaveSession}
-                        value="홈으로 가기"
-                      />
+      {/* 초대링크로 접속한 경우: 입장 대기실 */}
+      {sessionIdFromUrl != null && join === false ? (
+        <div id="wrapper">
+          <div id="container">
+            <h3 style={{ marginBottom: "20px" }}> 입장 대기실 </h3>
+            <div id="content">
+              <div style={{ width: "35rem", position: "relative" }}>
+                {/* 입장 대기실 화면 크기 props.guest 여부로 확인 */}
+                <UserVideoComponent
+                  streamManager={mainStreamManager}
+                  guest={sessionId}
+                />
+                <div id="buttongroup">
+                  {!videoOn ? (
+                    <div style={{ margin: "5px" }} onClick={camStatusChanged}>
+                      <img src={videoOnIcon} alt="videoOn" />
                     </div>
+                  ) : (
+                    <div style={{ margin: "5px" }} onClick={camStatusChanged}>
+                      <img src={videoOffIcon} alt="videoOff" />
+                    </div>
+                  )}
+                  {!audioOn ? (
+                    <div style={{ margin: "5px" }} onClick={micStatusChanged}>
+                      <img src={audioOnIcon} alt="audioOn" />
+                    </div>
+                  ) : (
+                    <div style={{ margin: "5px" }} onClick={micStatusChanged}>
+                      <img src={audioOffIcon} alt="audioOff" />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div style={{ width: "40vw" }} className="center">
+                <div className="center">
+                  <p style={{ fontSize: "30px" }}>참여할 준비가 되셨나요?</p>
+                  <div id="button">
+                    <input
+                      type="button"
+                      className="button"
+                      onClick={guestJoinSession}
+                      value="입장하기"
+                    />
+                    <input
+                      className="button"
+                      type="button"
+                      onClick={leaveSession}
+                      value="홈으로 가기"
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        ) : null}
+        </div>
+      ) : null}
+
+      {/* 방에 모였을 때 */}
+      <div style={{ display: "flex", flexFlow: "row wrap"}}>
         {mainStreamManager !== undefined && join === true ? (
-          <div id="main-video" className="col-md-6">
+          <div id="main-video" style={{ width: "50%", height: "auto" }}>
             <MainVideoComponent streamManager={mainStreamManager} />
           </div>
         ) : null}
-        <div id="video-container" className="col-md-6">
-          { join === true && publisher !== undefined ? (
-            <div
-              className="stream-container"
-              onClick={() => handleMainVideoStream(publisher)}
-            >
-              <UserVideoComponent streamManager={publisher} />
-            </div>
-          ) : null}
 
-          { join === true ? (
-            <div style={{ display: "flex", flexDirection: "row"}}>
+        <div
+          id="video-container"
+          style={{
+            width: "50%",
+            height: "auto",
+            padding: "0px",
+          }}
+        >
+          {join === true && (
+            <div style={{ display: "flex", flexFlow: "row wrap" }}>
+              <div
+                className="stream-container"
+                onClick={() => handleMainVideoStream(publisher)}
+              >
+                <UserVideoComponent
+                  streamManager={publisher}
+                  isSpeaking={isSpeaking}
+                />
+              </div>
               {subscribers.map((sub, i) => (
                 <div
                   key={sub.id}
@@ -391,18 +397,77 @@ function CustomRoom() {
                   onClick={() => handleMainVideoStream(sub)}
                 >
                   <span>{sub.id}</span>
-                  <UserVideoComponent streamManager={sub} />
+                  <UserVideoComponent
+                    streamManager={sub}
+                    isSpeaking={isSpeaking}
+                  />
                 </div>
               ))}
             </div>
-          ) : null}
+          )}
         </div>
       </div>
+
+      {/* 게임 중 */}
+      {/* <div
+        style={{ display: "flex", flexDirection: "column"}}
+      >
+        {join === true && (
+          <div
+            id="video-container"
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+            }}
+          >
+            <div
+              className="stream-container"
+              onClick={() => handleMainVideoStream(publisher)}
+            >
+              <UserVideoComponent
+                streamManager={publisher}
+                isSpeaking={isSpeaking}
+              />
+            </div>
+            {subscribers.map((sub, i) => (
+              <div
+                key={sub.id}
+                className="stream-container"
+                onClick={() => handleMainVideoStream(sub)}
+              >
+                <span>{sub.id}</span>
+                <UserVideoComponent
+                  streamManager={sub}
+                  isSpeaking={isSpeaking}
+                />
+              </div>
+            ))}
+          </div>
+        )}
+        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around"}}>
+          <div style={{ width: "50%", height: "auto" }}>
+            <video src={NarangNorangIntro} autoPlay></video>
+          </div>
+          {mainStreamManager !== undefined && join === true ? (
+            <div id="main-video" style={{ width: "50%", height: "auto" }}>
+              <MainVideoComponent streamManager={mainStreamManager} />
+            </div>
+          ) : null}
+        </div>
+      </div> */}
 
       {sessionIdFromUrl === null || join === true ? (
         <div>
           <Game1 />
-          <div style={{ position: "fixed", bottom: "0", display: "flex", zIndex: "3" }}>
+          <div
+            style={{
+              position: "fixed",
+              bottom: "0",
+              display: "flex",
+              zIndex: "3",
+            }}
+          >
             <ToolbarComponent
               audioOn={audioOn}
               videoOn={videoOn}

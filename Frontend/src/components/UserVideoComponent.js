@@ -10,12 +10,13 @@ const UserVideoComponent = (props) => {
 
   const streamManager = props.streamManager;
   const guest = props.guest;
+  const isSpeaking = props.isSpeaking;
 
   return (
     <div>
       {streamManager !== undefined ? (
         <div className="streamcomponent">
-          <OpenViduVideoComponent streamManager={streamManager} guest={guest} />
+          <OpenViduVideoComponent streamManager={streamManager} guest={guest} isSpeaking={isSpeaking} />
           {/* <div><p>{getNicknameTag()}</p></div> */}
         </div>
       ) : null}
