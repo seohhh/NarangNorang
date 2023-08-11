@@ -56,10 +56,11 @@ function PhotoComponent(props) {
     // 작성 버튼 클릭 시 호출되는 함수
     console.log('여기 오니?')
     axios({
-      method: "PUT", // PUT 요청으로 변경
-      url: `album/content/${photo.photoSeq}`,
+      method: "POST", // PUT 요청으로 변경
+      url: `album/content/`,
       data: {
         photoContent: editedContent, // 수정된 내용을 서버로 전송
+        photoSeq: photo.photoSeq
       },
     })
       .then((res) => {
@@ -75,7 +76,7 @@ function PhotoComponent(props) {
   return (
     <div>
       <Card
-        style={{ width: "24rem", margin: "3rem" }}
+        style={{ width: "24rem", margin: "3rem", height: "32rem" }}
         onMouseOver={doMouseOver}
         onMouseLeave={doMouseLeave}
       >
@@ -102,7 +103,7 @@ function PhotoComponent(props) {
           </Button>
         </ButtonBox>
         <Card.Body>
-          <Card.Title style={{ margin: "1rem" }}>{photo.photoDate}</Card.Title>
+          <Card.Title style={{ margin: "1rem" }}>{photo.photoDate.substr(0,10)}</Card.Title>
           <Card.Text style={{ margin: "1rem" }}>
             {photo.photoContent}
           </Card.Text>
