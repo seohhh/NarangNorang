@@ -7,6 +7,7 @@ import com.narang_norang.NarangNorang.photo.domain.dto.response.ReadPhotoRespons
 import com.narang_norang.NarangNorang.photo.domain.dto.response.UpdatePhotoContentResponse;
 import com.narang_norang.NarangNorang.photo.domain.entity.Photo;
 import com.narang_norang.NarangNorang.photo.service.PhotoService;
+import com.narang_norang.NarangNorang.redis.picture.domain.dto.GetPictureRequest;
 import com.narang_norang.NarangNorang.redis.picture.domain.dto.PictureResponse;
 import com.narang_norang.NarangNorang.redis.picture.domain.entity.Picture;
 import com.narang_norang.NarangNorang.redis.picture.repository.PictureRepository;
@@ -49,15 +50,15 @@ public class PhotoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Boolean> uploadPhoto(@RequestBody Long memberSeq,
-                                               @RequestBody String roomCode,
-                                               @RequestBody String subscriberId,
-                                               @RequestBody List<Long> redisImageSeqs) {
+    public ResponseEntity<Boolean> uploadPhoto(@RequestBody GetPictureRequest getPictureRequest) {
         try {
-            List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscriberId);
-            Member member = memberService.getMemberByMemberSeq(memberSeq);
+            List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(getPictureRequest.getRoomCode(),
+                    getPictureRequest.getSubscriberId());
+            System.out.println(pictureList.size());
+            Member member = memberService.getMemberByMemberSeq(getPictureRequest.getMemberSeq());
             for (Picture picture : pictureList) {
-                if (redisImageSeqs.contains((long) picture.getPictureSeq())) {
+                System.out.println(getPictureRequest.getRedisImageSeqs().contains(picture.getPictureSeq().longValue()));
+                if (getPictureRequest.getRedisImageSeqs().contains(picture.getPictureSeq().longValue())) {
                     String[] texts = s3Uploader.uploadFiles(picture, "static/"+member.getMemberId());
                     Photo photo = Photo.builder()
                             .member(member)
@@ -78,15 +79,15 @@ public class PhotoController {
     }
 
     @GetMapping("/capture-list")
-    @ApiOperation(value = "앨범 조회", notes = "로그인한 회원의 앨범을 조회한다.")
+    @ApiOperation(value = "캡처한 사진들 조회", notes = "로그인한 회원의 앨범을 조회한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<List<PictureResponse>> readPictureByRoomCodeAndSubscribeId(@RequestBody String roomCode,
-                                                                                     @RequestBody String subscriberId) {
+    public ResponseEntity<List<PictureResponse>> readPictureByRoomCodeAndSubscribeId(@RequestParam("roomCode") String roomCode,
+                                                                                     @RequestParam("subscriberId") String subscriberId) {
 
         List<Picture> pictures = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscriberId);
         List<PictureResponse> pictureResponses = new ArrayList<>();
@@ -160,9 +161,9 @@ public class PhotoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Boolean> uploadCapture(@RequestParam("roomCode") String roomCode,
-                                                 @RequestParam("subscriberId") String subscriberId,
-                                               @RequestParam("images") MultipartFile[] multipartFiles) throws IOException {
+    public ResponseEntity<Boolean> uploadCapture(@RequestBody String roomCode,
+                                                 @RequestBody String subscriberId,
+                                               @RequestBody MultipartFile[] multipartFiles) throws IOException {
 
         for (MultipartFile multipartFile : multipartFiles) {
 

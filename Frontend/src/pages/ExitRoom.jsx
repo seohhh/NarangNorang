@@ -19,21 +19,21 @@ function ExitRoom() {
   useEffect(() => {
 
 
-    // const loadRedisImages = () => {
-    //   const formData = new FormData()
-    //   formData.append('roomCode', sessionIdFromUrl)
-    //   formData.append('subscriberId', subscriberIdFromUrl)
+    const loadRedisImages = () => {
+      const formData = new FormData()
+      formData.append('roomCode', sessionIdFromUrl)
+      formData.append('subscriberId', subscriberIdFromUrl)
 
-    //   axios.get('/album/redis', formData)
-    //   .then((res) => {
-    //       console.log(res)
-    //   })
-    //   .catch((error) => {
-    //       console.log(error)
-    //   })
-    // }
+      axios.get('/album/capture-list', formData)
+      .then((res) => {
+          console.log(res)
+      })
+      .catch((error) => {
+          console.log(error)
+      })
+    }
 
-    // loadRedisImages()
+    loadRedisImages()
     if (sessionIdFromUrl === null || subscriberIdFromUrl===null) {
       navigate('/')
     }
