@@ -205,7 +205,7 @@ function CustomRoom() {
 
   const createSession = async (sessionId) => {
     const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions",
+      APPLICATION_SERVER_URL + "api/v1/sessions",
       { customSessionId: sessionId },
       {
         headers: {
@@ -219,7 +219,7 @@ function CustomRoom() {
 
   const createToken = async (sessionId) => {
     const response = await axios.post(
-      APPLICATION_SERVER_URL + "api/sessions/" + sessionId + "/connections",
+      APPLICATION_SERVER_URL + "api/v1/sessions/" + sessionId + "/connections",
       {},
       {
         headers: {
