@@ -1,24 +1,28 @@
 import { createSlice } from '@reduxjs/toolkit'
 import axios from 'axios'
 
-axios.defaults.baseURL = 'http://3.36.126.169:8080/api/v1'
+axios.defaults.baseURL = 'https://i9c208.p.ssafy.io/api/v1'
 
 const authSlice = createSlice({
   name: 'auth',
   initialState : {
-    // isLoggedin: sessionStorage.getItem('isLoggedin') === 'true',
-    isLoggedin: false,
+    isLoggedin: sessionStorage.getItem('isLoggedin') === 'true',
+    // isLoggedin: false,
     user: JSON.parse(sessionStorage.getItem('user')) || null,
     userNickname: null,
     userId: null,
     token: null,
     error : null,
+    userSeq: null,
   },
   reducers: {
     loginSuccess(state, action) {
       state.isLoggedin = true
       state.user = action.payload[0]
       state.userNickname = action.payload[0].memberNickname
+      state.userSeq = action.payload[0].memberSeq
+      console.log(state.userNickname, "로그인 시 유저닉네임")
+      console.log(state.userSeq, '유저 시퀀스')
       state.error = null
       state.token = action.payload[0].accessToken
       state.userId = action.payload[1]

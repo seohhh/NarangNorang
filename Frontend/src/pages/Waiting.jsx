@@ -52,7 +52,7 @@ function Waiting() {
 
   const isLoggedin = sessionStorage.getItem('isLoggedin')
   useEffect(() => {
-    if (isLoggedin === 'true') {
+    if (isLoggedin === 'true' && userNickname) {
       navigate(`/room?sessionId=${sessionId}&nickname=${userNickname}`)
     }
   }, [isLoggedin, navigate, sessionId, userNickname]);
@@ -103,6 +103,7 @@ function Waiting() {
             <Form.Group className="mb-3" controlId="formBasicPassword" style={{ width: "100%" }}>
               <Form.Label>비밀번호</Form.Label>
               <Form.Control
+                type="password"
                 placeholder="비밀번호를 입력하세요."
                 value={inputPw}
                 onChange={handleInputPw}
