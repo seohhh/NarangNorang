@@ -130,11 +130,11 @@ public class PhotoController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<UpdatePhotoContentResponse> updateContent(
-            @RequestBody @Valid final UpdatePhotoContentRequest updatePhotoContentRequestrequest) {
+            @RequestBody @Valid final UpdatePhotoContentRequest updatePhotoContentRequest) {
 
-        UpdatePhotoContentResponse response = photoService.updatePhotoContent(updatePhotoContentRequestrequest);
+        UpdatePhotoContentResponse updatePhotoContentResponse = photoService.updatePhotoContent(updatePhotoContentRequest);
 
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(updatePhotoContentResponse);
     }
 
     @DeleteMapping("/delete/{photoSeq}")

@@ -17,13 +17,12 @@ import java.util.Optional;
 @Slf4j
 @RequiredArgsConstructor
 @Service("PhotoService")
-//@Transactional(readOnly = true)
+@Transactional(readOnly = true)
 public class PhotoServiceImpl implements PhotoService {
 
     private final PhotoRepository photoRepository;
 
     @Override
-//    @Transactional
     public void uploadPhoto(Photo photo) {
         photoRepository.save(photo);
     }
@@ -34,15 +33,14 @@ public class PhotoServiceImpl implements PhotoService {
         return photoList;
     }
 
+    @Transactional
     @Override
     public UpdatePhotoContentResponse updatePhotoContent(UpdatePhotoContentRequest updatePhotoContentRequest) {
         Optional<Photo> photo = photoRepository.findById(updatePhotoContentRequest.getPhotoSeq());
 
         isPhoto(photo);
-
         photo.get()
                 .updateContent(updatePhotoContentRequest.getPhotoContent());
-
         return new UpdatePhotoContentResponse(photo.get());
     }
 
