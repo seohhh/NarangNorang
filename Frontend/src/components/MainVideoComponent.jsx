@@ -5,10 +5,9 @@ import html2canvas from "html2canvas";
 import "./MainVideoComponent.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
 import axios from "axios";
+import { useSelector } from "react-redux";
 
 const BASE_URL = 'https://i9c208.p.ssafy.io/api/v1'
-import * as tf from "@tensorflow/tfjs-core";  // 텐서플로우 JS 라이브러리
-import { useSelector } from "react-redux";
 
 const MainVideoComponent = (props) => {
   const videoRef = useRef();  // 비디오 요소 참조 생성

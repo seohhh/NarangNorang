@@ -26,7 +26,7 @@ function CustomNavbar() {
   const dispatch = useDispatch()
   const token = useSelector(state => state.login.token);
   const userId = useSelector(state => state.login.userId);
-
+  const userSeq = useSelector(state => state.login.userSeq);
   const handleLogout = () => {
     dispatch(logout(token))}
 
@@ -43,7 +43,7 @@ function CustomNavbar() {
       </div>
       <div class="align-self-center">
         <NavLink to="/contents">컨텐츠 소개</NavLink>
-        <NavLink to={`/album/${userId}`}>앨범</NavLink>
+        <NavLink to={`/album/${userSeq}`}>앨범</NavLink>
         {isLoggedin ?
           <NavLink to={`/mypage/${userId}`}>마이페이지</NavLink>
           : <NavLink to="/signup">회원가입</NavLink>}

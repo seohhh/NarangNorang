@@ -13,13 +13,16 @@ const authSlice = createSlice({
     userId: null,
     token: null,
     error : null,
+    userSeq: null,
   },
   reducers: {
     loginSuccess(state, action) {
       state.isLoggedin = true
       state.user = action.payload[0]
       state.userNickname = action.payload[0].memberNickname
+      state.userSeq = action.payload[0].memberSeq
       console.log(state.userNickname, "로그인 시 유저닉네임")
+      console.log(state.userSeq, '유저 시퀀스')
       state.error = null
       state.token = action.payload[0].accessToken
       state.userId = action.payload[1]
