@@ -52,7 +52,6 @@ const color = {
 
 function Main() {
   const isLoggedin = useSelector((state) => state.login.isLoggedin);
-  console.log(isLoggedin)
 
   return (
     <div>
