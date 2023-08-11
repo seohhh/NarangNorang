@@ -15,11 +15,11 @@ import javax.persistence.GenerationType;
 public class Participant {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long participantSeq;
 
     @Indexed
-    private String nickname;
+    private String participantNickname;
 
     @Indexed
     private String roomCode;

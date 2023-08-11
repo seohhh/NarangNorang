@@ -9,5 +9,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class FindParticipantRequest {
     private String roomCode;
-    private String nickname;
+    private String participantNickname;
 }

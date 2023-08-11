@@ -9,12 +9,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomResponse {
+    private Long roomSeq;
     private String roomCode;
-    private String hostname;
+    private String hostName;
+    private Long hostSeq;
 
     public RoomResponse(Room room) {
+        this.roomSeq = room.getRoomSeq();
         this.roomCode = room.getRoomCode();
-        this.hostname = room.getHostname();
+        this.hostName = room.getHostName();
+        this.hostSeq = room.getHostSeq();
     }
 
 }

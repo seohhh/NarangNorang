@@ -17,7 +17,7 @@ public class PictureResponse {
 
     private String roomCode;
 
-    private Long subscriberId;
+    private String subscriberId;
 
     private String pictureName;
 

@@ -13,7 +13,7 @@ public class ParticipantResponse {
 
     private Long participantSeq;
 
-    private String nickname;
+    private String participantNickname;
 
     private String roomCode;
 
@@ -23,7 +23,7 @@ public class ParticipantResponse {
 
     public ParticipantResponse(Participant participant) {
         this.participantSeq = participant.getParticipantSeq();
-        this.nickname = participant.getNickname();
+        this.participantNickname = participant.getParticipantNickname();
         this.roomCode = participant.getRoomCode();
         this.memberSeq = participant.getMemberSeq();
         this.grade = participant.getGrade();

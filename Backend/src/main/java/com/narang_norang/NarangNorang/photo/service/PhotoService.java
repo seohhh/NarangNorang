@@ -12,7 +12,7 @@ public interface PhotoService {
     void uploadPhoto(Photo photo);
     List<Photo> getPhotoByMember(Member member);
 
-    UpdatePhotoContentResponse updatePhotoContent(Long photoSeq, UpdatePhotoContentRequest request);
+    UpdatePhotoContentResponse updatePhotoContent(UpdatePhotoContentRequest updatePhotoContentRequest);
 
     boolean deletePhoto(Long photoSeq);
 

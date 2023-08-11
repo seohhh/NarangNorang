@@ -22,6 +22,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.validation.Valid;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,7 +50,7 @@ public class PhotoController {
     })
     public ResponseEntity<Boolean> uploadPhoto(@RequestParam("memberSeq") Long memberSeq,
                                                @RequestParam("roomCode") String roomCode,
-                                               @RequestParam("subscriberId") Long subscriberId) {
+                                               @RequestParam("subscriberId") String subscriberId) {
         try {
             List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscriberId);
             Member member = memberService.getMemberByMemberSeq(memberSeq);
@@ -59,6 +60,7 @@ public class PhotoController {
                         .member(member)
                         .photoFilename(texts[0])
                         .photoUrl(texts[1])
+                        .photoDate(picture.getPictureTime().toString())
                         .build();
                 photoService.uploadPhoto(photo);
             }
@@ -91,7 +93,7 @@ public class PhotoController {
         return ResponseEntity.ok(readPhotoResponses);
     }
 
-    @PutMapping ("/content/{photoSeq}")
+    @PostMapping ("/content")
     @ApiOperation(value = "앨범 사진 내용 수정", notes = "앨범 사진 내용을 수정한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -99,10 +101,10 @@ public class PhotoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<UpdatePhotoContentResponse> updateContent(@PathVariable("photoSeq") final Long photoSeq,
-                                                             @RequestBody @Valid final UpdatePhotoContentRequest request) {
+    public ResponseEntity<UpdatePhotoContentResponse> updateContent(
+            @RequestBody @Valid final UpdatePhotoContentRequest updatePhotoContentRequestrequest) {
 
-        UpdatePhotoContentResponse response = photoService.updatePhotoContent(photoSeq, request);
+        UpdatePhotoContentResponse response = photoService.updatePhotoContent(updatePhotoContentRequestrequest);
 
         return ResponseEntity.ok(response);
     }
@@ -123,7 +125,7 @@ public class PhotoController {
     }
 
     @PostMapping("/capture")
-    @ApiOperation(value = "캡처 등록", notes = "사진을 등록한다.")
+    @ApiOperation(value = "캡처 저장", notes = "캡처 사진을 레디스에 저장한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
             @ApiResponse(code = 401, message = "인증 실패"),
@@ -131,7 +133,7 @@ public class PhotoController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<Boolean> uploadCapture(@RequestParam("roomCode") String roomCode,
-                                                 @RequestParam("subscriberId") Long subscriberId,
+                                                 @RequestParam("subscriberId") String subscriberId,
                                                @RequestParam("images") MultipartFile[] multipartFiles) throws IOException {
 
         for (MultipartFile multipartFile : multipartFiles) {
@@ -143,6 +145,7 @@ public class PhotoController {
                     .pictureContentType(multipartFile.getContentType())
                     .pictureData(multipartFile.getBytes())
                     .pictureSize(multipartFile.getSize())
+                    .pictureTime(LocalDateTime.now())
                     .build();
             pictureService.savePicture(picture);
         }

@@ -12,7 +12,7 @@ public interface PictureRepository extends CrudRepository<Picture, Long> {
 
     Optional<Picture> findByPictureUrl(String pictureUrl);
 
-    List<Picture> findAllByRoomCodeAndSubscriberId(String roomCode, Long subscriberId);
+    List<Picture> findAllByRoomCodeAndSubscriberId(String roomCode, String subscriberId);
 
 
 }

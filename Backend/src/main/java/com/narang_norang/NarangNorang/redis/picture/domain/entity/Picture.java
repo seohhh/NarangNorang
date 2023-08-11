@@ -24,7 +24,7 @@ public class Picture {
     private String roomCode;
 
     @Indexed
-    private Long subscriberId;
+    private String subscriberId;
 
     private String pictureName;
 

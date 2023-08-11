@@ -38,19 +38,20 @@ public class ParticipantService {
     public ParticipantResponse findByRoomCodeAndNickname(FindParticipantRequest findParticipantRequest) {
         Optional<Participant> participant = participantRepository.findByRoomCodeAndNickname(
                 findParticipantRequest.getRoomCode(),
-                findParticipantRequest.getNickname());
+                findParticipantRequest.getParticipantNickname());
 
         isParticipant(participant);
 
         return new ParticipantResponse(participant.get());
     }
 
-    public void delete(FindParticipantRequest findParticipantRequest) {
+    public boolean delete(FindParticipantRequest findParticipantRequest) {
         Optional<Participant> participant = participantRepository.findByRoomCodeAndNickname(
                 findParticipantRequest.getRoomCode(),
-                findParticipantRequest.getNickname());
+                findParticipantRequest.getParticipantNickname());
 
         participant.ifPresent(participantRepository::delete);
+        return true;
     }
 
 

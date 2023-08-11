@@ -11,6 +11,6 @@ import javax.annotation.Nullable;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UpdatePhotoContentRequest {
-
+    private Long photoSeq;
     private String photoContent;
 }
