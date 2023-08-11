@@ -21,13 +21,14 @@ public class RoomService {
     }
 
 
-    public void deleteRoom(String hostname) {
-        Optional<Room> room = roomRepository.findByHostname(hostname);
+    public boolean deleteRoom(Long roomSeq) {
+        Optional<Room> room = roomRepository.findByRoomSeq(roomSeq);
         room.ifPresent(roomRepository::delete);
+        return true;
     }
 
-    public Room findRoomByHostname(String hostname) {
-        Optional<Room> room = roomRepository.findByHostname(hostname);
+    public Room findRoomByHostSeq(Long hostSeq) {
+        Optional<Room> room = roomRepository.findByHostSeq(hostSeq);
 
         if (room.isEmpty()) {
             throw new IllegalArgumentException("Hostname에 해당하는 방이 없습니다.");
@@ -46,8 +47,8 @@ public class RoomService {
         return room.get();
     }
 
-    public boolean isExistRoomByHostname(String hostname) {
-        Optional<Room> room = roomRepository.findByHostname(hostname);
+    public boolean isExistRoomByHostSeq(Long hostSeq) {
+        Optional<Room> room = roomRepository.findByHostSeq(hostSeq);
         // 객체가 있다면 true, 없다면 false
         return room.isPresent();
     }

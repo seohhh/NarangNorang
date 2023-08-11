@@ -14,7 +14,7 @@ public class PictureServiceImpl implements PictureService {
 
     private final PictureRepository pictureRepository;
 
-    public List<Picture> getPictureByRoomCodeAndSubscriberId(String roomCode, Long subscriberId) {
+    public List<Picture> getPictureByRoomCodeAndSubscriberId(String roomCode, String subscriberId) {
         List<Picture> pictureList = pictureRepository.findAllByRoomCodeAndSubscriberId(roomCode, subscriberId);
         return pictureList;
     }

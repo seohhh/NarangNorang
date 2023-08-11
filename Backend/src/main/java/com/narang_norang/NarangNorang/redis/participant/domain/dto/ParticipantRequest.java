@@ -12,7 +12,7 @@ import org.springframework.lang.Nullable;
 @AllArgsConstructor
 public class ParticipantRequest {
 
-    private String nickname;
+    private String participantNickname;
 
     private String roomCode;
 
@@ -23,7 +23,7 @@ public class ParticipantRequest {
 
     public Participant toParticipant() {
         return Participant.builder()
-                .nickname(nickname)
+                .participantNickname(participantNickname)
                 .roomCode(roomCode)
                 .memberSeq(memberSeq)
                 .grade(grade)

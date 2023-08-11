@@ -35,13 +35,13 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
-    public UpdatePhotoContentResponse updatePhotoContent(Long photoSeq, UpdatePhotoContentRequest request) {
-        Optional<Photo> photo = photoRepository.findById(photoSeq);
+    public UpdatePhotoContentResponse updatePhotoContent(UpdatePhotoContentRequest updatePhotoContentRequest) {
+        Optional<Photo> photo = photoRepository.findById(updatePhotoContentRequest.getPhotoSeq());
 
         isPhoto(photo);
 
         photo.get()
-                .updateContent(request.getPhotoContent());
+                .updateContent(updatePhotoContentRequest.getPhotoContent());
 
         return new UpdatePhotoContentResponse(photo.get());
     }

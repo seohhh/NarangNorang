@@ -11,5 +11,7 @@ public interface RoomRepository extends CrudRepository<Room, Long> {
 
     Optional<Room> findByRoomCode(String roomId);
 
-    Optional<Room> findByHostname(String hostname);
+    Optional<Room> findByHostSeq(Long hostSeq);
+
+    Optional<Room> findByRoomSeq(Long roomSeq);
 }
