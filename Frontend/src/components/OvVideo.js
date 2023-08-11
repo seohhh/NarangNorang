@@ -34,7 +34,7 @@ export default class OpenViduVideoComponent extends Component {
           />
         ) : (
           <video
-            style={{ width: "130px", height: "130px" }}
+            style={{ width: "250px", height: "250px" }}
             autoPlay={true}
             ref={this.videoRef}
           />

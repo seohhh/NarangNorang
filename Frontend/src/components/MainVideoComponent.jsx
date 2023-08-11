@@ -124,7 +124,7 @@ const MainVideoComponent = (props) => {
   return (
     <div>
       {props.streamManager !== undefined ? (
-        <div className="streamcomponent">
+        <div className="stream-component">
           <canvas
             ref={canvasRef}
             width={videoDimensions.width}
@@ -136,7 +136,7 @@ const MainVideoComponent = (props) => {
             width={videoDimensions.width}
             height={videoDimensions.height}
           />
-          <button onClick={handleCapture}>지금 이 순간!</button>
+          {/* <button onClick={handleCapture}>지금 이 순간!</button> */}
         </div>
 
         ) : null}
