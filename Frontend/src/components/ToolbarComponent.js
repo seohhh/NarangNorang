@@ -18,7 +18,7 @@ import copyIcon from '../assets/icon/copy.png';
 // icon
 import inviteIcon from '../assets/icon/invite.png';
 import leaveIcon from '../assets/icon/leave.png';
-
+import xrayIcon from '../assets/icon/xray.png';
 
 const ToolbarComponent = (props) => {
   const [audioOn, setAudioOn] = useState(props.audioOn)
