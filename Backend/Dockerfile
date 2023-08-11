@@ -14,6 +14,10 @@ FROM openjdk:11-jdk-slim
 # Docker Container에서 작업이 이루어지는 위치
 WORKDIR /root
 
+ENV ACCESS_KEY=AKIATO2TQR4HIQ7LYLXP \
+BUCKET_NAME=narangnorang \
+SECRET_KEY=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
+
 ARG JAR_FILE=build/libs/*.jar
 
 # 현재 경로/target/be-0.0.1-SNAPSHOT.jar에 해당하는 파일을 Docker Container의 WORKDIR 위치로 복사 (이미지 생성할 때 동작)
