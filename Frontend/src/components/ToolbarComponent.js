@@ -36,7 +36,7 @@ const ToolbarComponent = (props) => {
   // 방 나가기 모달(사진 선택)
 
   const mySessionId = props.sessionId;
-  const inviteLink = `http://localhost:3000/waiting/${mySessionId}`
+  const inviteLink = `http://i9c208.p.ssafy/waiting/${mySessionId}`
 
   const micStatusChanged = () => {
     props.micStatusChanged();
