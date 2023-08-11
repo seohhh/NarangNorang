@@ -1,8 +1,4 @@
 import React, { useState } from 'react';
-import Mic from '@material-ui/icons/Mic';
-import MicOff from '@material-ui/icons/MicOff';
-import Videocam from '@material-ui/icons/Videocam';
-import VideocamOff from '@material-ui/icons/VideocamOff';
 // import Fullscreen from '@material-ui/icons/Fullscreen';
 // import FullscreenExit from '@material-ui/icons/FullscreenExit';
 // import PowerSettingsNew from '@material-ui/icons/PowerSettingsNew';
@@ -11,14 +7,19 @@ import './Toolbar.css';
 import { switchShowCanvas } from "../slice/xraySlice";
 import { useSelector, useDispatch } from "react-redux";
 
-import IconButton from '@material-ui/core/IconButton';
-import copyIcon from '../assets/icon/copy.png';
+
 // import { div, exp } from '@tensorflow/tfjs-core';
 
 // icon
-import inviteIcon from '../assets/icon/invite.png';
-import leaveIcon from '../assets/icon/leave.png';
-import xrayIcon from '../assets/icon/xray.png';
+import inviteIcon from "../assets/icon/invite.png";
+import leaveIcon from "../assets/icon/leave.png";
+import xrayIcon from "../assets/icon/xray.png";
+import copyIcon from "../assets/icon/copy.png";
+import videoOnIcon from "../assets/icon/videoOn.png";
+import videoOffIcon from "../assets/icon/videoOff.png";
+import audioOnIcon from "../assets/icon/audioOn.png";
+import audioOffIcon from "../assets/icon/audioOff.png";
+import noXrayIcon from "../assets/icon/noXray.png";
 
 
 const ToolbarComponent = (props) => {
@@ -82,32 +83,38 @@ const ToolbarComponent = (props) => {
   
 return (
   <div className="toolbar-container">
-    <IconButton color="inherit" className="navButton" id="navMicButton" onClick={micStatusChanged}>
-      { !audioOn ? <Mic /> : <MicOff color="secondary" />}
-    </IconButton>
-
-    <IconButton color="inherit" className="navButton" id="navCamButton" onClick={camStatusChanged}>
-    { !videoOn ? (
-        <Videocam />
-        ) : (
-          <VideocamOff color="secondary" />
-        )}
-    </IconButton>
-    <div onClick={handleShow}>
-      <img src={inviteIcon} alt="invite" />
+    <div className="iconGroup">
+      { !videoOn ?
+        (<div onClick={camStatusChanged}>
+          <img src={videoOnIcon} alt="videoOn" className="icon" />
+        </div>) :
+        (<div onClick={camStatusChanged}>
+          <img src={videoOffIcon} alt="videoOff" className="icon" />
+        </div>)}
+      { !audioOn ?
+        (<div onClick={micStatusChanged}>
+          <img src={audioOnIcon} alt="audioOn" className="icon" />
+        </div>) :
+        (<div onClick={micStatusChanged}>
+          <img src={audioOffIcon} alt="audioOff" className="icon" />
+        </div>)}
+      <div onClick={handleShow}>
+        <img src={inviteIcon} alt="invite" className="icon" />
+      </div>
+      { !showCanvas ?
+        (<div onClick={clickShowCanvas}>
+          <img src={xrayIcon} alt="noXray" className="icon" />
+        </div>) :
+        (<div onClick={clickShowCanvas}>
+          <img src={noXrayIcon} alt="xray" className="icon" />
+        </div>)}
+      <div onClick={leaveSession}>
+        <img src={leaveIcon} alt="leave" className="icon" />
+      </div>
     </div>
-    <div onClick={clickShowCanvas}>
-      <img src={xrayIcon} alt="xray" />
-    </div>
-    <div onClick={leaveSession}>
-      <img src={leaveIcon} alt="leave" />
-    </div>
-    {/* <IconButton color="inherit" className="navButton" onClick={this.toggleFullscreen}>
-      {publisher !== undefined && this.state.fullscreen ? <FullscreenExit /> : <Fullscreen />}
-    </IconButton> */}
 
     {/* 초대링크 모달 */}
-    <Modal show={show} onHide={handleClose} style={{ padding: "50px" }}>
+    <Modal show={show} onHide={handleClose} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
       <Modal.Header closeButton>
         <Modal.Title style={{ fontFamily: "Happiness-Sans-Bold" }}>
           방이 생성되었습니다</Modal.Title>
@@ -116,7 +123,7 @@ return (
         <div>
           <div style={{ paddingBottom: "15px" }}>같이 게임을 즐기고 싶은 사용자와 이 링크를 공유하세요</div>
           <div id="linkContainer">
-            <span>{inviteLink}</span>
+            <span onClick={() => handleCopyClipBoard(inviteLink)}>{inviteLink}</span>
             <span onClick={() => handleCopyClipBoard(inviteLink)}>
               <img src={copyIcon} alt="copy" style={{ width: "15px" }} /></span>
           </div>

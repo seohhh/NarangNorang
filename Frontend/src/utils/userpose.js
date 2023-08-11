@@ -74,9 +74,16 @@ const startRender = async (videoref, context) => {
   renderPose();
 };
 
+const clearSkeleton = (ctx, videoWidth, videoHeight) => {
+  ctx.clearRect(0, 0, videoWidth, videoHeight);
+};
+
 const stopRender = () => {
   raf = false;
   cancelAnimationFrame(rafId);
+  if (ctx) {
+    clearSkeleton(ctx, video.width, video.height); // 스켈레톤 지우기
+  }
 };
 
 const renderPose = async () => {
@@ -97,7 +104,6 @@ const renderResult = async () => {
     poses = await detector.estimatePoses(video, estimationConfig);
   }
 
-  // ctx.drawImage(video, 0, 0, video.width, video.height);
   ctx.clearRect(0, 0, video.width, video.height);
 
   for (var i = 0; i < poses.length; i++) {

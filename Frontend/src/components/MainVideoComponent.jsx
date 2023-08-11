@@ -46,19 +46,6 @@ const MainVideoComponent = (props) => {
     }
   };
 
-  // 포즈 감지 버튼 클릭 핸들러
-  const handleDetectClick = async () => {
-    if (detectorRef.current) {
-      // 감지기가 로드되어 있을 경우
-      const poses = await userpose.detectPose(videoRef.current);  // 비디오에서 현재 포즈 감지
-      console.log(poses); // 콘솔에 감지된 포즈 출력
-    } else {
-      // 감지기가 로드되어 있지 않을 경우 로딩
-      console.log("Detector not ready yet.");
-      detectorRef.current = await userpose.loadDetector();  // 포즈 감지기 로딩
-    }
-  };
-
   useEffect(() => {
     if (props && !!videoRef) {
       props.streamManager.addVideoElement(videoRef.current);
