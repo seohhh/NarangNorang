@@ -39,7 +39,7 @@ import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 // import CatMusic from '../assets/game/music/CatMusic.wav';
 // import TigerMusic from '../assets/game/music/TigerMusic.wav';
 
-const APPLICATION_SERVER_URL = "http://3.36.126.169:8080/";
+const APPLICATION_SERVER_URL = "https://i9c208.p.ssafy.io/";
 
 const IntroMp4 = styled.video`
   width: 100%;
