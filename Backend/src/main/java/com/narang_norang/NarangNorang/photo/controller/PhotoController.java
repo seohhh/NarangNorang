@@ -49,10 +49,10 @@ public class PhotoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Boolean> uploadPhoto(@RequestParam("memberSeq") Long memberSeq,
-                                               @RequestParam("roomCode") String roomCode,
-                                               @RequestParam("subscriberId") String subscriberId,
-                                               @RequestParam("redisImageSeqs") List<Long> redisImageSeqs) {
+    public ResponseEntity<Boolean> uploadPhoto(@RequestBody Long memberSeq,
+                                               @RequestBody String roomCode,
+                                               @RequestBody String subscriberId,
+                                               @RequestBody List<Long> redisImageSeqs) {
         try {
             List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscriberId);
             Member member = memberService.getMemberByMemberSeq(memberSeq);
@@ -85,10 +85,10 @@ public class PhotoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<List<PictureResponse>> readPictureByRoomCodeAndSubscribeId(@RequestParam("roomCode") String roomCode,
-                                                                                     @RequestParam("SubscribeId") String subscribeId) {
+    public ResponseEntity<List<PictureResponse>> readPictureByRoomCodeAndSubscribeId(@RequestBody String roomCode,
+                                                                                     @RequestBody String subscriberId) {
 
-        List<Picture> pictures = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscribeId);
+        List<Picture> pictures = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscriberId);
         List<PictureResponse> pictureResponses = new ArrayList<>();
 
         for (Picture picture :
