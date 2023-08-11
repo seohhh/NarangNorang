@@ -66,23 +66,25 @@ const detectPose = async (video) => {
   return poses;
 };
 
+
 const startRender = async (videoref, context) => {
   video = videoref;
   ctx = context;
   raf = true;
-
   renderPose();
 };
 
-const clearSkeleton = (ctx, videoWidth, videoHeight) => {
-  ctx.clearRect(0, 0, videoWidth, videoHeight);
-};
+// const clearSkeleton = (ctx, videoWidth, videoHeight) => {
+//   ctx.clearRect(0, 0, videoWidth, videoHeight);
+// };
 
 const stopRender = () => {
   raf = false;
   cancelAnimationFrame(rafId);
-  if (ctx) {
-    clearSkeleton(ctx, video.width, video.height); // 스켈레톤 지우기
+  if (ctx && video) {
+    const canvas = ctx.canvas
+    ctx.clearRect(0, 0, video.width, video.height); // 스켈레톤 지우기
+    canvas.width = 0;
   }
 };
 
@@ -112,6 +114,9 @@ const renderResult = async () => {
       drawPose(ctx, pose, color);
     }
   }
+
+  // ctx.clearRect(0, 0, video.width, video.height);
+
 };
 
 const drawPose = (ctx, pose, color) => {
