@@ -7,6 +7,7 @@ import com.narang_norang.NarangNorang.photo.domain.dto.response.ReadPhotoRespons
 import com.narang_norang.NarangNorang.photo.domain.dto.response.UpdatePhotoContentResponse;
 import com.narang_norang.NarangNorang.photo.domain.entity.Photo;
 import com.narang_norang.NarangNorang.photo.service.PhotoService;
+import com.narang_norang.NarangNorang.redis.picture.domain.dto.PictureResponse;
 import com.narang_norang.NarangNorang.redis.picture.domain.entity.Picture;
 import com.narang_norang.NarangNorang.redis.picture.repository.PictureRepository;
 import com.narang_norang.NarangNorang.redis.picture.service.PictureService;
@@ -50,25 +51,52 @@ public class PhotoController {
     })
     public ResponseEntity<Boolean> uploadPhoto(@RequestParam("memberSeq") Long memberSeq,
                                                @RequestParam("roomCode") String roomCode,
-                                               @RequestParam("subscriberId") String subscriberId) {
+                                               @RequestParam("subscriberId") String subscriberId,
+                                               @RequestParam("redisImageSeqs") List<Long> redisImageSeqs) {
         try {
             List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscriberId);
             Member member = memberService.getMemberByMemberSeq(memberSeq);
             for (Picture picture : pictureList) {
-                String[] texts = s3Uploader.uploadFiles(picture, "static/"+member.getMemberId());
-                Photo photo = Photo.builder()
-                        .member(member)
-                        .photoFilename(texts[0])
-                        .photoUrl(texts[1])
-                        .photoDate(picture.getPictureTime().toString())
-                        .build();
-                photoService.uploadPhoto(photo);
+                if (redisImageSeqs.contains((long) picture.getPictureSeq())) {
+                    String[] texts = s3Uploader.uploadFiles(picture, "static/"+member.getMemberId());
+                    Photo photo = Photo.builder()
+                            .member(member)
+                            .photoFilename(texts[0])
+                            .photoUrl(texts[1])
+                            .photoDate(picture.getPictureTime().toString())
+                            .build();
+                    photoService.uploadPhoto(photo);
+                }
+
+                pictureService.deletePicture(picture);
             }
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/capture-list")
+    @ApiOperation(value = "앨범 조회", notes = "로그인한 회원의 앨범을 조회한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<List<PictureResponse>> readPictureByRoomCodeAndSubscribeId(@RequestParam("roomCode") String roomCode,
+                                                                                     @RequestParam("SubscribeId") String subscribeId) {
+
+        List<Picture> pictures = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscribeId);
+        List<PictureResponse> pictureResponses = new ArrayList<>();
+
+        for (Picture picture :
+                pictures) {
+            pictureResponses.add(new PictureResponse(picture));
+        }
+
+        return ResponseEntity.ok(pictureResponses);
     }
 
     @GetMapping("/{memberSeq}")

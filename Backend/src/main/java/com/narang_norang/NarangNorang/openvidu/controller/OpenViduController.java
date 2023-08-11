@@ -38,7 +38,8 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
-@RestController("/api/v1/sessions")
+@RestController
+@RequestMapping("/api/v1/sessions")
 public class OpenViduController {
 
 	@Value("${OPENVIDU_URL}")

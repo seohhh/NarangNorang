@@ -16,6 +16,7 @@ import Mypage from './pages/Mypage';
 import Contents from './components/ContentsComponent';
 import Waiting from './pages/Waiting';
 import CustomRoom from "./pages/CustomRoom";
+import Exit from "./pages/ExitRoom"
 
 const Wrapper = styled.div`
   background-image: url(${bgImg});
@@ -49,6 +50,7 @@ function App() {
           <Route path="/room" element={<CustomRoom />} />
           <Route path="/mypage/:userId" element={<Mypage />} />
           <Route path="/waiting/:sessionId" element={<Waiting />} />
+          <Route path="/exit" element={<Exit />} />
           {/* <Route path="/test" element={<VideoRoom />} /> */}
         </Routes>
       </div>

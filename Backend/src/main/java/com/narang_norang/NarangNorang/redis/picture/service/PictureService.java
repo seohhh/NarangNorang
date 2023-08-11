@@ -9,4 +9,6 @@ public interface PictureService {
 
     boolean savePicture(Picture picture);
 
+    void deletePicture(Picture picture);
+
 }
