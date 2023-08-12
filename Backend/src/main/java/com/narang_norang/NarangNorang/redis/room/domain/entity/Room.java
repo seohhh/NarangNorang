@@ -16,6 +16,7 @@ public class Room {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Indexed
     private Long roomSeq;
     @Indexed
     private String roomCode;
