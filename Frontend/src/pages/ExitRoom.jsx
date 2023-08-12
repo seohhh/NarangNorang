@@ -9,6 +9,7 @@ function ExitRoom() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionIdFromUrl = urlParams.get("sessionId");
   const subscriberIdFromUrl = urlParams.get("subscriberId");
+  const selctedPictureSeq = []
 
   const memberSeq = sessionStorage.getItem("user") !== null ? JSON.parse(sessionStorage.getItem("user")).memberSeq : -1
   const [ images, setImages ] = useState([])
@@ -27,11 +28,12 @@ function ExitRoom() {
     })
     .then((res) => {
       setImages(res.data)
+      console.log(res)
     })
     .catch((err) => {
       console.log(err)
     })
-  }, [images, sessionIdFromUrl, subscriberIdFromUrl, navigate])
+  }, [sessionIdFromUrl, subscriberIdFromUrl, navigate])
 
   const goToMain = () => {
     navigate('/')
@@ -40,17 +42,18 @@ function ExitRoom() {
 
 
   // arr: 원하는 pictureSeq 배열
-  const saveImages = (arr) => {
+  const saveImages = () => {
     // const redisImageIndex = []
 
-    const formData = new FormData()
-    formData.append('memberSeq', memberSeq)
-    formData.append('redisImageSeqs', arr)
-    formData.append('roomCode', sessionIdFromUrl)
-    formData.append('subscriberId', subscriberIdFromUrl)
+    const data = {
+      "memberSeq": 34,
+      "redisImageSeqs": selctedPictureSeq,
+      "roomCode": "IAY3U9CO62",
+      "subscriberId": "con_OvkQdZyEfp"
+    }
 
     axios
-      .post('/album/upload', formData)
+    .post('/album/upload', data)
     .then((res) => {
       console.log(res)
     })
@@ -58,54 +61,65 @@ function ExitRoom() {
       console.log(error)
     })
 
-    axios({
-      method: 'POST',
-      url: '/album/upload',
-      params: { 'roomCode': sessionIdFromUrl, 'subscriberId': subscriberIdFromUrl }
-    })
-    .then((res) => {
-      setImages(res.data)
-    })
-    .catch((err) => {
-      console.log(err)
-    })
+  //   axios({
+  //     method: 'POST',
+  //     url: '/album/upload',
+  //     params: { 'roomCode': sessionIdFromUrl, 'subscriberId': subscriberIdFromUrl }
+  //   })
+  //   .then((res) => {
+  //     setImages(res.data)
+  //   })
+  //   .catch((err) => {
+  //     console.log(err)
+  //   })
   }
 
   const imageInfo = () => {
     console.log(images)
   }
 
+  const selectImageSeq = (seq) => {
+    if (selctedPictureSeq.indexOf(seq) > -1) {
+      selctedPictureSeq.splice(selctedPictureSeq.indexOf(seq), selctedPictureSeq.indexOf(seq) + 1)
+    } else {
+      selctedPictureSeq.push(seq)
+    }
+    console.log(selctedPictureSeq)
+  }
+
 
   return (
-    <div>
-      <h1>exit</h1>
-      <p>sessionIdFromUrl : {sessionIdFromUrl}</p>
-      <p>subscriberIdFromUrl : {subscriberIdFromUrl}</p>
-      <p>memberSeq: {memberSeq}</p>
+      <div>
+          <h1>exit</h1>
+          <p>sessionIdFromUrl : {sessionIdFromUrl}</p>
+          <p>subscriberIdFromUrl : {subscriberIdFromUrl}</p>
+          <p>memberSeq: {memberSeq}</p>
+          
+          {images.map((image) => {
+            return (
+              <div key={image.pictureSeq}>
+                <button onClick={imageInfo}>이미지</button>
+                <button onClick={() => selectImageSeq(image.pictureSeq)}>선택</button>
+                <button onClick={() => saveImages()}>앨범으로~!</button>
+              </div>
+            )
+          })}
+          
+          <button onClick={goToMain}>나가기</button>
+          {/* {memberSeq !== -1 ? (
+              <button onClick={saveImages}>저장</button>
+          ): null} */}
+
+
+
+          {/* {images.map((image, i) => (
+            <div>
+              {image}
+              <img src={image} alt="" />
+            </div>
+          ))} */}
+      </div>
       
-      {images.map((image) => {
-        return (
-          <div key={image.pictureSeq}>
-            <button onClick={imageInfo}>이미지</button>
-            <button onClick={() => saveImages([])}>앨범저장</button>
-          </div>
-        )
-      })}
-      
-      <button onClick={goToMain}>나가기</button>
-      {/* {memberSeq !== -1 ? (
-          <button onClick={saveImages}>저장</button>
-      ): null} */}
-
-
-
-      {/* {images.map((image, i) => (
-        <div>
-          {image}
-          <img src={image} alt="" />
-        </div>
-      ))} */}
-    </div>
   );
 }
 

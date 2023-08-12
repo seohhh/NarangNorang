@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PictureResponse {
 
-    private Long pictureSeq;
+    private Integer pictureSeq;
 
     private String roomCode;
 
