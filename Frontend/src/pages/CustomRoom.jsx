@@ -261,12 +261,15 @@ function CustomRoom() {
   };
 
   const deleteSubscriber = (streamManager) => {
-    let removedSubscribers = subscribers;
-    let index = removedSubscribers.indexOf(streamManager, 0);
-    if (index > -1) {
-      removedSubscribers.splice(index, 1);
-      setSubscribers(removedSubscribers);
-    }
+    // let removedSubscribers = subscribers;
+    // let index = removedSubscribers.indexOf(streamManager, 0);
+    // if (index > -1) {
+    //   removedSubscribers.splice(index, 1);
+    //   setSubscribers(removedSubscribers);
+    // }
+    setSubscribers((prevSubscribers) =>
+    prevSubscribers.filter((sub) => sub !== streamManager)
+    );
   };
 
   // main 화면 변경
