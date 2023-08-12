@@ -22,7 +22,7 @@ const ToolbarComponent = (props) => {
   const dispatch = useDispatch()
 
   const showCanvas = useSelector((state) => (state.xray.showCanvas))
-  console.log(showCanvas, "useSelector로 확인한 값")
+  
   // 초대링크 모달
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
@@ -33,10 +33,8 @@ const ToolbarComponent = (props) => {
   const handleCopyClose = () => setCopyShow(false);
   const handleCopySuccess = () => setCopyShow(true);
 
-  // 방 나가기 모달(사진 선택)
-
   const mySessionId = props.sessionId;
-  const inviteLink = `http://i9c208.p.ssafy/waiting/${mySessionId}`
+  const inviteLink = `http://i9c208.p.ssafy.io/waiting/${mySessionId}`
 
   const micStatusChanged = () => {
     props.micStatusChanged();
