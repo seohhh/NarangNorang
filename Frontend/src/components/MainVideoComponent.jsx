@@ -6,7 +6,7 @@ import "./MainVideoComponent.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
 // import axios from "axios";
 import { useSelector } from "react-redux";
-import { handleCapture } from "../slice/gameSlice";
+import { handleCapture, handleGetScore } from "../slice/gameSlice";
 import { useDispatch } from "react-redux";
 
 // const BASE_URL = 'https://i9c208.p.ssafy.io/api/v1'
@@ -86,7 +86,6 @@ const MainVideoComponent = (props) => {
   }, [props, props.streamManager, showCanvas, videoDimensions.width, videoDimensions.height]);
 
 
-  const video = videoRef.current;
   const roomCode = props.streamManager.stream.session.sessionId;
   const subscriberId = props.streamManager.stream.connection.connectionId;
 
@@ -97,11 +96,9 @@ const MainVideoComponent = (props) => {
     }
   };
 
-  const handleGetScore = () => {
-    const poseIdx = 0;
-    
-    const score = userpose.getScore(poseIdx, videoRef.current);
-    console.log("similarity score", score);
+  const getScore = () => {
+    if (videoRef.current)
+      dispatch(handleGetScore(videoRef.current))
   }
 
 
@@ -122,7 +119,7 @@ const MainVideoComponent = (props) => {
             height={videoDimensions.height}
           />
           <button onClick={capture}>지금 이 순간!</button>
-          <button onClick={handleGetScore}>유사도 계산</button>
+          <button onClick={getScore}>유사도 계산</button>
         </div>
 
         ) : null}
