@@ -9,6 +9,7 @@ function ExitRoom() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionIdFromUrl = urlParams.get("sessionId");
   const subscriberIdFromUrl = urlParams.get("subscriberId");
+
   const memberSeq = sessionStorage.getItem("user") !== null ? JSON.parse(sessionStorage.getItem("user")).memberSeq : -1
   const [ images, setImages ] = useState([])
   
@@ -33,26 +34,40 @@ function ExitRoom() {
   }, [images, sessionIdFromUrl, subscriberIdFromUrl, navigate])
 
   const goToMain = () => {
-    saveImages()
     navigate('/')
     
   }
 
 
-
-  const saveImages = () => {
+  // arr: 원하는 pictureSeq 배열
+  const saveImages = (arr) => {
     // const redisImageIndex = []
 
     const formData = new FormData()
-    formData.append()
-    formData.append()// 배열 넣기
+    formData.append('memberSeq', memberSeq)
+    formData.append('redisImageSeqs', arr)
+    formData.append('roomCode', sessionIdFromUrl)
+    formData.append('subscriberId', subscriberIdFromUrl)
 
-    axios.post('', formData)
+    axios
+      .post('/album/upload', formData)
     .then((res) => {
       console.log(res)
     })
     .catch((error) => {
       console.log(error)
+    })
+
+    axios({
+      method: 'POST',
+      url: '/album/upload',
+      params: { 'roomCode': sessionIdFromUrl, 'subscriberId': subscriberIdFromUrl }
+    })
+    .then((res) => {
+      setImages(res.data)
+    })
+    .catch((err) => {
+      console.log(err)
     })
   }
 
@@ -62,35 +77,35 @@ function ExitRoom() {
 
 
   return (
-      <div>
-          <h1>exit</h1>
-          <p>sessionIdFromUrl : {sessionIdFromUrl}</p>
-          <p>subscriberIdFromUrl : {subscriberIdFromUrl}</p>
-          <p>memberSeq: {memberSeq}</p>
-          
-          {images.map((image) => {
-            return (
-              <div key={image.pictureSeq}>
-                <button onClick={imageInfo}>이미지</button>
-              </div>
-            )
-          })}
-          
-          <button onClick={goToMain}>나가기</button>
-          {memberSeq !== -1 ? (
-              <button onClick={saveImages}>저장</button>
-          ): null}
-
-
-
-          {/* {images.map((image, i) => (
-            <div>
-              {image}
-              <img src={image} alt="" />
-            </div>
-          ))} */}
-      </div>
+    <div>
+      <h1>exit</h1>
+      <p>sessionIdFromUrl : {sessionIdFromUrl}</p>
+      <p>subscriberIdFromUrl : {subscriberIdFromUrl}</p>
+      <p>memberSeq: {memberSeq}</p>
       
+      {images.map((image) => {
+        return (
+          <div key={image.pictureSeq}>
+            <button onClick={imageInfo}>이미지</button>
+            <button onClick={() => saveImages([])}>앨범저장</button>
+          </div>
+        )
+      })}
+      
+      <button onClick={goToMain}>나가기</button>
+      {/* {memberSeq !== -1 ? (
+          <button onClick={saveImages}>저장</button>
+      ): null} */}
+
+
+
+      {/* {images.map((image, i) => (
+        <div>
+          {image}
+          <img src={image} alt="" />
+        </div>
+      ))} */}
+    </div>
   );
 }
 
