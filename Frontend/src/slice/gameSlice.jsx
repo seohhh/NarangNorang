@@ -1,5 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import axios from 'axios';
+import userpose from "../utils/userpose";
 
 axios.defaults.baseURL = 'https://i9c208.p.ssafy.io/api/v1'
 
@@ -50,6 +51,15 @@ export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async
     console.log(error, "캡처 에러")
   }
 
+}
+export const handleGetScore = (video) => async (dispatch) => {
+  try {
+    const poseIdx = 0;
+    const score = userpose.getScore(poseIdx, video);
+    console.log("similarity score", score);
+  } catch (error) {
+    console.log(error, "점수계산 에러")
+  }
 }
 
 export const { switchShowCanvas, switchGameStart } = gameSlice.actions;

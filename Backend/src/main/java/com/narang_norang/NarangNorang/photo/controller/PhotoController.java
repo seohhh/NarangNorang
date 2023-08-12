@@ -10,6 +10,7 @@ import com.narang_norang.NarangNorang.photo.service.PhotoService;
 import com.narang_norang.NarangNorang.redis.picture.domain.dto.GetPictureRequest;
 import com.narang_norang.NarangNorang.redis.picture.domain.dto.PictureResponse;
 import com.narang_norang.NarangNorang.redis.picture.domain.entity.Picture;
+import com.narang_norang.NarangNorang.redis.picture.repository.PictureRepository;
 import com.narang_norang.NarangNorang.redis.picture.service.PictureService;
 import com.narang_norang.NarangNorang.util.S3Uploader;
 import io.swagger.annotations.*;
@@ -39,6 +40,8 @@ public class PhotoController {
 
     private final PictureService pictureService;
 
+    private final PictureRepository pictureRepository;
+
     @PostMapping("/upload")
     @ApiOperation(value = "사진 등록", notes = "사진을 등록한다.")
     @ApiResponses({
@@ -49,23 +52,31 @@ public class PhotoController {
     })
     public ResponseEntity<Boolean> uploadPhoto(@RequestBody GetPictureRequest getPictureRequest) {
         try {
+            Member member = memberService.getMemberByMemberSeq(getPictureRequest.getMemberSeq());
+            System.out.println(getPictureRequest.getRedisImageSeqs());
             List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(getPictureRequest.getRoomCode(),
                     getPictureRequest.getSubscriberId());
-            System.out.println(pictureList.size());
-            Member member = memberService.getMemberByMemberSeq(getPictureRequest.getMemberSeq());
-            for (Picture picture : pictureList) {
-                System.out.println(getPictureRequest.getRedisImageSeqs().contains(picture.getPictureSeq().longValue()));
-                if (getPictureRequest.getRedisImageSeqs().contains(picture.getPictureSeq().longValue())) {
-                    String[] texts = s3Uploader.uploadFiles(picture, "static/"+member.getMemberId());
-                    Photo photo = Photo.builder()
-                            .member(member)
-                            .photoFilename(texts[0])
-                            .photoUrl(texts[1])
-                            .photoDate(picture.getPictureTime().toString())
-                            .build();
-                    photoService.uploadPhoto(photo);
-                }
 
+            for (Picture picture : pictureList) {
+                System.out.println(picture.getPictureSeq());
+            }
+
+            for (Integer pictureSeq : getPictureRequest.getRedisImageSeqs()) {
+                System.out.println(pictureSeq);
+                Picture picture = pictureService.getPictureByPictureSeq(pictureSeq);
+                System.out.println(picture);
+                String[] texts = s3Uploader.uploadFiles(picture, "static/"+member.getMemberId());
+                Photo photo = Photo.builder()
+                        .member(member)
+                        .photoFilename(texts[0])
+                        .photoUrl(texts[1])
+                        .photoDate(picture.getPictureTime().toString())
+                        .build();
+                photoService.uploadPhoto(photo);
+            }
+
+
+            for (Picture picture : pictureList) {
                 pictureService.deletePicture(picture);
             }
 

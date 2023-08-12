@@ -17,8 +17,9 @@ import java.time.LocalDateTime;
 public class Picture {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long pictureSeq;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Indexed
+    private Integer pictureSeq;
 
     @Indexed
     private String roomCode;

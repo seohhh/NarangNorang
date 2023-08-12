@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service("PictureService")
@@ -17,6 +18,17 @@ public class PictureServiceImpl implements PictureService {
 
     public List<Picture> getPictureByRoomCodeAndSubscriberId(String roomCode, String subscriberId) {
         return pictureRepository.findAllByRoomCodeAndSubscriberId(roomCode, subscriberId);
+    }
+
+    public Picture getPictureByPictureSeq(Integer pictureSeq) {
+        System.out.println(pictureSeq + " service");
+        Optional<Picture> pictureOpt = pictureRepository.findPictureByPictureSeq(pictureSeq);
+        System.out.println(pictureOpt + " service");
+        if (pictureOpt.isEmpty()) {
+            throw new IllegalArgumentException("해당하는 캡쳐사진이 존재하지 않습니다.");
+        }
+
+        return pictureOpt.get();
     }
 
     public boolean savePicture(Picture picture) {

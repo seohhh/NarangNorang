@@ -14,5 +14,5 @@ public class GetPictureRequest {
     private Long memberSeq;
     private String roomCode;
     private String subscriberId;
-    private List<Long> redisImageSeqs;
+    private List<Integer> redisImageSeqs;
 }

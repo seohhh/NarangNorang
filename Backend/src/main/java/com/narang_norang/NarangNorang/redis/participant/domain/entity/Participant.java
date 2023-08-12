@@ -16,6 +16,7 @@ public class Participant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Indexed
     private Long participantSeq;
 
     @Indexed

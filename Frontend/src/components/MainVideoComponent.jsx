@@ -97,12 +97,10 @@ const MainVideoComponent = (props) => {
   //   }
   // };
 
-  const handleGetScore = () => {
-    const poseIdx = 0;
-    
-    const score = userpose.getScore(poseIdx, videoRef.current);
-    console.log("similarity score", score);
-  }
+  // const getScore = () => {
+  //   if (videoRef.current)
+  //     dispatch(handleGetScore(videoRef.current))
+  // }
 
 
   // 컴포넌트 렌더링
