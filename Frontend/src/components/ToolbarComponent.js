@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { Modal } from "react-bootstrap";
-import './Toolbar.css';
 import { switchShowCanvas, switchGameStart } from "../slice/gameSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Tooltip, OverlayTrigger } from 'react-bootstrap';
+import './Toolbar.css';
 
 // icone
 import inviteIcon from "../assets/icon/invite.png";
@@ -100,11 +100,12 @@ return (
           <img src={inviteIcon} alt="invite" className="icon" />
         </div>
       </OverlayTrigger>
-      <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-xray">{!showCanvas ? '기본모드' : '엑스레이모드'}</Tooltip>}>
+      <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-xray">{!showCanvas ? '엑스레이모드' : '기본모드'}</Tooltip>}>
         <div onClick={clickShowCanvas}>
           <img src={!showCanvas ? xrayIcon : noXrayIcon} alt={!showCanvas ? 'noXray' : 'xray'} className="icon" />
         </div>
       </OverlayTrigger>
+      {/* 방장인 경우 게임스타트 버튼 */}
       { !guest &&
         <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-gamestart">게임시작</Tooltip>}>
           <div onClick={gameStatusChanged}>
@@ -117,43 +118,6 @@ return (
         </div>
       </OverlayTrigger>
     </div>
-
-    
-   {/* <div className="toolbar-container">
-     <div className="iconGroup">
-       { !videoOn ?
-        (<div onClick={camStatusChanged}>
-          <img src={videoOnIcon} alt="videoOn" className="icon" />
-        </div>) :
-        (<div onClick={camStatusChanged}>
-          <img src={videoOffIcon} alt="videoOff" className="icon" />
-        </div>)}
-      { !audioOn ?
-        (<div onClick={micStatusChanged}>
-          <img src={audioOnIcon} alt="audioOn" className="icon" />
-        </div>) :
-        (<div onClick={micStatusChanged}>
-          <img src={audioOffIcon} alt="audioOff" className="icon" />
-        </div>)}
-      <div onClick={handleShow}>
-        <img src={inviteIcon} alt="invite" className="icon" />
-      </div>
-      { !showCanvas ?
-        (<div onClick={clickShowCanvas}>
-          <img src={xrayIcon} alt="noXray" className="icon" />
-        </div>) :
-        (<div onClick={clickShowCanvas}>
-          <img src={noXrayIcon} alt="xray" className="icon" />
-        </div>)}*/}
-      {/* 방장인 경우 게임스타트 */}
-      {/* { !guest ?
-        (<div onClick={gameStatusChanged}>
-          <img src={gamestartIcon} alt="gamestart" className="icon" />
-        </div>) : null }
-      <div onClick={leaveSession}>
-        <img src={leaveIcon} alt="leave" className="icon" />
-      </div>
-    </div>  */}
 
     {/* 초대링크 모달 */}
     <Modal show={show} onHide={handleClose} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
