@@ -42,14 +42,14 @@ function Intro() {
           <MySpan>아이와 함께 놀이를 할 수 있다면...?</MySpan>
           <MySpan>아이의 친구를 집으로 초대하지 않아도 같이 놀 수 있다..?</MySpan>
           <MyBox>
-            <Image src={HeartImage} style={{width: "70px"}} rounded></Image>
+            <Image src={HeartImage} style={{width: "70px", height: "100%", paddingTop: "15px"}} rounded></Image>
             <Column>
               <h3>아이와의 교감</h3>
               <MySpan>나랑노랑을 통해 아이와 교감할 수 있습니다.</MySpan>
             </Column>
           </MyBox>
           <MyBox>
-            <Image src={EmoImage} style={{width: "70px"}} rounded></Image>
+            <Image src={EmoImage} style={{width: "70px", height: "100%", paddingTop: "15px"}} rounded></Image>
             <Column>
             <h3>아이의 정서발달</h3>
             <MySpan>나랑노랑은 아이의 정서발달을 돕습니다.</MySpan>
@@ -57,7 +57,7 @@ function Intro() {
           </MyBox>
         </Fade>
       </Column>
-      <Image src={IntroImage} style={{width: "25%"}} rounded></Image> 
+      <Image src={IntroImage} style={{width: "500px", }} rounded></Image> 
     </MyDiv>
   );
 }
