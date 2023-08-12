@@ -56,7 +56,7 @@ function Main() {
   return (
     <div>
       <Container>
-        <div class="align-self-center" style={{ paddingBottom: "120px"}}>
+        <div className="align-self-center" style={{ paddingBottom: "120px"}}>
           {" "}
           {/* 왼쪽 영역 */}
           <Fade cascade damping={0.2}>
