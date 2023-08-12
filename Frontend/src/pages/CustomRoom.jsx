@@ -322,82 +322,89 @@ function CustomRoom() {
   };
 
   return (
-    <div style={{backgroundColor: "#F1F0F0"}}>
-      <div style={{display: "flex", flexFlow: "column-reverse wrap", alignContent: "center", justifyContent: "center"}}>
-        <Dialog
-          fullWidth
-          maxWidth={"lg"}
-          open={gameStart}
-          onClose={() => closeIntroModal()}
-          aria-labelledby="form-dialog-title"
-        >
-          <ContentDialog>
-            <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
-          </ContentDialog>
-        </Dialog>
+    <div className="CustomRoomRoot" style={{ backgroundColor: "#F1F0F0" }}>
+      <Dialog
+        fullWidth
+        maxWidth={"lg"}
+        open={gameStart}
+        onClose={() => closeIntroModal()}
+        aria-labelledby="form-dialog-title"
+      >
+        <ContentDialog>
+          <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
+        </ContentDialog>
+      </Dialog>
 
-        <Dialog
-          fullWidth
-          maxWidth={"lg"}
-          open={rank}
-          onClose={() => closeRankModal()}
-          aria-labelledby="form-dialog-title"
-        >
-          <ContentDialog>
-            <Rank first={mainStreamManager} second={null} third={null} />
-          </ContentDialog>
-        </Dialog>
+      <Dialog
+        fullWidth
+        maxWidth={"lg"}
+        open={rank}
+        onClose={() => closeRankModal()}
+        aria-labelledby="form-dialog-title"
+      >
+        <ContentDialog>
+          <Rank first={mainStreamManager} second={null} third={null} />
+        </ContentDialog>
+      </Dialog>
 
-        {/* 초대링크로 접속한 경우: 입장 대기실 */}
-        {sessionIdFromUrl != null && join === false ? (
-          <div id="wrapper">
-            <div id="container">
-              <h3 style={{ marginBottom: "20px" }}> 입장 대기실 </h3>
-              <div id="content">
-                <div style={{ width: "35rem", position: "relative" }}>
-                  <UserVideoComponent streamManager={mainStreamManager} guest={sessionId} />
-                  <div id="buttongroup">
-                    { !videoOn ?
-                      (<div style={{margin:"5px"}} onClick={camStatusChanged}>
-                        <img src={videoOnIcon} alt="videoOn"/>
-                      </div>) :
-                      (<div style={{margin:"5px"}} onClick={camStatusChanged}>
-                        <img src={videoOffIcon} alt="videoOff"/>
-                      </div>)}
-                    { !audioOn ?
-                      (<div style={{margin:"5px"}} onClick={micStatusChanged}>
-                        <img src={audioOnIcon} alt="audioOn"/>
-                      </div>) :
-                      (<div style={{margin:"5px"}} onClick={micStatusChanged}>
-                        <img src={audioOffIcon} alt="audioOff"/>
-                      </div>)}
-                  </div>
-                </div>
-                <div style={{ width: "40vw" }} className="center">
-                  <div className="center">
-                    <p style={{ fontSize: "30px" }}>참여할 준비가 되셨나요?</p>
-                    <div id="button">
-                      <input
-                        type="button"
-                        className="button"
-                        onClick={guestJoinSession}
-                        value="입장하기"
-                      />
-                      <input
-                        className="button"
-                        type="button"
-                        onClick={leaveSession}
-                        value="홈으로 가기"
-                      />
+      {/* 초대링크로 접속한 경우: 입장 대기실 */}
+      {sessionIdFromUrl != null && join === false ? (
+        <div id="wrapper">
+          <div id="container">
+            <h3 style={{ marginBottom: "20px" }}> 입장 대기실 </h3>
+            <div id="content">
+              <div style={{ width: "35rem", position: "relative" }}>
+                {/* 입장 대기실 화면 크기 props.guest 여부로 확인 */}
+                <UserVideoComponent
+                  streamManager={mainStreamManager}
+                  guest={sessionId}
+                />
+                <div id="buttongroup">
+                  {!videoOn ? (
+                    <div style={{ margin: "5px" }} onClick={camStatusChanged}>
+                      <img src={videoOnIcon} alt="videoOn" />
                     </div>
+                  ) : (
+                    <div style={{ margin: "5px" }} onClick={camStatusChanged}>
+                      <img src={videoOffIcon} alt="videoOff" />
+                    </div>
+                  )}
+                  {!audioOn ? (
+                    <div style={{ margin: "5px" }} onClick={micStatusChanged}>
+                      <img src={audioOnIcon} alt="audioOn" />
+                    </div>
+                  ) : (
+                    <div style={{ margin: "5px" }} onClick={micStatusChanged}>
+                      <img src={audioOffIcon} alt="audioOff" />
+                    </div>
+                  )}
+                </div>
+              </div>
+              <div style={{ width: "40vw" }} className="center">
+                <div className="center">
+                  <p style={{ fontSize: "30px" }}>참여할 준비가 되셨나요?</p>
+                  <div id="button">
+                    <input
+                      type="button"
+                      className="button"
+                      onClick={guestJoinSession}
+                      value="입장하기"
+                    />
+                    <input
+                      className="button"
+                      type="button"
+                      onClick={leaveSession}
+                      value="홈으로 가기"
+                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
+        </div>
       ) : null}
 
-      {/* 방에 모였을 때 */}
+     {/* 방에 모였을 때 */}
       <div style={{ display: "flex", flexFlow: "row wrap"}}>
         {mainStreamManager !== undefined && join === true ? (
           <div id="main-video" style={{ width: "50%", height: "auto" }}>
@@ -421,7 +428,6 @@ function CustomRoom() {
               >
                 <UserVideoComponent
                   streamManager={publisher}
-                  // isSpeaking={isSpeaking}
                 />
               </div>
               {subscribers.map((sub, i) => (
@@ -433,7 +439,6 @@ function CustomRoom() {
                   <span>{sub.id}</span>
                   <UserVideoComponent
                     streamManager={sub}
-                    // isSpeaking={isSpeaking}
                   />
                 </div>
               ))}
@@ -442,7 +447,7 @@ function CustomRoom() {
         </div>
       </div>
 
-      {/* 게임 중 */}
+        {/* 게임 중 */}
       {/* <div
         style={{ display: "flex", flexDirection: "column"}}
       >
@@ -461,7 +466,6 @@ function CustomRoom() {
             >
               <UserVideoComponent
                 streamManager={publisher}
-                isSpeaking={isSpeaking}
               />
             </div>
             {subscribers.map((sub, i) => (
@@ -473,7 +477,6 @@ function CustomRoom() {
                 <span>{sub.id}</span>
                 <UserVideoComponent
                   streamManager={sub}
-                  isSpeaking={isSpeaking}
                 />
               </div>
             ))}
@@ -490,7 +493,7 @@ function CustomRoom() {
           ) : null}
         </div>
       </div> */}
-      </div>
+
       {sessionIdFromUrl === null || join === true ? (
         <div>
           <Game1 />
