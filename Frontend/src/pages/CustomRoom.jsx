@@ -2,7 +2,7 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
+// import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 // component
@@ -18,9 +18,9 @@ import videoOffIcon from "../assets/icon/videoOff.png";
 import audioOnIcon from "../assets/icon/audioOn.png";
 import audioOffIcon from "../assets/icon/audioOff.png";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
+// import Dialog from "@material-ui/core/Dialog";
+// import DialogContent from "@mui/material/DialogContent";
+// import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
 // import Gorilla from '../assets/game/quiz/Gorilla.png';
 // import Elephant from '../assets/game/quiz/Elephant.png';
@@ -41,17 +41,17 @@ import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
 const APPLICATION_SERVER_URL = "https://i9c208.p.ssafy.io/";
 
-const IntroMp4 = styled.video`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-`;
+// const IntroMp4 = styled.video`
+//   width: 100%;
+//   height: 100%;
+//   position: absolute;
+//   top: 0;
+//   left: 0;
+// `;
 
-const IntroDialogContent = styled(DialogContent)`
-  height: 700px;
-`;
+// const IntroDialogContent = styled(DialogContent)`
+//   height: 700px;
+// `;
 
 function CustomRoom() {
   const urlParams = new URLSearchParams(window.location.search);
@@ -68,7 +68,7 @@ function CustomRoom() {
   const [videoOn, setVideoOn] = useState(undefined);
   const [audioOn, setAudioOn] = useState(undefined);
   const [join, setJoin] = useState(false);
-  const [gameStart, setGameStart] = useState(false);
+  // const [gameStart, setGameStart] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(undefined);
 
   // const myUserNameFromUrl = urlParams.get("nickname");
@@ -120,13 +120,13 @@ function CustomRoom() {
       console.warn(exception);
     });
 
-    mySession.on("signal:intro", (event) => {
-      setGameStart(true);
+    // mySession.on("signal:intro", (event) => {
+    //   setGameStart(true);
 
-      setTimeout(() => {
-        closeIntroModal();
-      }, 16800);
-    });
+    //   setTimeout(() => {
+    //     closeIntroModal();
+    //   }, 16800);
+    // });
     if (nicknameFromUrl === null) {
       setMyUserName(hostNickname);
     }
@@ -276,25 +276,25 @@ function CustomRoom() {
     }
   };
 
-  const displayEvery = () => {
-    session
-      .signal({
-        data: "인트로 영상 버튼",
-        to: [],
-        type: "intro",
-      })
-      .then(() => {})
-      .catch(() => {});
-  };
+  // const displayEvery = () => {
+  //   session
+  //     .signal({
+  //       data: "인트로 영상 버튼",
+  //       to: [],
+  //       type: "intro",
+  //     })
+  //     .then(() => {})
+  //     .catch(() => {});
+  // };
 
-  const closeIntroModal = () => {
-    setGameStart(false);
-  };
+  // const closeIntroModal = () => {
+  //   setGameStart(false);
+  // };
 
   return (
     <div className="CustomRoomRoot" style={{ backgroundColor: "#F1F0F0" }}>
       {/* Intro Dialog */}
-      <Dialog
+      {/* <Dialog
         fullWidth
         maxWidth={"lg"}
         open={gameStart}
@@ -304,7 +304,7 @@ function CustomRoom() {
         <IntroDialogContent>
           <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
         </IntroDialogContent>
-      </Dialog>
+      </Dialog> */}
 
       {/* 초대링크로 접속한 경우: 입장 대기실 */}
       {sessionIdFromUrl != null && join === false ? (
@@ -364,7 +364,7 @@ function CustomRoom() {
       ) : null}
 
       {/* 방에 모였을 때 */}
-      <div style={{ display: "flex", flexFlow: "row wrap"}}>
+      {/* <div style={{ display: "flex", flexFlow: "row wrap"}}>
         {mainStreamManager !== undefined && join === true ? (
           <div id="main-video" style={{ width: "50%", height: "auto" }}>
             <MainVideoComponent streamManager={mainStreamManager} />
@@ -406,10 +406,10 @@ function CustomRoom() {
             </div>
           )}
         </div>
-      </div>
+      </div> */}
 
       {/* 게임 중 */}
-      {/* <div
+      <div
         style={{ display: "flex", flexDirection: "column"}}
       >
         {join === true && (
@@ -447,7 +447,8 @@ function CustomRoom() {
         )}
         <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around"}}>
           <div style={{ width: "50%", height: "auto" }}>
-            <video src={NarangNorangIntro} autoPlay></video>
+          {/* 여기에 내 화면의 왼쪽에 넣고 싶은 내용을 넣으면 됨 */}
+          <Game1 session={session} showGameVideo={true} />
           </div>
           {mainStreamManager !== undefined && join === true ? (
             <div id="main-video" style={{ width: "50%", height: "auto" }}>
@@ -455,11 +456,14 @@ function CustomRoom() {
             </div>
           ) : null}
         </div>
-      </div> */}
+      </div>
+      {/* 여기까지 게임중 */}
 
       {sessionIdFromUrl === null || join === true ? (
         <div>
-          <Game1 />
+          <div>
+          <Game1 session={session} />
+          </div>
           <div
             style={{
               position: "fixed",
@@ -478,7 +482,7 @@ function CustomRoom() {
               publisher={publisher}
             />
           </div>
-          <button onClick={displayEvery}>버튼</button>
+          {/* <button onClick={displayEvery}>버튼</button> */}
         </div>
       ) : null}
     </div>
