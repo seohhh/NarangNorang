@@ -13,7 +13,7 @@ import Footer from '../components/Footer';
 const Container = styled.div`
   display: flex;
   margin-left: 100px;
-  padding-top: 260px;
+  padding-top: 300px;
   padding-right: 600px;
   justify-content: center;
 `;
@@ -56,14 +56,14 @@ function Main() {
   return (
     <div>
       <Container>
-        <div class="align-self-center" style={{ paddingBottom: "100px"}}>
+        <div class="align-self-center" style={{ paddingBottom: "120px"}}>
           {" "}
           {/* 왼쪽 영역 */}
           <Fade cascade damping={0.2}>
-            <h1>
+            <div style={{ fontSize: "40px"}}>
               <span style={color}>나랑노랑</span>에서
-            </h1>
-            <h1 style={{ marginBottom: "50px"}}>아이와 함께 즐거운 추억을 쌓아보세요</h1>
+              <div style={{ marginBottom: "40px"}}>아이와 함께 즐거운 추억을 쌓아보세요</div>
+            </div>
             {isLoggedin ? (
               <Link to="/room">
                 <Button>방만들기 →</Button>

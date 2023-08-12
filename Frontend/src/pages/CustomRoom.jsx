@@ -11,6 +11,7 @@ import MainVideoComponent from "../components/MainVideoComponent";
 import ToolbarComponent from "../components/ToolbarComponent";
 import Game1 from "../components/Game1";
 import "./CustomRoom.css";
+import Rank from "../components/Rank";
 
 // icon
 import videoOnIcon from "../assets/icon/videoOn.png";
@@ -49,8 +50,8 @@ const IntroMp4 = styled.video`
   left: 0;
 `;
 
-const IntroDialogContent = styled(DialogContent)`
-  height: 700px;
+const ContentDialog = styled(DialogContent)`
+  height: 750px;
 `;
 
 function CustomRoom() {
@@ -68,7 +69,8 @@ function CustomRoom() {
   const [videoOn, setVideoOn] = useState(undefined)
   const [audioOn, setAudioOn] = useState(undefined)
   const [join, setJoin] = useState(false)
-  const [gameStart, setGameStart] = useState(false)  
+  const [gameStart, setGameStart] = useState(false)
+  const [rank, setRank] = useState(false)
 
   // const myUserNameFromUrl = urlParams.get("nickname");
 
@@ -118,6 +120,16 @@ function CustomRoom() {
 
       }, 16800)
     })
+
+    mySession.on("signal:rank", (event) => {
+      setRank(true);
+
+      setTimeout(() => {
+        closeRankModal()
+
+      }, 16800)
+    })
+
     if (nicknameFromUrl === null) {
       setMyUserName(hostNickname)
     }
@@ -300,13 +312,28 @@ function CustomRoom() {
       .catch(() => {});
   };
 
+  const displayRank = () => {
+    session
+      .signal({
+        data: "순위 버튼",
+        to: [],
+        type: "rank",
+      })
+      .then(() => {})
+      .catch(() => {});
+  };
+
   const closeIntroModal = () => {
     setGameStart(false);
   };
 
+  const closeRankModal = () => {
+    setRank(false);
+  };
+
   return (
     <div style={{backgroundColor: "#F1F0F0"}}>
-      <div style={{display: "flex", flexFlow: "column-reverse wrap", alignContent: "center"}}>
+      <div style={{display: "flex", flexFlow: "column-reverse wrap", alignContent: "center", justifyContent: "center"}}>
         <Dialog
           fullWidth
           maxWidth={"lg"}
@@ -314,9 +341,21 @@ function CustomRoom() {
           onClose={() => closeIntroModal()}
           aria-labelledby="form-dialog-title"
         >
-          <IntroDialogContent>
+          <ContentDialog>
             <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
-          </IntroDialogContent>
+          </ContentDialog>
+        </Dialog>
+
+        <Dialog
+          fullWidth
+          maxWidth={"lg"}
+          open={rank}
+          onClose={() => closeRankModal()}
+          aria-labelledby="form-dialog-title"
+        >
+          <ContentDialog>
+            <Rank first={mainStreamManager} second={null} third={null} />
+          </ContentDialog>
         </Dialog>
 
         {/* 초대링크로 접속한 경우: 입장 대기실 */}
@@ -414,6 +453,7 @@ function CustomRoom() {
             />
           </div>
           <button onClick={displayEvery}>버튼</button>
+          <button onClick={displayRank}>랭크컴포넌트</button>
         </div>
       ) : null}
     </div>
