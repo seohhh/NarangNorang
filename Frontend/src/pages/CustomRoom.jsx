@@ -103,15 +103,15 @@ function CustomRoom() {
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
 
-    mySession.on("publisherStartSpeaking", (event) => {
-      console.log("User " + event.connection.connectionId + " start speaking");
-      setIsSpeaking(true);
-    });
+    // mySession.on("publisherStartSpeaking", (event) => {
+    //   console.log("User " + event.connection.connectionId + " start speaking");
+    //   setIsSpeaking(true);
+    // });
 
-    mySession.on("publisherStopSpeaking", (event) => {
-      console.log("User " + event.connection.connectionId + " stop speaking");
-      setIsSpeaking(false);
-    });
+    // mySession.on("publisherStopSpeaking", (event) => {
+    //   console.log("User " + event.connection.connectionId + " stop speaking");
+    //   setIsSpeaking(false);
+    // });
 
     mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager);
@@ -390,40 +390,11 @@ function CustomRoom() {
                         value="홈으로 가기"
                       />
                     </div>
-                  )}
-                  {!audioOn ? (
-                    <div style={{ margin: "5px" }} onClick={micStatusChanged}>
-                      <img src={audioOnIcon} alt="audioOn" />
-                    </div>
-                  ) : (
-                    <div style={{ margin: "5px" }} onClick={micStatusChanged}>
-                      <img src={audioOffIcon} alt="audioOff" />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div style={{ width: "40vw" }} className="center">
-                <div className="center">
-                  <p style={{ fontSize: "30px" }}>참여할 준비가 되셨나요?</p>
-                  <div id="button">
-                    <input
-                      type="button"
-                      className="button"
-                      onClick={guestJoinSession}
-                      value="입장하기"
-                    />
-                    <input
-                      className="button"
-                      type="button"
-                      onClick={leaveSession}
-                      value="홈으로 가기"
-                    />
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
       ) : null}
 
       {/* 방에 모였을 때 */}
@@ -450,7 +421,7 @@ function CustomRoom() {
               >
                 <UserVideoComponent
                   streamManager={publisher}
-                  isSpeaking={isSpeaking}
+                  // isSpeaking={isSpeaking}
                 />
               </div>
               {subscribers.map((sub, i) => (
@@ -462,7 +433,7 @@ function CustomRoom() {
                   <span>{sub.id}</span>
                   <UserVideoComponent
                     streamManager={sub}
-                    isSpeaking={isSpeaking}
+                    // isSpeaking={isSpeaking}
                   />
                 </div>
               ))}
@@ -519,7 +490,7 @@ function CustomRoom() {
           ) : null}
         </div>
       </div> */}
-
+      </div>
       {sessionIdFromUrl === null || join === true ? (
         <div>
           <Game1 />
@@ -545,7 +516,7 @@ function CustomRoom() {
           <button onClick={displayRank}>랭크컴포넌트</button>
         </div>
       ) : null}
-    </div>
+  </div>
   );
 }
 
