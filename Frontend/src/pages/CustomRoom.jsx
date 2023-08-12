@@ -2,7 +2,7 @@ import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-// import styled from "styled-components";
+import styled from "styled-components";
 import { useSelector } from "react-redux";
 
 // component
@@ -19,9 +19,9 @@ import videoOffIcon from "../assets/icon/videoOff.png";
 import audioOnIcon from "../assets/icon/audioOn.png";
 import audioOffIcon from "../assets/icon/audioOff.png";
 
-// import Dialog from "@material-ui/core/Dialog";
-// import DialogContent from "@mui/material/DialogContent";
-// import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
 // import Gorilla from '../assets/game/quiz/Gorilla.png';
 // import Elephant from '../assets/game/quiz/Elephant.png';
@@ -42,23 +42,23 @@ import audioOffIcon from "../assets/icon/audioOff.png";
 
 const APPLICATION_SERVER_URL = "https://i9c208.p.ssafy.io/";
 
-// const IntroMp4 = styled.video`
-//   width: 100%;
-//   height: 100%;
-//   position: absolute;
-//   top: 0;
-//   left: 0;
-// `;
+const IntroMp4 = styled.video`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+`;
 
-// const IntroDialogContent = styled(DialogContent)`
-//   height: 700px;
-// `;
+const ContentDialog = styled(DialogContent)`
+  height: 750px;
+`;
 
 function CustomRoom() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionIdFromUrl = urlParams.get("sessionId");
   const nicknameFromUrl = urlParams.get("nickname");
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const [sessionId, setSessionId] = useState(sessionIdFromUrl);
   const [myUserName, setMyUserName] = useState(nicknameFromUrl);
@@ -69,12 +69,13 @@ function CustomRoom() {
   const [videoOn, setVideoOn] = useState(undefined);
   const [audioOn, setAudioOn] = useState(undefined);
   const [join, setJoin] = useState(false);
-  // const [gameStart, setGameStart] = useState(false);
-  const [isSpeaking, setIsSpeaking] = useState(undefined);
+  const [gameStart, setGameStart] = useState(false);
+  const [rank, setRank] = useState(false);
 
   // const myUserNameFromUrl = urlParams.get("nickname");
 
   const hostNickname = useSelector((state) => state.login.userNickname);
+  const gameStatus = useSelector((state) => state.game.gameStart);
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -121,13 +122,22 @@ function CustomRoom() {
       console.warn(exception);
     });
 
-    // mySession.on("signal:intro", (event) => {
-    //   setGameStart(true);
+    mySession.on("signal:intro", (event) => {
+      setGameStart(true);
 
-    //   setTimeout(() => {
-    //     closeIntroModal();
-    //   }, 16800);
-    // });
+      setTimeout(() => {
+        closeIntroModal();
+      }, 16800);
+    });
+
+    mySession.on("signal:rank", (event) => {
+      setRank(true);
+
+      setTimeout(() => {
+        closeRankModal();
+      }, 16800);
+    });
+
     if (nicknameFromUrl === null) {
       setMyUserName(hostNickname);
     }
@@ -250,6 +260,7 @@ function CustomRoom() {
 
     if (publisher) {
       publisher.publishVideo(videoOn);
+      console.log(publisher.properties);
     }
   };
 
@@ -258,6 +269,7 @@ function CustomRoom() {
 
     if (publisher) {
       publisher.publishAudio(audioOn);
+      console.log(publisher.properties);
     }
   };
 
@@ -269,7 +281,7 @@ function CustomRoom() {
     //   setSubscribers(removedSubscribers);
     // }
     setSubscribers((prevSubscribers) =>
-    prevSubscribers.filter((sub) => sub !== streamManager)
+      prevSubscribers.filter((sub) => sub !== streamManager)
     );
   };
 
@@ -280,24 +292,39 @@ function CustomRoom() {
     }
   };
 
-  // const displayEvery = () => {
-  //   session
-  //     .signal({
-  //       data: "인트로 영상 버튼",
-  //       to: [],
-  //       type: "intro",
-  //     })
-  //     .then(() => {})
-  //     .catch(() => {});
-  // };
+  const displayEvery = () => {
+    session
+      .signal({
+        data: "인트로 영상 버튼",
+        to: [],
+        type: "intro",
+      })
+      .then(() => {})
+      .catch(() => {});
+  };
 
-  // const closeIntroModal = () => {
-  //   setGameStart(false);
-  // };
+  const displayRank = () => {
+    session
+      .signal({
+        data: "순위 버튼",
+        to: [],
+        type: "rank",
+      })
+      .then(() => {})
+      .catch(() => {});
+  };
+
+  const closeIntroModal = () => {
+    setGameStart(false);
+  };
+
+  const closeRankModal = () => {
+    setRank(false);
+  };
 
   return (
     <div className="CustomRoomRoot" style={{ backgroundColor: "#F1F0F0" }}>
-      {/* <Dialog
+      <Dialog
         fullWidth
         maxWidth={"lg"}
         open={gameStart}
@@ -306,8 +333,20 @@ function CustomRoom() {
       >
         <ContentDialog>
           <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
-        </IntroDialogContent>
-      </Dialog> */}
+        </ContentDialog>
+      </Dialog>
+
+      <Dialog
+        fullWidth
+        maxWidth={"lg"}
+        open={rank}
+        onClose={() => closeRankModal()}
+        aria-labelledby="form-dialog-title"
+      >
+        <ContentDialog>
+          <Rank first={mainStreamManager} second={null} third={null} />
+        </ContentDialog>
+      </Dialog>
 
       {/* 초대링크로 접속한 경우: 입장 대기실 */}
       {sessionIdFromUrl != null && join === false ? (
@@ -319,7 +358,7 @@ function CustomRoom() {
                 {/* 입장 대기실 화면 크기 props.guest 여부로 확인 */}
                 <UserVideoComponent
                   streamManager={mainStreamManager}
-                  guest={sessionId}
+                  guest={sessionIdFromUrl}
                 />
                 <div id="buttongroup">
                   {!videoOn ? (
@@ -366,31 +405,23 @@ function CustomRoom() {
         </div>
       ) : null}
 
-      {/* 방에 모였을 때 */}
-      {/* <div style={{ display: "flex", flexFlow: "row wrap"}}>
-        {mainStreamManager !== undefined && join === true ? (
-          <div id="main-video" style={{ width: "50%", height: "auto" }}>
-            <MainVideoComponent streamManager={mainStreamManager} />
-          </div>
-        ) : null}
-
-        <div
-          id="video-container"
-          style={{
-            width: "50%",
-            height: "auto",
-            padding: "0px",
-          }}
-        >
+      {/* 게임 중 */}
+      {gameStatus ? (
+        <div style={{ display: "flex", flexDirection: "column" }}>
           {join === true && (
-            <div style={{ display: "flex", flexFlow: "row wrap" }}>
+            <div
+              id="video-container"
+              style={{
+                width: "100%",
+                display: "flex",
+                flexDirection: "row",
+              }}
+            >
               <div
                 className="stream-container"
                 onClick={() => handleMainVideoStream(publisher)}
               >
-                <UserVideoComponent
-                  streamManager={publisher}
-                />
+                <UserVideoComponent streamManager={publisher} />
               </div>
               {subscribers.map((sub, i) => (
                 <div
@@ -399,70 +430,72 @@ function CustomRoom() {
                   onClick={() => handleMainVideoStream(sub)}
                 >
                   <span>{sub.id}</span>
-                  <UserVideoComponent
-                    streamManager={sub}
-                  />
+                  <UserVideoComponent streamManager={sub} />
                 </div>
               ))}
             </div>
           )}
-        </div>
-      </div> */}
-
-      {/* 게임 중 */}
-      <div
-        style={{ display: "flex", flexDirection: "column"}}
-      >
-        {join === true && (
           <div
-            id="video-container"
             style={{
-              width: "100%",
               display: "flex",
               flexDirection: "row",
+              justifyContent: "space-around",
             }}
           >
-            <div
-              className="stream-container"
-              onClick={() => handleMainVideoStream(publisher)}
-            >
-              <UserVideoComponent
-                streamManager={publisher}
-              />
+            <div style={{ width: "50%", height: "auto" }}>
+              <video src={NarangNorangIntro} autoPlay></video>
             </div>
-            {subscribers.map((sub, i) => (
-              <div
-                key={sub.id}
-                className="stream-container"
-                onClick={() => handleMainVideoStream(sub)}
-              >
-                <span>{sub.id}</span>
-                <UserVideoComponent
-                  streamManager={sub}
-                />
+            {mainStreamManager !== undefined && join === true ? (
+              <div id="main-video" style={{ width: "50%", height: "auto" }}>
+                <MainVideoComponent streamManager={mainStreamManager} />
               </div>
-            ))}
+            ) : null}
           </div>
-        )}
-        <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-around"}}>
-          <div style={{ width: "50%", height: "auto" }}>
-          {/* 여기에 내 화면의 왼쪽에 넣고 싶은 내용을 넣으면 됨 */}
-          <Game1 session={session} showGameVideo={true} />
-          </div>
+        </div>
+        // 방에 모여있을 때
+      ) : ( 
+        <div style={{ display: "flex", flexFlow: "row wrap" }}>
           {mainStreamManager !== undefined && join === true ? (
             <div id="main-video" style={{ width: "50%", height: "auto" }}>
               <MainVideoComponent streamManager={mainStreamManager} />
             </div>
           ) : null}
+
+          <div
+            id="video-container"
+            style={{
+              width: "50%",
+              height: "auto",
+              padding: "0px",
+            }}
+          >
+            {join === true && (
+              <div style={{ display: "flex", flexFlow: "row wrap" }}>
+                <div
+                  className="stream-container"
+                  onClick={() => handleMainVideoStream(publisher)}
+                >
+                  <UserVideoComponent streamManager={publisher} />
+                </div>
+                {subscribers.map((sub, i) => (
+                  <div
+                    key={sub.id}
+                    className="stream-container"
+                    onClick={() => handleMainVideoStream(sub)}
+                  >
+                    <span>{sub.id}</span>
+                    <UserVideoComponent streamManager={sub} />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
-      </div>
-      {/* 여기까지 게임중 */}
+      )}
 
       {sessionIdFromUrl === null || join === true ? (
         <div>
-          <div>
-          <Game1 session={session} />
-          </div>
+          <Game1 />
           <div
             style={{
               position: "fixed",
@@ -482,11 +515,11 @@ function CustomRoom() {
               guest={sessionIdFromUrl}
             />
           </div>
-          {/* <button onClick={displayEvery}>버튼</button> */}
-          {/* <button onClick={displayRank}>랭크컴포넌트</button> */}
+          <button onClick={displayEvery}>버튼</button>
+          <button onClick={displayRank}>랭크컴포넌트</button>
         </div>
       ) : null}
-  </div>
+    </div>
   );
 }
 
