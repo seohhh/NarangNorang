@@ -54,7 +54,7 @@ const ContentDialog = styled(DialogContent)`
   height: 750px;
 `;
 
-function CustomRoom() {
+function CustomRoom(props) {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionIdFromUrl = urlParams.get("sessionId");
   const nicknameFromUrl = urlParams.get("nickname");
@@ -493,9 +493,10 @@ function CustomRoom() {
         </div>
       )}
 
+      {sessionIdFromUrl === null && join === true ?
+        <Game1 streamManager={publisher} /> : null}
       {sessionIdFromUrl === null || join === true ? (
         <div>
-          <Game1 />
           <div
             style={{
               position: "fixed",
