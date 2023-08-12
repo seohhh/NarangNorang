@@ -4,10 +4,12 @@ import userpose from "../utils/userpose";
 import html2canvas from "html2canvas";
 import "./MainVideoComponent.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
-import axios from "axios";
+// import axios from "axios";
 import { useSelector } from "react-redux";
+import { handleCapture } from "../slice/gameSlice";
+import { useDispatch } from "react-redux";
 
-const BASE_URL = 'https://i9c208.p.ssafy.io/api/v1'
+// const BASE_URL = 'https://i9c208.p.ssafy.io/api/v1'
 
 const MainVideoComponent = (props) => {
   const videoRef = useRef();  // 비디오 요소 참조 생성
@@ -16,6 +18,7 @@ const MainVideoComponent = (props) => {
     width: 640,
     height: 480,
   });
+  const dispatch = useDispatch()
 
   const showCanvas = useSelector((state) => state.game.showCanvas);
   const detectorRef = useRef(null);
@@ -82,37 +85,15 @@ const MainVideoComponent = (props) => {
     };
   }, [props, props.streamManager, showCanvas, videoDimensions.width, videoDimensions.height]);
 
-  const handleCapture = async () => {
-    if (!videoRef.current) return;
 
-    try {
-      const video = videoRef.current;
-      const canvas = await html2canvas(video, { scale: 2 });
-      canvas.toBlob((blob) => {
-        if (blob !== null) {
+  const video = videoRef.current;
+  const roomCode = props.streamManager.stream.session.sessionId;
+  const subscriberId = props.streamManager.stream.connection.connectionId;
 
-          let file = new File([blob], "캡쳐.png", { type: blob.type })
-          const formData = new FormData()
-          formData.append('images', file)
-          formData.append('roomCode', props.streamManager.stream.session.sessionId)
-          formData.append('subscriberId', props.streamManager.stream.connection.connectionId)
-
-          const header = {header: {"Content-Type": "multipart/form-data"}}
-        
-
-          axios.post(BASE_URL + '/album/capture', formData, {header})
-          .then((response) => {
-            console.log(response)
-            console.log(file)
-          })
-          .catch((error) => {
-            console.log(error)
-            console.log(file)
-          })
-        }
-      });
-    } catch (error) {
-      console.error("Error converting div to image:", error);
+  const capture = async () => {
+    if (videoRef.current) {
+      const canvas = await html2canvas(videoRef.current, { scale: 2 });
+      dispatch(handleCapture(videoRef, canvas, roomCode, subscriberId));
     }
   };
 
@@ -140,7 +121,7 @@ const MainVideoComponent = (props) => {
             width={videoDimensions.width}
             height={videoDimensions.height}
           />
-          <button onClick={handleCapture}>지금 이 순간!</button>
+          <button onClick={capture}>지금 이 순간!</button>
           <button onClick={handleGetScore}>유사도 계산</button>
         </div>
 
