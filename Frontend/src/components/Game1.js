@@ -1,91 +1,149 @@
-import React, { useState, useRef } from 'react';
-import gamemusic1 from '../assets/music/gamemusic1.mp3'; // 음악 파일 경로
-import { CountdownCircleTimer } from 'react-countdown-circle-timer';
-import styled from 'styled-components';
+import React, { useState, useEffect, useRef } from "react";
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import styled from "styled-components";
 
-const StyledButton = styled.button`
-  background-color: #ff9800;
-  color: white;
-  font-size: 16px;
-  border: none;
-  border-radius: 50px;
-  padding: 10px 20px;
-  cursor: pointer;
+import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
+import Gorilla from "../assets/game/Gorilla.mp4";
+import Elephant from "../assets/game/Elephant.mp4";
+import Eagle from "../assets/game/Eagle.mp4";
+import Frog from "../assets/game/Frog.mp4";
+import Cat from "../assets/game/Cat.mp4";
+import Tiger from "../assets/game/Tiger.mp4";
 
-  &:hover {
-    background-color: #f57c00;
-  }
+import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
+import userpose from "../utils/userpose";
+import html2canvas from "html2canvas";
+
+import { useSelector } from "react-redux";
+import { handleCapture } from "../slice/gameSlice";
+import { useDispatch } from "react-redux";
+
+// 나랑노랑 인트로
+const IntroMp4 = styled.video`
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
 `;
 
-const Game = () => {
-  const [isMusicPlaying, setMusicPlaying] = useState(false);
-  const [showCountdown, setShowCountdown] = useState(false);
-  const musicRef = useRef(null);
+// 모달 크기
+const IntroDialogContent = styled(DialogContent)`
+  height: 700px;
+`;
 
-  const handleStartMusic = () => {
-    console.log("handleStartMusic is called!");
-    if (!isMusicPlaying) {
-      setMusicPlaying(true);
-      setShowCountdown(false);
-      musicRef.current.currentTime = 0;
-      musicRef.current.play();
+// 게임영상 크기
+const GameVideo = styled.video`
+  width: 100%;
+  height: 100%;
+`;
+
+function Game1(props) {
+  const { streamManager, session, handleCaptureRef } = props;
+
+  console.log("streamManager:", props.streamManager);
+  const [introOpen, setIntroOpen] = useState(false);
+  const [gameStart, setGameStart] = useState(false);
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
+
+  const videos = [Gorilla, Elephant, Eagle, Frog, Cat, Tiger];
+
+  const videoRef = useRef(null); // 비디오 요소 참조 생성
+
+  const dispatch = useDispatch();
+
+  const roomCode = props.streamManager.stream.session.sessionId;
+  const subscriberId = props.streamManager.stream.connection.connectionId;
+
+  // const capture = async () => {
+  //   if (videoRef.current) {
+  //     const canvas = await html2canvas(videoRef.current, { scale: 2 });
+  //     dispatch(handleCapture(videoRef.current, canvas, roomCode, subscriberId));
+  //   }
+  // };
+  const capture = async () => {
+    if (videoRef.current) {
+      try {
+        const canvas = await html2canvas(videoRef.current, { scale: 2 });
+        console.log("캡쳐 시작"); // 캡쳐 시작 로그 출력
+        dispatch(
+          handleCapture(videoRef.current, canvas, roomCode, subscriberId)
+        );
+        console.log("캡쳐 성공"); // 캡쳐 성공 로그 출력
+      } catch (error) {
+        console.error("캡쳐 실패:", error); // 캡쳐 실패 로그 출력
+      }
     }
   };
 
-  const handleStopMusic = () => {
-    console.log("handleStopMusic is called!");
-    if (isMusicPlaying) {
-      setMusicPlaying(false);
-      musicRef.current.pause();
+  const handleGameStartClick = () => {
+    setIntroOpen(true);
+  };
+
+  useEffect(() => {
+    if (session) {
+      const handleSignal = (event) => {
+        console.log("세션 Received signal event:", event); // 콘솔 로깅 추가
+        if (event.type === "startGame") {
+          setGameStart(true);
+        }
+      };
+
+      session.on("signal", handleSignal);
+      return () => {
+        session.off("signal", handleSignal);
+      };
     }
+  }, [session]);
+
+  const handleIntroEnded = () => {
+    setIntroOpen(false);
+    setGameStart(true);
   };
 
-  const handleMusicEnded = () => {
-    console.log("handleMusicEnded is called!");
-    setShowCountdown(true);
-    setMusicPlaying(false);
-  };
-
-  const renderTime = (remainingTime) => {
-    
-    return (
-      <div className="timer">
-        <div className="value" style={{ fontSize: '40px' }}>
-          {remainingTime}
-        </div>
-      </div>
-    );
+  const handleVideoEnded = () => {
+    if (currentVideoIndex < videos.length - 1) {
+      // 여기에서 캡쳐함수를!!
+      capture();
+      setCurrentVideoIndex(currentVideoIndex + 1);
+    }
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: 'auto' }}>
-      <div style={{ position: 'relative', top: '300px' }}>
-        {showCountdown && (
-          <div style={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}>
-            <CountdownCircleTimer
-              isPlaying
-              duration={5}
-              colors={[['#ff9800', 0.33], ['#F7B801', 0.33], ['#A30000']]}
-              onComplete={() => setShowCountdown(false)}
-              renderTime={renderTime}
-            />
-          </div>
-        )}
-        <video
-          style={{ width: '100%', height: 'auto' }}
-          autoPlay
-          playsInline
-          onEnded={handleMusicEnded}
-
-        />
-      </div>
-      <div style={{ marginTop: '2px' }}>
-        {!isMusicPlaying && <StyledButton onClick={handleStartMusic}>게임시작</StyledButton>}
-        {isMusicPlaying && <StyledButton onClick={handleStopMusic}>정지</StyledButton>}
-      </div>
-      <audio ref={musicRef} src={gamemusic1} />
+    <div>
+      {!gameStart && (
+        <div>
+          <button onClick={() => handleGameStartClick()}>게임 시작</button>
+        </div>
+      )}
+      {gameStart && (
+        <div>
+          <GameVideo
+            ref={videoRef} // 비디오 요소에 ref 설정
+            src={videos[currentVideoIndex]}
+            autoPlay
+            onEnded={handleVideoEnded}
+          ></GameVideo>
+        </div>
+      )}
+      <Dialog
+        fullWidth
+        maxWidth={"lg"}
+        open={introOpen}
+        onClose={() => handleIntroEnded()}
+        aria-labelledby="form-dialog-title"
+      >
+        <IntroDialogContent>
+          <IntroMp4
+            src={NarangNorangIntro}
+            autoPlay
+            onEnded={handleIntroEnded}
+          ></IntroMp4>
+        </IntroDialogContent>
+      </Dialog>
     </div>
   );
-};
+}
 
-export default Game;
+export default Game1;

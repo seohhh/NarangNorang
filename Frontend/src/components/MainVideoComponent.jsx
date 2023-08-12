@@ -1,13 +1,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import userpose from "../utils/userpose";
 // import POSE from "../utils/POSE";
-import html2canvas from "html2canvas";
+// import html2canvas from "html2canvas";
 import "./MainVideoComponent.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
 // import axios from "axios";
 import { useSelector } from "react-redux";
-import { handleCapture, handleGetScore } from "../slice/gameSlice";
-import { useDispatch } from "react-redux";
+// import { handleCapture } from "../slice/gameSlice";
+// import { useDispatch } from "react-redux";
 
 // const BASE_URL = 'https://i9c208.p.ssafy.io/api/v1'
 
@@ -18,7 +18,7 @@ const MainVideoComponent = (props) => {
     width: 640,
     height: 480,
   });
-  const dispatch = useDispatch()
+  // const dispatch = useDispatch()
 
   const showCanvas = useSelector((state) => state.game.showCanvas);
   const detectorRef = useRef(null);
@@ -86,20 +86,21 @@ const MainVideoComponent = (props) => {
   }, [props, props.streamManager, showCanvas, videoDimensions.width, videoDimensions.height]);
 
 
-  const roomCode = props.streamManager.stream.session.sessionId;
-  const subscriberId = props.streamManager.stream.connection.connectionId;
+  // const video = videoRef.current;
+  // const roomCode = props.streamManager.stream.session.sessionId;
+  // const subscriberId = props.streamManager.stream.connection.connectionId;
 
-  const capture = async () => {
-    if (videoRef.current) {
-      const canvas = await html2canvas(videoRef.current, { scale: 2 });
-      dispatch(handleCapture(videoRef, canvas, roomCode, subscriberId));
-    }
-  };
+  // const capture = async () => {
+  //   if (videoRef.current) {
+  //     const canvas = await html2canvas(videoRef.current, { scale: 2 });
+  //     dispatch(handleCapture(videoRef, canvas, roomCode, subscriberId));
+  //   }
+  // };
 
-  const getScore = () => {
-    if (videoRef.current)
-      dispatch(handleGetScore(videoRef.current))
-  }
+  // const getScore = () => {
+  //   if (videoRef.current)
+  //     dispatch(handleGetScore(videoRef.current))
+  // }
 
 
   // 컴포넌트 렌더링
@@ -118,8 +119,8 @@ const MainVideoComponent = (props) => {
             width={videoDimensions.width}
             height={videoDimensions.height}
           />
-          <button onClick={capture}>지금 이 순간!</button>
-          <button onClick={getScore}>유사도 계산</button>
+          {/* <button onClick={capture}>지금 이 순간!</button> */}
+          <button onClick={handleGetScore}>유사도 계산</button>
         </div>
 
         ) : null}
