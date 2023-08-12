@@ -1,11 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
 import loginReducer from './slice/authSlice';
-import xrayReducer from './slice/xraySlice';
+import gameReducer from './slice/gameSlice';
 
 const store = configureStore({
   reducer: {
     login: loginReducer,
-    xray: xrayReducer,
+    game: gameReducer,
   },
 });
 

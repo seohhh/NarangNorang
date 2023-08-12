@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Modal } from "react-bootstrap";
 import './Toolbar.css';
-import { switchShowCanvas } from "../slice/xraySlice";
+import { switchShowCanvas, switchGameStart } from "../slice/gameSlice";
 import { useSelector, useDispatch } from "react-redux";
 
-// icon
+// icone
 import inviteIcon from "../assets/icon/invite.png";
 import leaveIcon from "../assets/icon/leave.png";
 import xrayIcon from "../assets/icon/xray.png";
@@ -14,6 +14,7 @@ import videoOffIcon from "../assets/icon/videoOff.png";
 import audioOnIcon from "../assets/icon/audioOn.png";
 import audioOffIcon from "../assets/icon/audioOff.png";
 import noXrayIcon from "../assets/icon/noXray.png";
+import gamestartIcon from "../assets/icon/gamestart.png";
 
 
 const ToolbarComponent = (props) => {
@@ -21,7 +22,7 @@ const ToolbarComponent = (props) => {
   const [videoOn, setVideoOn] = useState(props.videoOn)
   const dispatch = useDispatch()
 
-  const showCanvas = useSelector((state) => (state.xray.showCanvas))
+  const showCanvas = useSelector((state) => (state.game.showCanvas))
   
   // 초대링크 모달
   const [show, setShow] = useState(false);
@@ -36,6 +37,8 @@ const ToolbarComponent = (props) => {
   const mySessionId = props.sessionId;
   const inviteLink = `http://i9c208.p.ssafy.io/waiting/${mySessionId}`
 
+  const guest = props.guest 
+
   const micStatusChanged = () => {
     props.micStatusChanged();
     setAudioOn(!props.audioOn)
@@ -44,6 +47,10 @@ const ToolbarComponent = (props) => {
   const camStatusChanged = () => {
     props.camStatusChanged();
     setVideoOn(!props.videoOn)
+  }
+
+  const gameStatusChanged = () => {
+    dispatch(switchGameStart())
   }
 
   // const toggleFullscreen = () => {
@@ -100,6 +107,11 @@ return (
         (<div onClick={clickShowCanvas}>
           <img src={noXrayIcon} alt="xray" className="icon" />
         </div>)}
+      {/* 방장인 경우 게임스타트 */}
+      { !guest ?
+        (<div onClick={gameStatusChanged}>
+          <img src={gamestartIcon} alt="gamestart" className="icon" />
+        </div>) : null }
       <div onClick={leaveSession}>
         <img src={leaveIcon} alt="leave" className="icon" />
       </div>

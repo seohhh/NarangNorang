@@ -479,6 +479,7 @@ function CustomRoom() {
               micStatusChanged={micStatusChanged}
               leaveSession={leaveSession}
               publisher={publisher}
+              guest={sessionIdFromUrl}
             />
           </div>
           {/* <button onClick={displayEvery}>버튼</button> */}
