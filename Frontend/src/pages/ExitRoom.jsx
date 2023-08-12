@@ -1,9 +1,7 @@
 import axios from "axios";
-import React from "react";
+import React, { useState } from "react";
 import { useEffect } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-// import { useState } from "react";
 
 axios.defaults.url = 'https://i9c208.p.ssafy.io/api/v1'
 
@@ -11,60 +9,43 @@ function ExitRoom() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionIdFromUrl = urlParams.get("sessionId");
   const subscriberIdFromUrl = urlParams.get("subscriberId");
-  const memberSeq = useSelector((state) => state.login.userSeq)
+  const memberSeq = sessionStorage.getItem("user") !== null ? JSON.parse(sessionStorage.getItem("user")).memberSeq : -1
+  const [ images, setImages ] = useState([])
   
   const navigate = useNavigate()
-  // const { images, setimages } = useState([])
 
   useEffect(() => {
-
-
-    const loadRedisImages = () => {
-      console.log(sessionIdFromUrl)
-      console.log(subscriberIdFromUrl)
-      const formData = new FormData()
-      formData.append('roomCode', sessionIdFromUrl)
-      formData.append('subscriberId', subscriberIdFromUrl)
-
-      // axios.get('/album/capture-list', formData)
-      // .then((res) => {
-      //     console.log(res)
-      // })
-      // .catch((error) => {
-      //     console.log(error)
-      // })
-      axios({
-        method: 'GET',
-        url: '/album/capture-list',
-        params: { 'roomCode': sessionIdFromUrl, 'subscriberId': subscriberIdFromUrl }
-      })
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => {
-        console.log(err, sessionIdFromUrl, subscriberIdFromUrl)
-      })
-    }
-
-    loadRedisImages()
     if (sessionIdFromUrl === null || subscriberIdFromUrl===null) {
       navigate('/')
     }
-      
-
-  }, [navigate, sessionIdFromUrl, subscriberIdFromUrl])
-
+    
+    axios({
+      method: 'GET',
+      url: '/album/capture-list',
+      params: { 'roomCode': sessionIdFromUrl, 'subscriberId': subscriberIdFromUrl }
+    })
+    .then((res) => {
+      setImages(res.data)
+    })
+    .catch((err) => {
+      console.log(err)
+    })
+  }, [images, sessionIdFromUrl, subscriberIdFromUrl, navigate])
 
   const goToMain = () => {
     saveImages()
     navigate('/')
+    
   }
+
+
 
   const saveImages = () => {
     // const redisImageIndex = []
 
     const formData = new FormData()
     formData.append()
+    formData.append()// 배열 넣기
 
     axios.post('', formData)
     .then((res) => {
@@ -75,6 +56,10 @@ function ExitRoom() {
     })
   }
 
+  const imageInfo = () => {
+    console.log(images)
+  }
+
 
   return (
       <div>
@@ -82,10 +67,28 @@ function ExitRoom() {
           <p>sessionIdFromUrl : {sessionIdFromUrl}</p>
           <p>subscriberIdFromUrl : {subscriberIdFromUrl}</p>
           <p>memberSeq: {memberSeq}</p>
+          
+          {images.map((image) => {
+            return (
+              <div key={image.pictureSeq}>
+                <button onClick={imageInfo}>이미지</button>
+              </div>
+            )
+          })}
+          
           <button onClick={goToMain}>나가기</button>
-          {memberSeq !== null ? (
+          {memberSeq !== -1 ? (
               <button onClick={saveImages}>저장</button>
           ): null}
+
+
+
+          {/* {images.map((image, i) => (
+            <div>
+              {image}
+              <img src={image} alt="" />
+            </div>
+          ))} */}
       </div>
       
   );
