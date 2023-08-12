@@ -1,9 +1,11 @@
 import React, { Component } from "react";
+
 export default class OpenViduVideoComponent extends Component {
   constructor(props) {
     super(props);
     this.videoRef = React.createRef();
     this.guest = props.guest;
+    this.rank = props.rank;
   }
 
   componentDidUpdate(props) {
@@ -31,14 +33,21 @@ export default class OpenViduVideoComponent extends Component {
           <video
             autoPlay={true}
             ref={this.videoRef}
-          />
-        ) : (
+          />) : null }
+
+        { this.rank ? (
+          <video 
+            style={{ width: "280px", height: "100%"}}
+            autoPlay={true}
+            ref={this.videoRef}
+          />) : null } 
+        
+        { !this.guest && !this.rank ? (
           <video
             style={{ width: "250px", height: "250px" }}
             autoPlay={true}
             ref={this.videoRef}
-          />
-        )}
+          />) : null }
       </div>
     );
   }

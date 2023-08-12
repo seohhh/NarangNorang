@@ -11,6 +11,7 @@ import MainVideoComponent from "../components/MainVideoComponent";
 import ToolbarComponent from "../components/ToolbarComponent";
 import Game1 from "../components/Game1";
 import "./CustomRoom.css";
+import Rank from "../components/Rank";
 
 // icon
 import videoOnIcon from "../assets/icon/videoOn.png";
@@ -57,7 +58,7 @@ function CustomRoom() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionIdFromUrl = urlParams.get("sessionId");
   const nicknameFromUrl = urlParams.get("nickname");
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const [sessionId, setSessionId] = useState(sessionIdFromUrl);
   const [myUserName, setMyUserName] = useState(nicknameFromUrl);
@@ -102,15 +103,15 @@ function CustomRoom() {
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
 
-    mySession.on("publisherStartSpeaking", (event) => {
-      console.log("User " + event.connection.connectionId + " start speaking");
-      setIsSpeaking(true);
-    });
+    // mySession.on("publisherStartSpeaking", (event) => {
+    //   console.log("User " + event.connection.connectionId + " start speaking");
+    //   setIsSpeaking(true);
+    // });
 
-    mySession.on("publisherStopSpeaking", (event) => {
-      console.log("User " + event.connection.connectionId + " stop speaking");
-      setIsSpeaking(false);
-    });
+    // mySession.on("publisherStopSpeaking", (event) => {
+    //   console.log("User " + event.connection.connectionId + " stop speaking");
+    //   setIsSpeaking(false);
+    // });
 
     mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager);
@@ -261,12 +262,15 @@ function CustomRoom() {
   };
 
   const deleteSubscriber = (streamManager) => {
-    let removedSubscribers = subscribers;
-    let index = removedSubscribers.indexOf(streamManager, 0);
-    if (index > -1) {
-      removedSubscribers.splice(index, 1);
-      setSubscribers(removedSubscribers);
-    }
+    // let removedSubscribers = subscribers;
+    // let index = removedSubscribers.indexOf(streamManager, 0);
+    // if (index > -1) {
+    //   removedSubscribers.splice(index, 1);
+    //   setSubscribers(removedSubscribers);
+    // }
+    setSubscribers((prevSubscribers) =>
+    prevSubscribers.filter((sub) => sub !== streamManager)
+    );
   };
 
   // main 화면 변경
@@ -294,17 +298,17 @@ function CustomRoom() {
   return (
     <div className="CustomRoomRoot" style={{ backgroundColor: "#F1F0F0" }}>
       {/* Intro Dialog */}
-      {/* <Dialog
+      <Dialog
         fullWidth
         maxWidth={"lg"}
         open={gameStart}
         onClose={() => closeIntroModal()}
         aria-labelledby="form-dialog-title"
       >
-        <IntroDialogContent>
+        <ContentDialog>
           <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
         </IntroDialogContent>
-      </Dialog> */}
+      </Dialog>
 
       {/* 초대링크로 접속한 경우: 입장 대기실 */}
       {sessionIdFromUrl != null && join === false ? (
@@ -387,7 +391,6 @@ function CustomRoom() {
               >
                 <UserVideoComponent
                   streamManager={publisher}
-                  isSpeaking={isSpeaking}
                 />
               </div>
               {subscribers.map((sub, i) => (
@@ -399,7 +402,6 @@ function CustomRoom() {
                   <span>{sub.id}</span>
                   <UserVideoComponent
                     streamManager={sub}
-                    isSpeaking={isSpeaking}
                   />
                 </div>
               ))}
@@ -427,7 +429,6 @@ function CustomRoom() {
             >
               <UserVideoComponent
                 streamManager={publisher}
-                isSpeaking={isSpeaking}
               />
             </div>
             {subscribers.map((sub, i) => (
@@ -439,7 +440,6 @@ function CustomRoom() {
                 <span>{sub.id}</span>
                 <UserVideoComponent
                   streamManager={sub}
-                  isSpeaking={isSpeaking}
                 />
               </div>
             ))}
@@ -482,10 +482,11 @@ function CustomRoom() {
               publisher={publisher}
             />
           </div>
-          {/* <button onClick={displayEvery}>버튼</button> */}
+          <button onClick={displayEvery}>버튼</button>
+          <button onClick={displayRank}>랭크컴포넌트</button>
         </div>
       ) : null}
-    </div>
+  </div>
   );
 }
 

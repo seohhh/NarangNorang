@@ -31,8 +31,8 @@ function CustomNavbar() {
     dispatch(logout(token))}
 
   return (
-    <Wrapper class="container">
-      <div class="align-self-center">
+    <Wrapper className="container">
+      <div className="align-self-center">
         <Link to="/">
           <img
             src={logo} // 로고 이미지 파일 경로 설정
@@ -41,14 +41,14 @@ function CustomNavbar() {
           />
         </Link>
       </div>
-      <div class="align-self-center">
+      <div className="align-self-center">
         <NavLink to="/contents">컨텐츠 소개</NavLink>
         <NavLink to={`/album/${userSeq}`}>앨범</NavLink>
         {isLoggedin ?
           <NavLink to={`/mypage/${userId}`}>마이페이지</NavLink>
           : <NavLink to="/signup">회원가입</NavLink>}
       </div>
-      <div class="align-self-center">
+      <div className="align-self-center">
         {isLoggedin ? 
           <Button variant="light" onClick={handleLogout}>로그아웃</Button>
           : <NavLink to="/login"><Button variant="light">로그인</Button></NavLink>}
