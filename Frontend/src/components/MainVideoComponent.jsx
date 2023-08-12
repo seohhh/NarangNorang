@@ -95,7 +95,7 @@ const MainVideoComponent = (props) => {
           const formData = new FormData()
           formData.append('images', file)
           formData.append('roomCode', props.streamManager.stream.session.sessionId)
-          formData.append('subscriberId', 123)
+          formData.append('subscriberId', props.streamManager.stream.connection.connectionId)
 
           const header = {header: {"Content-Type": "multipart/form-data"}}
         
@@ -109,7 +109,6 @@ const MainVideoComponent = (props) => {
             console.log(error)
             console.log(file)
           })
-          console.log(props.streamManager.stream.session.sessionId)
         }
       });
     } catch (error) {
@@ -117,14 +116,19 @@ const MainVideoComponent = (props) => {
     }
   };
 
-
+  const handleGetScore = () => {
+    const poseIdx = 0;
+    
+    const score = userpose.getScore(poseIdx, videoRef.current);
+    console.log("similarity score", score);
+  }
 
 
   // 컴포넌트 렌더링
   return (
     <div>
       {props.streamManager !== undefined ? (
-        <div className="streamcomponent">
+        <div className="stream-component">
           <canvas
             ref={canvasRef}
             width={videoDimensions.width}
@@ -137,6 +141,7 @@ const MainVideoComponent = (props) => {
             height={videoDimensions.height}
           />
           <button onClick={handleCapture}>지금 이 순간!</button>
+          <button onClick={handleGetScore}>유사도 계산</button>
         </div>
 
         ) : null}
