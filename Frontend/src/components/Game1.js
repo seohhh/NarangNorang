@@ -33,7 +33,7 @@ const GameVideo = styled.video`
   height: 100%;
 `;
 
-function Game1({ session, showGameVideo }) {
+function Game1({ session, showGameVideo, handleCaptureRef, ...restProps}) {
   const [introOpen, setIntroOpen] = useState(false);
   const [gameStart, setGameStart] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
@@ -74,6 +74,10 @@ function Game1({ session, showGameVideo }) {
 
   const handleVideoEnded = () => {
     if (currentVideoIndex < videos.length - 1) {
+
+
+    // 여기에서 캡쳐함수를 
+
       setCurrentVideoIndex(currentVideoIndex + 1);
     }
   };

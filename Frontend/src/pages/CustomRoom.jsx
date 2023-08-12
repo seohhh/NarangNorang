@@ -297,8 +297,7 @@ function CustomRoom() {
 
   return (
     <div className="CustomRoomRoot" style={{ backgroundColor: "#F1F0F0" }}>
-      {/* Intro Dialog */}
-      <Dialog
+      {/* <Dialog
         fullWidth
         maxWidth={"lg"}
         open={gameStart}
@@ -308,7 +307,7 @@ function CustomRoom() {
         <ContentDialog>
           <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
         </IntroDialogContent>
-      </Dialog>
+      </Dialog> */}
 
       {/* 초대링크로 접속한 경우: 입장 대기실 */}
       {sessionIdFromUrl != null && join === false ? (
@@ -482,8 +481,8 @@ function CustomRoom() {
               publisher={publisher}
             />
           </div>
-          <button onClick={displayEvery}>버튼</button>
-          <button onClick={displayRank}>랭크컴포넌트</button>
+          {/* <button onClick={displayEvery}>버튼</button> */}
+          {/* <button onClick={displayRank}>랭크컴포넌트</button> */}
         </div>
       ) : null}
   </div>
