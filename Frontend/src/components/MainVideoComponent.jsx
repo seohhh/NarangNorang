@@ -17,7 +17,7 @@ const MainVideoComponent = (props) => {
     height: 480,
   });
 
-  const showCanvas = useSelector((state) => state.xray.showCanvas);
+  const showCanvas = useSelector((state) => state.game.showCanvas);
   const detectorRef = useRef(null);
 
   // 비디오 메타데이터 로드 핸들러
