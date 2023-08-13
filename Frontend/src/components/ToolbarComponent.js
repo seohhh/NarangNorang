@@ -36,7 +36,7 @@ const ToolbarComponent = (props) => {
   const handleCopySuccess = () => setCopyShow(true);
 
   const mySessionId = props.sessionId;
-  const inviteLink = `http://i9c208.p.ssafy.io/waiting/${mySessionId}`
+  const inviteLink = `https://i9c208.p.ssafy.io/waiting/${mySessionId}`
 
   const guest = props.guest 
 

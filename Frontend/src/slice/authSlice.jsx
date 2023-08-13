@@ -31,7 +31,7 @@ const authSlice = createSlice({
     },
     loginFailure(state, action) {
       state.isLoggedin = false
-      state.user = null
+      state.user = null 
       state.error = action.payload
       sessionStorage.removeItem('isLoggedin');
       sessionStorage.removeItem('user');
