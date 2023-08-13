@@ -9,6 +9,7 @@ import ContentsComponent from "../components/ContentsComponent";
 import IntroComponent from "../components/IntroComponent";
 import Ask from "../components/Ask";
 import Footer from '../components/Footer';
+import "./Main.css";
 
 const Container = styled.div`
   display: flex;
@@ -18,25 +19,6 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-const MainContent = styled.div`
-  display: flex;
-  justify-content: center;
-  width: 100%; /* 부모 컨테이너에 가로 영역 전체 사용 */
-`;
-
-const Button = styled.button`
-  padding: 13px;
-  border-radius: 20px;
-  background-color: white;
-  border: none;
-  box-shadow: 0 0 20px -10px rgba(0, 0, 0, 2);
-`;
-
-const MainImage = styled.img`
- border-radius: 1%;
- box-shadow: 0 0 22px -9px rgba(0, 0, 0, 1);
- margin-bottom: 250px;
-`;
 
 // const TextContent = styled.div`
 //   flex: 1; /* 텍스트 부분이 화면 가로 방향을 반반으로 차지 */
@@ -66,19 +48,19 @@ function Main() {
             </div>
             {isLoggedin ? (
               <Link to="/room">
-                <Button>방만들기 →</Button>
+                <button id="button">방만들기 →</button>
               </Link>
             ) : (
               <Link to="/login">
-                <Button>방만들기 →</Button>
+                <button id="button">방만들기 →</button>
               </Link>
             )}
           </Fade>
         </div>
       </Container>
-      <MainContent>
-        <MainImage src={PlayImg} alt="PlayImg" />
-      </MainContent>
+      <div id="mainContent">
+        <img id="mainImage" src={PlayImg} alt="PlayImg" />
+      </div>
       <div style={{ marginBottom: "250px"}}>
         <IntroComponent />
       </div>

@@ -11,11 +11,8 @@ public interface PhotoService {
 
     void uploadPhoto(Photo photo);
     List<Photo> getPhotoByMember(Member member);
-
     UpdatePhotoContentResponse updatePhotoContent(UpdatePhotoContentRequest updatePhotoContentRequest);
-
     boolean deletePhoto(Long photoSeq);
-
     String getFilenameByPhotoSeq(Long photoSeq);
 
 }

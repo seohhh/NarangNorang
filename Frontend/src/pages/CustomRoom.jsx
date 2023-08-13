@@ -3,7 +3,8 @@ import axios from "axios";
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { switchRenderBool } from '../slice/gameSlice';
 
 // component
 import UserVideoComponent from "../components/UserVideoComponent";
@@ -71,11 +72,14 @@ function CustomRoom(props) {
   const [join, setJoin] = useState(false);
   const [gameStart, setGameStart] = useState(false);
   const [rank, setRank] = useState(false);
+  const dispatch = useDispatch()
+  
 
   // const myUserNameFromUrl = urlParams.get("nickname");
 
   const hostNickname = useSelector((state) => state.login.userNickname);
-  const gameStatus = useSelector((state) => state.game.gameStart);
+  const checkStatus = useSelector((state) => state.game.gameStart);
+  const [gameStatus, setGameStatus] = useState(false)
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -89,6 +93,18 @@ function CustomRoom(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (session) {
+      session.signal({
+        data: gameStatus,
+        to: [],
+        type: "gameStatus"
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkStatus])
+
+
   const onbeforeunload = (event) => {
     leaveSession();
   };
@@ -100,7 +116,9 @@ function CustomRoom(props) {
     setSession(mySession);
 
     mySession.on("streamCreated", (event) => {
+      
       const subscriber = mySession.subscribe(event.stream, undefined);
+      console.log(subscriber)
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
 
@@ -137,6 +155,20 @@ function CustomRoom(props) {
         closeRankModal();
       }, 16800);
     });
+
+    mySession.on("signal:render", (event) => {
+      dispatch(switchRenderBool())
+    })
+
+    mySession.on("signal:gameStatus", (event) => {
+      if (event.data === "") {
+        setGameStatus(true)
+      } else  {
+        setGameStatus(false)
+      }
+      
+    })
+  
 
     if (nicknameFromUrl === null) {
       setMyUserName(hostNickname);
@@ -271,6 +303,12 @@ function CustomRoom(props) {
       publisher.publishAudio(audioOn);
       console.log(publisher.properties);
     }
+
+    session.signal({
+      data: "렌더링",
+      to: [],
+      type: "render",
+    })
   };
 
   const deleteSubscriber = (streamManager) => {

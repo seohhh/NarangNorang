@@ -18,6 +18,7 @@ import Waiting from './pages/Waiting';
 import CustomRoom from "./pages/CustomRoom";
 import Exit from "./pages/ExitRoom"
 import Rank from "./components/Rank";
+import NotFound from "./pages/NotFound";
 
 const Wrapper = styled.div`
   background-image: url(${bgImg});
@@ -31,10 +32,12 @@ const Wrapper = styled.div`
 function App() {
   const location = useLocation();
   const isNavVisible = !(location.pathname === '/login' || location.pathname === '/signup' ||
-                          location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room'));
+                          location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room') ||
+                          location.pathname === '/notfound');
   const isMainPage = location.pathname === '/';
   const isLoggedIn = useSelector(state => state.login.isLoggedin);
-  const noBackground = (location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room'));
+  const noBackground = (location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room') ||
+                        location.pathname === '/notfound');
   const shouldShowBackground = isMainPage && !noBackground;
 
   return (
@@ -53,6 +56,8 @@ function App() {
           <Route path="/waiting/:sessionId" element={<Waiting />} />
           <Route path="/exit" element={<Exit />} />
           <Route path="/test" element={<Rank />} />
+          <Route path="*" element={<Navigate to="/notfound" />} />
+          <Route path="/notfound" element={<NotFound />} />
           {/* <Route path="/test" element={<VideoRoom />} /> */}
         </Routes>
       </div>

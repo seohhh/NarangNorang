@@ -1,0 +1,30 @@
+.wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+#albumBtn{
+  background-color: white;
+  border-radius: 15px;
+  padding: 5px 10px;
+  border: 1.5px solid grey;
+  margin: 1rem;
+  font-Size: 20px;
+}
+
+#downloadBtn{
+  background-color: #F7DB42;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin: 1rem;
+  font-Size: 20px;
+}
+
+.modalBtn{
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 7px;
+  font-Size: 18px;
+}
