@@ -1,14 +1,14 @@
 import React, { useEffect, useRef, useState } from "react";
 import userpose from "../utils/userpose";
 // import POSE from "../utils/POSE";
-import html2canvas from "html2canvas";
+// import html2canvas from "html2canvas";
 import "./MainVideoComponent.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
 // import axios from "axios";
 import { useSelector } from "react-redux";
-import { handleCapture, handleGetScore, handleVideoRef } from "../slice/gameSlice";
+import { handleVideoRef } from "../slice/gameSlice";
 import { useDispatch } from "react-redux";
-import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
+// import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
 // const BASE_URL = 'https://i9c208.p.ssafy.io/api/v1'
 
@@ -94,8 +94,8 @@ const MainVideoComponent = (props) => {
     videoDimensions.height,
   ]);
 
-  const roomCode = props.streamManager.stream.session.sessionId;
-  const subscriberId = props.streamManager.stream.connection.connectionId;
+  // const roomCode = props.streamManager.stream.session.sessionId;
+  // const subscriberId = props.streamManager.stream.connection.connectionId;
 
   // const video = videoRef.current;
   // const roomCode = props.streamManager.stream.session.sessionId;
