@@ -9,6 +9,7 @@ const gameSlice = createSlice({
     initialState : {
       showCanvas: false,
       gameStart: false,
+      videoRef: null,
       renderBool: false
     },
     reducers: {
@@ -17,9 +18,6 @@ const gameSlice = createSlice({
       },
       switchGameStart(state) {
         state.gameStart = !state.gameStart
-      },
-      switchRenderBool(state) {
-        state.renderBool = !state.renderBool
       }
     },
   });
@@ -56,19 +54,29 @@ export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async
   }
 
 }
-export const handleGetScore = (video) => async (dispatch) => {
+export const handleGetScore = (poseIdx, videoRef) => async (dispatch) => {
+  
   try {
-    const poseIdx = 0;
-    const score = userpose.getScore(poseIdx, video);
-    console.log("similarity score", score);
+    const score = userpose.getScore(poseIdx, videoRef);
+    console.log("getScore videoRef", videoRef)
+    console.log("getScore", poseIdx, score);
+    return score;
   } catch (error) {
     console.log(error, "점수계산 에러")
   }
 }
 
+export const handleVideoRef = (videoRef) => async (dispatch) => {
+  try {
+    dispatch(setVideoRef(videoRef))
+  } catch (error) {
+    console.log(error, "videoRef 에러")
+  }
+} 
+
 export const render = (dispatch) => {
   dispatch(switchRenderBool())
 }
 
-export const { switchShowCanvas, switchGameStart, switchRenderBool } = gameSlice.actions;
+export const { switchShowCanvas, switchGameStart, setVideoRef, switchRenderBool } = gameSlice.actions;
 export default gameSlice.reducer;

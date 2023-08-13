@@ -11,12 +11,13 @@ import Frog from "../assets/game/Frog.mp4";
 import Cat from "../assets/game/Cat.mp4";
 import Tiger from "../assets/game/Tiger.mp4";
 
+import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
+import POSE from "../utils/POSE";
 import userpose from "../utils/userpose";
 import html2canvas from "html2canvas";
 
-import { useSelector } from "react-redux";
-import { handleCapture } from "../slice/gameSlice";
-import { useDispatch } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { handleCapture, handleGetScore,  handleVideoRef} from "../slice/gameSlice";
 
 // 나랑노랑 인트로
 const IntroMp4 = styled.video`
@@ -38,52 +39,84 @@ const GameVideo = styled.video`
   height: 100%;
 `;
 
-function Game1(props) {
-  const { streamManager, session, handleCaptureRef } = props;
 
-  console.log("streamManager:", props.streamManager);
+function Game1(props) {
+  const { streamManager, session } = props;
+  const webcamRef = useSelector((state) => state.game.videoRef)
+  console.log(webcamRef, "useSelector로 game1에서 받은 값")
+
   const [introOpen, setIntroOpen] = useState(false);
   const [gameStart, setGameStart] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
+
   const videos = [Gorilla, Elephant, Eagle, Frog, Cat, Tiger];
 
-  const videoRef = useRef(null); // 비디오 요소 참조 생성
 
+  const videoRef = useRef(null); // 게임 비디오 참조
+
+  
   const dispatch = useDispatch();
+
 
   const roomCode = props.streamManager.stream.session.sessionId;
   const subscriberId = props.streamManager.stream.connection.connectionId;
+  // let scoreSum = 0;
+  const [scoreSum, setScoreSum] = useState(0);
 
-  // const capture = async () => {
-  //   if (videoRef.current) {
-  //     const canvas = await html2canvas(videoRef.current, { scale: 2 });
-  //     dispatch(handleCapture(videoRef.current, canvas, roomCode, subscriberId));
-  //   }
-  // };
+
+
   const capture = async () => {
-    if (videoRef.current) {
+    if (webcamRef) {
+      console.log("videoRef.current:",webcamRef )
       try {
-        const canvas = await html2canvas(videoRef.current, { scale: 2 });
-        console.log("캡쳐 시작"); // 캡쳐 시작 로그 출력
+        const canvas = await html2canvas(webcamRef, { scale: 2 });
+        console.log("캡쳐 시작");
         dispatch(
-          handleCapture(videoRef.current, canvas, roomCode, subscriberId)
+          handleCapture(webcamRef, canvas, roomCode, subscriberId)
         );
-        console.log("캡쳐 성공"); // 캡쳐 성공 로그 출력
+        console.log("캡쳐 성공");
       } catch (error) {
-        console.error("캡쳐 실패:", error); // 캡쳐 실패 로그 출력
+        console.error("캡쳐 실패:", error);
       }
     }
   };
 
+  const getScore = async (poseIdx) => {
+    try {
+      console.log("webcamRef", webcamRef);
+      // 웹캠에서 사용자 포즈 감지
+      if (webcamRef) {
+        // const detectedPose = await userpose.detectPose(webcamRef.current);
+        // const score = userpose.getScore(poseIdx, webcamRef.current)
+        // const score = POSE.compare(detectedPose, currentVideoIndex); // 정답 코드와 사용자 포즈 비교
+
+        // 비교 결과를 바탕으로 점수 계산 및 저장
+        const score = dispatch(handleGetScore(poseIdx, webcamRef));
+        console.log("점수 계산 완료");
+        // console.log("점수는?", score);
+        return score;
+      }
+    } catch (error) {
+      console.log(error, "점수계산 에러");
+    }
+  };
+
+  // const getScore = () => {
+  //   if (videoRef.current) dispatch(handleGetScore(videoRef.current));
+  // };
+
   const handleGameStartClick = () => {
+    setScoreSum(0);
+    console.log("handleGameStart", scoreSum);
     setIntroOpen(true);
   };
+  
 
   useEffect(() => {
     if (session) {
       const handleSignal = (event) => {
-        console.log("세션 Received signal event:", event); // 콘솔 로깅 추가
+        console.log("세션 Received signal event:", event);
         if (event.type === "startGame") {
           setGameStart(true);
         }
@@ -94,20 +127,30 @@ function Game1(props) {
         session.off("signal", handleSignal);
       };
     }
+
+    console.log("props", props);
   }, [session]);
 
   const handleIntroEnded = () => {
     setIntroOpen(false);
     setGameStart(true);
   };
-
-  const handleVideoEnded = () => {
+  const handleVideoEnded = async () => {
     if (currentVideoIndex < videos.length - 1) {
-      // 여기에서 캡쳐함수를!!
-      capture();
-      setCurrentVideoIndex(currentVideoIndex + 1);
+      await capture();
+      const score = await getScore(currentVideoIndex);
+      setScoreSum(prevScore => prevScore + score); // 점수를 더해 상태 업데이트
+      console.log("handleVideoEnded", scoreSum, score);
+      setTimeout(() => {
+        setCurrentVideoIndex(currentVideoIndex + 1);
+      }, 3000);
+    }
+    else{
+      
     }
   };
+
+
 
   return (
     <div>
@@ -119,11 +162,14 @@ function Game1(props) {
       {gameStart && (
         <div>
           <GameVideo
-            ref={videoRef} // 비디오 요소에 ref 설정
+            ref={videoRef}// 게임 비디오 참조
             src={videos[currentVideoIndex]}
             autoPlay
+            crossOrigin="anonymous"
             onEnded={handleVideoEnded}
+
           ></GameVideo>
+
         </div>
       )}
       <Dialog
