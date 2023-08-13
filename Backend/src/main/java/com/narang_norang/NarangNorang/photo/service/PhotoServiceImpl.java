@@ -46,6 +46,7 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Override
+    @Transactional
     public boolean deletePhoto(Long photoSeq) {
         Optional<Photo> photo = photoRepository.findByPhotoSeq(photoSeq);
         isPhoto(photo);

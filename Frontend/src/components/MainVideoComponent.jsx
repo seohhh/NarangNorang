@@ -120,7 +120,6 @@ const MainVideoComponent = (props) => {
             height={videoDimensions.height}
           />
           {/* <button onClick={capture}>지금 이 순간!</button> */}
-          <button onClick={handleGetScore}>유사도 계산</button>
         </div>
 
         ) : null}
