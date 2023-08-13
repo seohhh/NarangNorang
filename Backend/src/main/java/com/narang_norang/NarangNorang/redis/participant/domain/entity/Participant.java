@@ -1,5 +1,6 @@
 package com.narang_norang.NarangNorang.redis.participant.domain.entity;
 
+import io.swagger.models.auth.In;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
@@ -16,18 +17,19 @@ public class Participant {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Indexed
-    private Long participantSeq;
+    private Integer participantSeq;
 
     @Indexed
-    private String participantNickname;
+    private String participantId;
 
     @Indexed
     private String roomCode;
 
-    private Long memberSeq;
+    private Double score;
 
-    private Grade grade;
+    public void updateScore(Double score) {
+        this.score = score;
+    }
 
 
 }
