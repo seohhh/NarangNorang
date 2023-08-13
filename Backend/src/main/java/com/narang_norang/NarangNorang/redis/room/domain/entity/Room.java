@@ -9,18 +9,33 @@ import org.springframework.data.redis.core.index.Indexed;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
-@RedisHash(value = "room", timeToLive = 3600000)
+@RedisHash(value = "room")
 @Builder
 @Getter
 public class Room {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Indexed
-    private Long roomSeq;
     @Indexed
     private String roomCode;
+    private RoomStatus roomStatus;
     private String hostName;
     private Long hostSeq;
+    private Integer participantCount;
 
+    public Boolean updateStatus() {
+        if (this.roomStatus == RoomStatus.WAIT) {
+            this.roomStatus = RoomStatus.START;
+        } else {
+            this.roomStatus = RoomStatus.WAIT;
+        }
+        return true;
+    }
+
+    public void updateParticipantCountPlus() {
+         this.participantCount += 1;
+    }
+
+    public void updateParticipantCountMinus() {
+        this.participantCount -= 1;
+    }
 }

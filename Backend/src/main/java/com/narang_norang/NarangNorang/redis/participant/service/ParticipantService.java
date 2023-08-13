@@ -25,33 +25,50 @@ public class ParticipantService {
         return new ParticipantResponse(participant);
     }
 
-    public List<ParticipantResponse> findAllByRoomCode(String roomCode) {
-        List<ParticipantResponse> participantResponses = new ArrayList<>();
+    public List<Participant> findAllByRoomCode(String roomCode) {
 
-        for (Participant participant :
-                participantRepository.findAllByRoomCode(roomCode)) {
-            participantResponses.add(new ParticipantResponse(participant));
-        }
-        return participantResponses;
+        return participantRepository.findAllByRoomCode(roomCode);
     }
 
-    public ParticipantResponse findByRoomCodeAndNickname(FindParticipantRequest findParticipantRequest) {
-        Optional<Participant> participant = participantRepository.findByRoomCodeAndNickname(
-                findParticipantRequest.getRoomCode(),
-                findParticipantRequest.getParticipantNickname());
+    public Participant findByRoomCodeAndParticipantId(String participantId, String roomCode) {
+        Optional<Participant> participant = participantRepository.findByRoomCodeAndParticipantId(
+                roomCode, participantId);
 
-        isParticipant(participant);
+        if (participant.isEmpty()) {
+            throw new IllegalArgumentException("해당하는 참가자가 존재하지 않습니다");
+        }
 
-        return new ParticipantResponse(participant.get());
+        return participant.get();
     }
 
     public boolean delete(FindParticipantRequest findParticipantRequest) {
-        Optional<Participant> participant = participantRepository.findByRoomCodeAndNickname(
+        Optional<Participant> participant = participantRepository.findByRoomCodeAndParticipantId(
                 findParticipantRequest.getRoomCode(),
-                findParticipantRequest.getParticipantNickname());
+                findParticipantRequest.getParticipantId());
 
         participant.ifPresent(participantRepository::delete);
         return true;
+    }
+
+    public boolean deleteAllByRoomCode(String roomCode) {
+        List<Participant> participants = participantRepository.findAllByRoomCode(roomCode);
+
+        participantRepository.deleteAll(participants);
+
+        return true;
+    }
+
+    public void updateScore(ParticipantRequest participantRequest) {
+        Optional<Participant> participant = participantRepository.findByRoomCodeAndParticipantId(
+                participantRequest.getRoomCode(),
+                participantRequest.getParticipantId());
+
+        if (participant.isEmpty()) {
+            throw new IllegalArgumentException("해당하는 참가자가 없습니다.");
+        }
+
+        participant.get().updateScore(participantRequest.getScore());
+        participantRepository.save(participant.get());
     }
 
     public void isParticipant(Optional<Participant> participantOpt) {

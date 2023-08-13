@@ -21,10 +21,28 @@ public class RoomService {
     }
 
 
-    public boolean deleteRoom(Long roomSeq) {
-        Optional<Room> room = roomRepository.findByRoomSeq(roomSeq);
-        room.ifPresent(roomRepository::delete);
+    public boolean deleteRoom(String roomCode) {
+        Room room = findRoomByRoomCode(roomCode);
+        roomRepository.delete(room);
         return true;
+    }
+
+    public void updateRoomStatus(String roomCode) {
+        Room room = findRoomByRoomCode(roomCode);
+        room.updateStatus();
+        roomRepository.save(room);
+    }
+
+    public void updateRoomParticipantCountPlus(String roomCode) {
+        Room room = findRoomByRoomCode(roomCode);
+        room.updateParticipantCountPlus();
+        roomRepository.save(room);
+    }
+
+    public void updateRoomParticipantCountMinus(String roomCode) {
+        Room room = findRoomByRoomCode(roomCode);
+        room.updateParticipantCountMinus();
+        roomRepository.save(room);
     }
 
     public Room findRoomByHostSeq(Long hostSeq) {

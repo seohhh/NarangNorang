@@ -11,7 +11,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import java.time.LocalDateTime;
 
-@RedisHash(value = "picture", timeToLive = 3600)
+@RedisHash(value = "picture")
 @Builder
 @Getter
 public class Picture {

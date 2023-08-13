@@ -7,7 +7,8 @@ import com.narang_norang.NarangNorang.photo.domain.dto.response.ReadPhotoRespons
 import com.narang_norang.NarangNorang.photo.domain.dto.response.UpdatePhotoContentResponse;
 import com.narang_norang.NarangNorang.photo.domain.entity.Photo;
 import com.narang_norang.NarangNorang.photo.service.PhotoService;
-import com.narang_norang.NarangNorang.redis.picture.domain.dto.GetPictureRequest;
+import com.narang_norang.NarangNorang.redis.picture.domain.dto.DeletePictureRequest;
+import com.narang_norang.NarangNorang.redis.picture.domain.dto.UploadPictureRequest;
 import com.narang_norang.NarangNorang.redis.picture.domain.dto.PictureResponse;
 import com.narang_norang.NarangNorang.redis.picture.domain.entity.Picture;
 import com.narang_norang.NarangNorang.redis.picture.service.PictureService;
@@ -47,11 +48,11 @@ public class PhotoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Boolean> uploadPhoto(@RequestBody GetPictureRequest getPictureRequest) {
+    public ResponseEntity<Boolean> uploadPhoto(@RequestBody UploadPictureRequest uploadPictureRequest) {
         try {
-            Member member = memberService.getMemberByMemberSeq(getPictureRequest.getMemberSeq());
+            Member member = memberService.getMemberByMemberSeq(uploadPictureRequest.getMemberSeq());
 
-            for (Integer pictureSeq : getPictureRequest.getRedisImageSeqs()) {
+            for (Integer pictureSeq : uploadPictureRequest.getRedisImageSeqs()) {
                 Picture picture = pictureService.getPictureByPictureSeq(pictureSeq);
                 String[] texts = s3Uploader.uploadFiles(picture, "static/"+member.getMemberId());
                 Photo photo = Photo.builder()
@@ -112,7 +113,7 @@ public class PhotoController {
         return ResponseEntity.ok(readPhotoResponses);
     }
 
-    @PostMapping ("/content")
+    @PutMapping ("/content")
     @ApiOperation(value = "앨범 사진 내용 수정", notes = "앨범 사진 내용을 수정한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -167,7 +168,7 @@ public class PhotoController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @PostMapping("/capture/delelte")
+    @DeleteMapping("/capture/delete")
     @ApiOperation(value = "캡처 삭제", notes = "캡처 사진을 레디스에서 삭제한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -175,9 +176,9 @@ public class PhotoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Boolean> deleteCapture(@RequestBody GetPictureRequest getPictureRequest) {
-        List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(getPictureRequest.getRoomCode(),
-                getPictureRequest.getSubscriberId());
+    public ResponseEntity<Boolean> deleteCapture(@RequestBody DeletePictureRequest deletePictureRequest) {
+        List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(deletePictureRequest.getRoomCode(),
+                deletePictureRequest.getSubscriberId());
         for (Picture picture : pictureList) {
             pictureService.deletePicture(picture);
         }
