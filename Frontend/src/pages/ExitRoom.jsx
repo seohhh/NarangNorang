@@ -144,31 +144,32 @@ function ExitRoom() {
     <div className="wrapper">
       <div className="ShadowContainer">
         <img src={exitIcon} alt="exit" onClick={handleShow} 
-          style={{width: "30px", position: "absolute", top: "2rem", right: "2rem",}}/>
-        <div>
-          <div style={{ fontSize: "35px"}}>
-            <span style={{ color: "#FFE600" }} onClick={goToMain}>나랑노랑</span>과 함께 즐거운 시간 보내셨나요?
-          <div>아이와 찍은 사진을 저장해보세요!</div>
+          style={{width: "30px", position: "absolute", top: "2rem", right: "2rem"}}/>
+        <div style={{paddingBottom: "3rem"}}>
+            <div style={{fontSize: "33px"}}>
+              <span style={{color: "#FFE600"}} onClick={goToMain}>나랑노랑</span>과 함께 즐거운 시간 보내셨나요?
+            <div>아이와 찍은 사진을 저장해보세요!</div>
+          </div>
         </div>
-      </div>
-      
-      <div className="imageContainer">
-        {images.map((image) => {
-          const isSelected = selectedPictureSeq.includes(image.pictureSeq);
-          return (
-            <div key={image.pictureSeq} style={{display: "flex", flexDirection: "column", padding: "15px", position: "relative"}}>
-              <img src={`data:image/png;base64,${image.pictureData}`} alt="test" style={{width: "10rem"}} />
-              <label style={{position: "absolute", top: "20px", left: "20px"}}>
-                <input
-                  type="checkbox"
-                  checked={isSelected}
-                  style={{accentColor: "#F7DB42", width: "20px", height: "20px"}}
-                  onChange={() => selectImageSeq(image.pictureSeq)}
-                />
-              </label>
-            </div>)
-         })}
-      </div>
+        
+        <div className="imageContainer">
+          {images.map((image) => {
+            const isSelected = selectedPictureSeq.includes(image.pictureSeq);
+            return (
+              <div key={image.pictureSeq} className="imageContent">
+                <img src={`data:image/png;base64,${image.pictureData}`} alt="test"
+                  style={{width: "10rem", borderRadius: "5px"}} />
+                <label style={{position: "absolute", top: "20px", left: "20px"}}>
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    style={{accentColor: "#F7DB42", width: "20px", height: "20px"}}
+                    onChange={() => selectImageSeq(image.pictureSeq)}
+                  />
+                </label>
+              </div>)
+          })}
+        </div>
         <div style={{display: "flex", flexDirection: "row"}}>
           <div id="downloadBtn" onClick={downloadSelectedImages}>
             사진 다운로드
