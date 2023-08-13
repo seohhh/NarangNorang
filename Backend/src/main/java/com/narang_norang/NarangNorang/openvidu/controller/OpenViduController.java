@@ -9,10 +9,7 @@ import com.narang_norang.NarangNorang.redis.participant.domain.dto.ParticipantRe
 import com.narang_norang.NarangNorang.redis.participant.domain.dto.ParticipantResponse;
 import com.narang_norang.NarangNorang.redis.participant.service.ParticipantService;
 import com.narang_norang.NarangNorang.util.RandomNumberUtil;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -31,6 +28,7 @@ import io.openvidu.java.client.SessionProperties;
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/sessions")
+@Api(value = "openVidu API", tags = {"Open-vidu"})
 public class OpenViduController {
 
 	@Value("${OPENVIDU_URL}")

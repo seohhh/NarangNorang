@@ -5,10 +5,7 @@ import com.narang_norang.NarangNorang.redis.participant.domain.dto.ParticipantRe
 import com.narang_norang.NarangNorang.redis.participant.domain.dto.ParticipantResponse;
 import com.narang_norang.NarangNorang.redis.participant.domain.entity.Participant;
 import com.narang_norang.NarangNorang.redis.participant.service.ParticipantService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,6 +16,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/participant")
 @RequiredArgsConstructor
+@Api(value = "사진 API", tags = {"Participant-Redis"})
 public class ParticipantController {
 
     private final ParticipantService participantService;
