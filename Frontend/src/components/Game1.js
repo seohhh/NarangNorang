@@ -11,13 +11,10 @@ import Frog from "../assets/game/Frog.mp4";
 import Cat from "../assets/game/Cat.mp4";
 import Tiger from "../assets/game/Tiger.mp4";
 
-import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
-import POSE from "../utils/POSE";
-import userpose from "../utils/userpose";
 import html2canvas from "html2canvas";
 
 import { useSelector, useDispatch } from "react-redux";
-import { handleCapture, handleGetScore,  handleVideoRef} from "../slice/gameSlice";
+import { handleCapture, handleGetScore } from "../slice/gameSlice";
 
 // 나랑노랑 인트로
 const IntroMp4 = styled.video`
@@ -41,7 +38,7 @@ const GameVideo = styled.video`
 
 
 function Game1(props) {
-  const { streamManager, session } = props;
+  const { session } = props;
   const webcamRef = useSelector((state) => state.game.videoRef)
   console.log(webcamRef, "useSelector로 game1에서 받은 값")
 
@@ -128,7 +125,7 @@ function Game1(props) {
       };
     }
 
-    console.log("props", props);
+    // console.log("props", props);
   }, [session]);
 
   const handleIntroEnded = () => {

@@ -13,17 +13,17 @@ function ExitRoom() {
   const urlParams = new URLSearchParams(window.location.search);
   const sessionIdFromUrl = urlParams.get("sessionId");
   const subscriberIdFromUrl = urlParams.get("subscriberId");
-  const selctedPictureSeq = []
+  const [selectedPictureSeq, setSelectedPictureSeq] = useState([])
+  const navigate = useNavigate()
 
   const memberSeq = sessionStorage.getItem("user") !== null ? JSON.parse(sessionStorage.getItem("user")).memberSeq : -1
   const [ images, setImages ] = useState([])
-  const [ url, setUrl ] = useState(null)
-  const navigate = useNavigate()
 
   // 창 나가기 모달
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+  
 
   useEffect(() => {
     if (sessionIdFromUrl === null || subscriberIdFromUrl===null) {
@@ -37,12 +37,6 @@ function ExitRoom() {
     })
     .then((res) => {
       setImages(res.data)
-      console.log(res)
-      console.log(images[0].pictureData, "이미지")
-      // let blob = new Blob([new ArrayBuffer(images[0].pictureData)], { type: "image/png" });
-      const url = URL.createObjectURL(new Blob([images[0].pictureData], { type: 'image/png' }))
-      setUrl(url)
-      console.log(url)
     })
     .catch((err) => {
       console.log(err)
@@ -54,12 +48,13 @@ function ExitRoom() {
   }
 
 
+  // 앨범에 저장
   // arr: 원하는 pictureSeq 배열
   const saveImages = () => {
 
     const data = {
       "memberSeq": memberSeq,
-      "redisImageSeqs": selctedPictureSeq,
+      "redisImageSeqs": selectedPictureSeq,
       "roomCode": sessionIdFromUrl,
       "subscriberId": subscriberIdFromUrl
     }
@@ -74,58 +69,108 @@ function ExitRoom() {
     })
   }
 
-  const imageInfo = () => {
-    console.log(images)
+  // 이미지 정보 확인
+  // const imageInfo = () => {
+  //   console.log(images)
+  // }
+
+
+  // 사진 선택
+  const selectImageSeq = (seq) => {
+    if (selectedPictureSeq.includes(seq)) {
+      setSelectedPictureSeq(selectedPictureSeq.filter((selectedSeq) => selectedSeq !== seq));
+    } else {
+      setSelectedPictureSeq([...selectedPictureSeq, seq]);
+    }
+    console.log(selectedPictureSeq);
   }
 
-  const selectImageSeq = (seq) => {
-    if (selctedPictureSeq.indexOf(seq) > -1) {
-      selctedPictureSeq.splice(selctedPictureSeq.indexOf(seq), selctedPictureSeq.indexOf(seq) + 1)
-    } else {
-      selctedPictureSeq.push(seq)
+
+  // 선택한 이미지 컴퓨터에 다운로드
+  const downloadSelectedImages = () => {
+    const selectedImages = images.filter((image) =>
+      selectedPictureSeq.includes(image.pictureSeq)
+    );
+
+    selectedImages.forEach((selectedImage) => {
+      downloadImage(selectedImage.pictureData);
+    });
+
+    // 선택된 이미지 초기화
+    setSelectedPictureSeq([]);
+  };
+
+
+  // 컴퓨터에 저장
+  const downloadImage = (imageData) => {
+    // base64 이미지 데이터를 Blob으로 디코딩
+    const fileName = "캡처"
+    const byteCharacters = atob(imageData);
+    const byteArrays = [];
+    for (let offset = 0; offset < byteCharacters.length; offset += 512) {
+      const slice = byteCharacters.slice(offset, offset + 512);
+      const byteNumbers = new Array(slice.length);
+      for (let i = 0; i < slice.length; i++) {
+        byteNumbers[i] = slice.charCodeAt(i);
+      }
+      const byteArray = new Uint8Array(byteNumbers);
+      byteArrays.push(byteArray);
     }
-    console.log(selctedPictureSeq)
-  }
+    const blob = new Blob(byteArrays, { type: 'image/png' });
+  
+    // Blob을 File 객체로 변환하여 다운로드
+    const file = new File([blob], fileName, { type: 'image/png' });
+  
+    // 파일 다운로드를 위한 링크 생성
+    const url = URL.createObjectURL(file);
+  
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = fileName;
+    a.style.display = 'none';
+    document.body.appendChild(a);
+  
+    // 파일 다운로드 실행
+    a.click();
+  
+    // 사용한 URL 및 링크 제거
+    URL.revokeObjectURL(url);
+    document.body.removeChild(a);
+  };
+  
 
 
   return (
     <div className="wrapper">
       <div className="ShadowContainer">
+        <img src={exitIcon} alt="exit" onClick={handleShow} 
+          style={{width: "30px", position: "absolute", top: "2rem", right: "2rem",}}/>
         <div>
-          <img src={exitIcon} alt="exit" onClick={handleShow} 
-            style={{width: "30px", position: "absolute", top: "2rem", right: "2rem",}}/>
           <div style={{ fontSize: "35px"}}>
             <span style={{ color: "#FFE600" }} onClick={goToMain}>나랑노랑</span>과 함께 즐거운 시간 보내셨나요?
-            <div>아이와 찍은 사진을 저장해보세요!</div>
-          </div>
+          <div>아이와 찍은 사진을 저장해보세요!</div>
         </div>
-        
+      </div>
+      
+      <div className="imageContainer">
         {images.map((image) => {
+          const isSelected = selectedPictureSeq.includes(image.pictureSeq);
           return (
-            <div key={image.pictureSeq}>
-              {/* <img src="" alt="" /> */}
-              <button onClick={imageInfo}>이미지</button>
-              <button onClick={() => selectImageSeq(image.pictureSeq)}>선택</button>
-              <button onClick={() => saveImages()}>앨범으로~!</button>
-            </div>
-          )
-        })}
-        {/* <img src="blob:http://3.36.126.169:6378/0a887c95-9eef-49c0-9c9b-35f224455a65" alt="test" /> */}
-        <img src="blob:http://localhost:3000/e2db9b2f-5c69-44a5-bfec-a29f9bd4469a" alt="test" />
-        {/* {memberSeq !== -1 ? (
-            <button onClick={saveImages}>저장</button>
-        ): null} */}
-
-
-
-        {/* {images.map((image, i) => (
-          <div>
-            {image}
-            <img src={image} alt="" />
-          </div>
-        ))} */}
+            <div key={image.pictureSeq} style={{display: "flex", flexDirection: "column", padding: "15px", position: "relative"}}>
+              <img src={`data:image/png;base64,${image.pictureData}`} alt="test" style={{width: "10rem"}} />
+              <label style={{position: "absolute", top: "20px", left: "20px"}}>
+                <input
+                  type="checkbox"
+                  checked={isSelected}
+                  style={{accentColor: "#F7DB42", width: "20px", height: "20px"}}
+                  onChange={() => selectImageSeq(image.pictureSeq)}
+                />
+              </label>
+            </div>)
+         })}
+      </div>
         <div style={{display: "flex", flexDirection: "row"}}>
-          <div id="downloadBtn" >
+          <div id="downloadBtn" onClick={downloadSelectedImages}>
             사진 다운로드
           </div>
           { memberSeq !== -1 ? 
