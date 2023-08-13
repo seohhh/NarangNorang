@@ -14,8 +14,7 @@ FROM openjdk:11-jdk-slim
 # Docker Container에서 작업이 이루어지는 위치
 WORKDIR /root
 
-ENV
-DB_URL=3.36.126.169:3306/narang_norang \
+ENV DB_URL=3.36.126.169:3306/narang_norang \
 DB_USERNAME=root \
 DB_PASSWORD=Ssafy123!@# \
 SERVER_PORT=8080 \
