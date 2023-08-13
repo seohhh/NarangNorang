@@ -1,0 +1,31 @@
+.container{
+  display: flex;
+  margin-left: 100px;
+  padding-top: 300px;
+  padding-right: 600px;
+  justify-content: center;
+}
+
+#mainContent{
+  display: flex;
+  justify-content: center;
+  width: 100%; /* 부모 컨테이너에 가로 영역 전체 사용 */
+}
+
+#button{
+  padding: 13px;
+  border-radius: 20px;
+  background-color: white;
+  border: none;
+  box-shadow: 0 0 20px -10px rgba(0, 0, 0, 2);
+}
+
+#button:hover{
+  
+}
+
+#mainImage{
+ border-radius: 1%;
+ box-shadow: 0 0 22px -9px rgba(0, 0, 0, 1);
+ margin-bottom: 250px;
+}
