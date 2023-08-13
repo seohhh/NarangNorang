@@ -10,7 +10,6 @@ import com.narang_norang.NarangNorang.photo.service.PhotoService;
 import com.narang_norang.NarangNorang.redis.picture.domain.dto.GetPictureRequest;
 import com.narang_norang.NarangNorang.redis.picture.domain.dto.PictureResponse;
 import com.narang_norang.NarangNorang.redis.picture.domain.entity.Picture;
-import com.narang_norang.NarangNorang.redis.picture.repository.PictureRepository;
 import com.narang_norang.NarangNorang.redis.picture.service.PictureService;
 import com.narang_norang.NarangNorang.util.S3Uploader;
 import io.swagger.annotations.*;
@@ -40,8 +39,6 @@ public class PhotoController {
 
     private final PictureService pictureService;
 
-    private final PictureRepository pictureRepository;
-
     @PostMapping("/upload")
     @ApiOperation(value = "사진 등록", notes = "사진을 등록한다.")
     @ApiResponses({
@@ -53,18 +50,9 @@ public class PhotoController {
     public ResponseEntity<Boolean> uploadPhoto(@RequestBody GetPictureRequest getPictureRequest) {
         try {
             Member member = memberService.getMemberByMemberSeq(getPictureRequest.getMemberSeq());
-            System.out.println(getPictureRequest.getRedisImageSeqs());
-            List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(getPictureRequest.getRoomCode(),
-                    getPictureRequest.getSubscriberId());
-
-            for (Picture picture : pictureList) {
-                System.out.println(picture.getPictureSeq());
-            }
 
             for (Integer pictureSeq : getPictureRequest.getRedisImageSeqs()) {
-                System.out.println(pictureSeq);
                 Picture picture = pictureService.getPictureByPictureSeq(pictureSeq);
-                System.out.println(picture);
                 String[] texts = s3Uploader.uploadFiles(picture, "static/"+member.getMemberId());
                 Photo photo = Photo.builder()
                         .member(member)
@@ -73,11 +61,6 @@ public class PhotoController {
                         .photoDate(picture.getPictureTime().toString())
                         .build();
                 photoService.uploadPhoto(photo);
-            }
-
-
-            for (Picture picture : pictureList) {
-                pictureService.deletePicture(picture);
             }
 
         } catch (Exception e) {
@@ -96,7 +79,6 @@ public class PhotoController {
     })
     public ResponseEntity<List<PictureResponse>> readPictureByRoomCodeAndSubscribeId(@RequestParam("roomCode") String roomCode,
                                                                                      @RequestParam("subscriberId") String subscriberId) {
-
         List<Picture> pictures = pictureService.getPictureByRoomCodeAndSubscriberId(roomCode, subscriberId);
         List<PictureResponse> pictureResponses = new ArrayList<>();
 
@@ -140,7 +122,6 @@ public class PhotoController {
     })
     public ResponseEntity<UpdatePhotoContentResponse> updateContent(
             @RequestBody @Valid final UpdatePhotoContentRequest updatePhotoContentRequest) {
-
         UpdatePhotoContentResponse updatePhotoContentResponse = photoService.updatePhotoContent(updatePhotoContentRequest);
 
         return ResponseEntity.ok(updatePhotoContentResponse);
@@ -154,7 +135,6 @@ public class PhotoController {
             @ApiResponse(code = 404, message = "사용자 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-
     public ResponseEntity<Boolean> deletePhoto(@PathVariable("photoSeq") final Long photoSeq) throws IOException {
         String FileName = photoService.getFilenameByPhotoSeq(photoSeq);
         s3Uploader.deleteFile(FileName);
@@ -172,8 +152,6 @@ public class PhotoController {
     public ResponseEntity<Boolean> uploadCapture(@RequestParam("roomCode") String roomCode,
                                                  @RequestParam("subscriberId") String subscriberId,
                                                  @RequestParam("images") MultipartFile multipartFile) throws IOException {
-
-
         Picture picture = Picture.builder()
                 .roomCode(roomCode)
                 .subscriberId(subscriberId)
@@ -187,6 +165,24 @@ public class PhotoController {
 
 
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @PostMapping("/capture/delelte")
+    @ApiOperation(value = "캡처 삭제", notes = "캡처 사진을 레디스에서 삭제한다.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "성공"),
+            @ApiResponse(code = 401, message = "인증 실패"),
+            @ApiResponse(code = 404, message = "사용자 없음"),
+            @ApiResponse(code = 500, message = "서버 오류")
+    })
+    public ResponseEntity<Boolean> deleteCapture(@RequestBody GetPictureRequest getPictureRequest) {
+        List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(getPictureRequest.getRoomCode(),
+                getPictureRequest.getSubscriberId());
+        for (Picture picture : pictureList) {
+            pictureService.deletePicture(picture);
+        }
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }
