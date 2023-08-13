@@ -1,12 +1,9 @@
-package com.narang_norang.NarangNorang.redis.room.domain.controller;
+package com.narang_norang.NarangNorang.redis.room.controller;
 
 import com.narang_norang.NarangNorang.redis.room.domain.dto.MakeRoomRequest;
 import com.narang_norang.NarangNorang.redis.room.domain.dto.RoomResponse;
 import com.narang_norang.NarangNorang.redis.room.service.RoomService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/v1/room")
 @RequiredArgsConstructor
+@Api(value = "방 API", tags = {"Room-Redis"})
 public class RoomController {
 
     private final RoomService roomService;
