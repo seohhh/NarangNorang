@@ -50,13 +50,9 @@ public class PhotoController {
     public ResponseEntity<Boolean> uploadPhoto(@RequestBody GetPictureRequest getPictureRequest) {
         try {
             Member member = memberService.getMemberByMemberSeq(getPictureRequest.getMemberSeq());
-            List<Picture> pictureList = pictureService.getPictureByRoomCodeAndSubscriberId(getPictureRequest.getRoomCode(),
-                    getPictureRequest.getSubscriberId());
 
             for (Integer pictureSeq : getPictureRequest.getRedisImageSeqs()) {
-                System.out.println(pictureSeq);
                 Picture picture = pictureService.getPictureByPictureSeq(pictureSeq);
-                System.out.println(picture);
                 String[] texts = s3Uploader.uploadFiles(picture, "static/"+member.getMemberId());
                 Photo photo = Photo.builder()
                         .member(member)
@@ -65,10 +61,6 @@ public class PhotoController {
                         .photoDate(picture.getPictureTime().toString())
                         .build();
                 photoService.uploadPhoto(photo);
-            }
-
-            for (Picture picture : pictureList) {
-                pictureService.deletePicture(picture);
             }
 
         } catch (Exception e) {

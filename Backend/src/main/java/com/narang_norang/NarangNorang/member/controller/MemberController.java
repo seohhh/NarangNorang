@@ -9,8 +9,7 @@ import com.narang_norang.NarangNorang.member.domain.dto.response.UpdateMemberRes
 import com.narang_norang.NarangNorang.member.domain.entity.Member;
 import com.narang_norang.NarangNorang.member.service.MemberService;
 import io.swagger.annotations.*;
-
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -20,11 +19,11 @@ import javax.validation.Valid;
 
 @Api(value = "유저 API", tags = {"Member"})
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/member")
 public class MemberController {
 
-    @Autowired
-    MemberService memberService;
+    private final MemberService memberService;
 
     @PostMapping()
     @ApiOperation(value = "회원 가입", notes = "<strong>아이디와 패스워드</strong>을 통해 회원가입 한다.")

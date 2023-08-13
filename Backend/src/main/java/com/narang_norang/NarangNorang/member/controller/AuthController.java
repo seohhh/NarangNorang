@@ -8,8 +8,6 @@ import com.narang_norang.NarangNorang.member.security.jwt.JwtTokenUtil;
 import com.narang_norang.NarangNorang.member.service.MemberService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections.iterators.SingletonIterator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.ResponseEntity;

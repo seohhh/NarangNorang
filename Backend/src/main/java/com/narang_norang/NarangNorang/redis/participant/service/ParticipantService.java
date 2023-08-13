@@ -54,7 +54,6 @@ public class ParticipantService {
         return true;
     }
 
-
     public void isParticipant(Optional<Participant> participantOpt) {
         if (participantOpt.isEmpty()) {
             throw new IllegalArgumentException("해당하는 참가자가 없습니다.");
