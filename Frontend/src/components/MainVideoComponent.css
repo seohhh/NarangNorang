@@ -2,8 +2,18 @@
   position: relative;
   /* 비디오와 캔버스의 위치 기준점 */
   padding: 5px;
-  width: 800px;
-  height: 680px;
+  width: 100%;
+  height: 100%;
+  /* width: 800px; */
+  /* height: 640px; */
+}
+
+.game-stream {
+  position: relative;
+  /* width: 575px; */
+  /* height: 460px; */
+  width: 100%;
+  height: 100%;
 }
 
 video {
@@ -18,6 +28,7 @@ video {
   z-index: 1;
   /* 쌓임 순서 조정 */
   object-fit: fill;
+  border-radius: 5px;
 }
 
 canvas {
