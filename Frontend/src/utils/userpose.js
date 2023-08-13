@@ -171,6 +171,7 @@ const drawSkeleton = (ctx, keypoints, poseId, color) => {
 
 const getScore = async (poseIdx, videoref) => {
   const poses = await detectPose(videoref);
+  console.log("poses", poses);
 
   let total = 0;
   let count = 0;

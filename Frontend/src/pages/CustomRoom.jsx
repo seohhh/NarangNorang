@@ -447,7 +447,7 @@ function CustomRoom(props) {
             </div>
             {mainStreamManager !== undefined && join === true ? (
               <div id="main-video" style={{ width: "50%", height: "auto" }}>
-                <MainVideoComponent streamManager={mainStreamManager} />
+                <MainVideoComponent streamManager={mainStreamManager}  />
               </div>
             ) : null}
           </div>
