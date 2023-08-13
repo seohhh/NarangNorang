@@ -18,6 +18,9 @@ const gameSlice = createSlice({
       },
       switchGameStart(state) {
         state.gameStart = !state.gameStart
+      },
+      switchRenderBool(state) {
+        state.renderBool = !state.renderBool
       }
     },
   });
