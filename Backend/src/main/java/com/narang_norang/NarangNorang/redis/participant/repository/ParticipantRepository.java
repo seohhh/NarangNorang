@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 @EnableRedisRepositories
-public interface ParticipantRepository extends CrudRepository<Participant, Long> {
+public interface ParticipantRepository extends CrudRepository<Participant, Integer> {
 
-    Optional<Participant> findByRoomCodeAndNickname(String roomCode, String nickname);
+    Optional<Participant> findByRoomCodeAndParticipantId(String roomCode, String participantId);
 
     List<Participant> findAllByRoomCode(String roomCode);
 }

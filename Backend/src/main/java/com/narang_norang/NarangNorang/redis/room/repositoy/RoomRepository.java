@@ -7,11 +7,10 @@ import org.springframework.data.repository.CrudRepository;
 import java.util.Optional;
 
 @EnableRedisRepositories
-public interface RoomRepository extends CrudRepository<Room, Long> {
+public interface RoomRepository extends CrudRepository<Room, String> {
 
     Optional<Room> findByRoomCode(String roomId);
 
     Optional<Room> findByHostSeq(Long hostSeq);
 
-    Optional<Room> findByRoomSeq(Long roomSeq);
 }

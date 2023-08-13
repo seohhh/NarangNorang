@@ -6,6 +6,7 @@ export default class OpenViduVideoComponent extends Component {
     this.videoRef = React.createRef();
     this.guest = props.guest;
     this.rank = props.rank;
+    this.gameStatus = props.gameStatus;
   }
 
   componentDidUpdate(props) {
@@ -42,12 +43,21 @@ export default class OpenViduVideoComponent extends Component {
             ref={this.videoRef}
           />) : null } 
         
-        { !this.guest && !this.rank ? (
+        { !this.guest && !this.rank && !this.gameStatus ? (
           <video
-            style={{ width: "250px", height: "250px" }}
+            style={{ width: "220px", height: "220px" }}
             autoPlay={true}
             ref={this.videoRef}
           />) : null }
+
+        { !this.guest && !this.rank && this.gameStatus ? (
+          <video
+          style={{ width: "150px", height: "150px" }}
+          autoPlay={true}
+          ref={this.videoRef}
+        />
+        ) 
+        : null }
       </div>
     );
   }

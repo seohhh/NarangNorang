@@ -17,6 +17,17 @@ import audioOffIcon from "../assets/icon/audioOff.png";
 import noXrayIcon from "../assets/icon/noXray.png";
 import gamestartIcon from "../assets/icon/gamestart.png";
 
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@mui/material/DialogContent";
+import styled from "styled-components";
+
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
+
+const ContentDialog = styled(DialogContent)`
+  height: 750px;
+`;
+
 
 const ToolbarComponent = (props) => {
   const [audioOn, setAudioOn] = useState(props.audioOn)
@@ -35,8 +46,16 @@ const ToolbarComponent = (props) => {
   const handleCopyClose = () => setCopyShow(false);
   const handleCopySuccess = () => setCopyShow(true);
 
+  // 게임 선택 모달
+  const [gameSelect, SetGameSelect] = useState(false)
+  const handleGameSelect = () => { 
+    SetGameSelect(!gameSelect)
+    setGameKey("game")
+   }
+  const [gameKey, setGameKey] = useState("game")
+
   const mySessionId = props.sessionId;
-  const inviteLink = `https://i9c208.p.ssafy.io/waiting/${mySessionId}`
+  const inviteLink = `http://i9c208.p.ssafy.io/waiting/${mySessionId}`
 
   const guest = props.guest 
 
@@ -52,6 +71,7 @@ const ToolbarComponent = (props) => {
 
   const gameStatusChanged = () => {
     dispatch(switchGameStart())
+    SetGameSelect(false)
   }
 
   // const toggleFullscreen = () => {
@@ -65,6 +85,7 @@ const ToolbarComponent = (props) => {
 
   const clickShowCanvas = () => {
     dispatch(switchShowCanvas())
+   
   }
 
   // 복사
@@ -80,6 +101,8 @@ const ToolbarComponent = (props) => {
       console.log(error)
     }
   };
+
+  
   
   
 return (
@@ -108,7 +131,7 @@ return (
       {/* 방장인 경우 게임스타트 버튼 */}
       { !guest &&
         <OverlayTrigger placement="top" overlay={<Tooltip id="tooltip-gamestart">게임시작</Tooltip>}>
-          <div onClick={gameStatusChanged}>
+          <div onClick={handleGameSelect}>
             <img src={gamestartIcon} alt="gamestart" className="icon" />
           </div>
         </OverlayTrigger> }
@@ -143,9 +166,37 @@ return (
         <p>링크가 복사되었습니다</p>
       </Modal.Body>
     </Modal>
+
+    <Dialog
+        fullWidth
+        maxWidth={"lg"}
+        open={gameSelect}
+        onClose={() => handleGameSelect()}
+        aria-labelledby="form-dialog-title"
+      >
+        <ContentDialog>
+        <Tabs
+          id="controlled-tab-example"
+          activeKey={gameKey}
+          onSelect={(k) => setGameKey(k)}
+          className="mb-3"
+        >
+          <Tab eventKey="game" title="Game">
+            Tab content for Home
+          </Tab>
+          <Tab eventKey="stretching" title="Stretching">
+            Tab content for Profile
+          </Tab>
+          
+        </Tabs>
+        <p className="btn btn-primary" style={{position:"absolute"}} onClick={gameStatusChanged}>
+          게임 시작!
+        </p>
+        </ContentDialog>
+      </Dialog>
   </div>
 
-  );
+);
 }
 
 

@@ -1,6 +1,7 @@
 package com.narang_norang.NarangNorang.redis.room.domain.dto;
 
 import com.narang_norang.NarangNorang.redis.room.domain.entity.Room;
+import com.narang_norang.NarangNorang.redis.room.domain.entity.RoomStatus;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,8 @@ public class MakeRoomRequest {
                 .roomCode(roomCode)
                 .hostName(hostName)
                 .hostSeq(hostSeq)
+                .roomStatus(RoomStatus.WAIT)
+                .participantCount(1)
                 .build();
     }
 }

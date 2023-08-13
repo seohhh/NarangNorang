@@ -10,10 +10,8 @@ public interface MemberService {
     Member createMember(CreateMemberRequest createMemberRequest);
     Member getMemberByMemberId(String memberId);
     boolean checkMemberIdDuplicate(String memberId);
-
     UpdateMemberResponse updateMember(String memberId, UpdateMemberRequest updateMemberRequest);
-
     boolean deleteMember(String memberId);
-
     Member getMemberByMemberSeq(Long memberSeq);
+
 }

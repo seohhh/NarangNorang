@@ -8,20 +8,18 @@ import com.narang_norang.NarangNorang.member.exception.ErrorCode;
 import com.narang_norang.NarangNorang.member.exception.NotFoundException;
 import com.narang_norang.NarangNorang.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service("memberService")
+@RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-    @Autowired
-    MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Member createMember(CreateMemberRequest createMemberRequest) {

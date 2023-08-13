@@ -21,9 +21,7 @@ public class PictureServiceImpl implements PictureService {
     }
 
     public Picture getPictureByPictureSeq(Integer pictureSeq) {
-        System.out.println(pictureSeq + " service");
         Optional<Picture> pictureOpt = pictureRepository.findPictureByPictureSeq(pictureSeq);
-        System.out.println(pictureOpt + " service");
         if (pictureOpt.isEmpty()) {
             throw new IllegalArgumentException("해당하는 캡쳐사진이 존재하지 않습니다.");
         }

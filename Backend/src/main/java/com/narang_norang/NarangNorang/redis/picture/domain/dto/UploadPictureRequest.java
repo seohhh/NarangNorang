@@ -9,7 +9,7 @@ import java.util.List;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetPictureRequest {
+public class UploadPictureRequest {
 
     private Long memberSeq;
     private String roomCode;
