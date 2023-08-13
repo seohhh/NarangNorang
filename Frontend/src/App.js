@@ -33,11 +33,11 @@ function App() {
   const location = useLocation();
   const isNavVisible = !(location.pathname === '/login' || location.pathname === '/signup' ||
                           location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room') ||
-                          location.pathname === '/notfound');
+                          location.pathname.startsWith('/exit') || location.pathname === '/notfound');
   const isMainPage = location.pathname === '/';
   const isLoggedIn = useSelector(state => state.login.isLoggedin);
   const noBackground = (location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room') ||
-                        location.pathname === '/notfound');
+                        location.pathname.startsWith('/exit') || location.pathname === '/notfound');
   const shouldShowBackground = isMainPage && !noBackground;
 
   return (
