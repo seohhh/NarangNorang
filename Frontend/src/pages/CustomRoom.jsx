@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { switchRenderBool } from "../slice/gameSlice";
+import { switchRenderBool } from '../slice/gameSlice';
 
 // component
 import UserVideoComponent from "../components/UserVideoComponent";
@@ -72,12 +72,14 @@ function CustomRoom(props) {
   const [join, setJoin] = useState(false);
   const [gameStart, setGameStart] = useState(false);
   const [rank, setRank] = useState(false);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
+  
 
   // const myUserNameFromUrl = urlParams.get("nickname");
 
   const hostNickname = useSelector((state) => state.login.userNickname);
-  const gameStatus = useSelector((state) => state.game.gameStart);
+  const checkStatus = useSelector((state) => state.game.gameStart);
+  const [gameStatus, setGameStatus] = useState(false)
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -91,6 +93,18 @@ function CustomRoom(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (session) {
+      session.signal({
+        data: gameStatus,
+        to: [],
+        type: "gameStatus"
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkStatus])
+
+
   const onbeforeunload = (event) => {
     leaveSession();
   };
@@ -102,8 +116,9 @@ function CustomRoom(props) {
     setSession(mySession);
 
     mySession.on("streamCreated", (event) => {
+      
       const subscriber = mySession.subscribe(event.stream, undefined);
-      console.log(subscriber);
+      console.log(subscriber)
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
 
@@ -142,8 +157,18 @@ function CustomRoom(props) {
     });
 
     mySession.on("signal:render", (event) => {
-      dispatch(switchRenderBool());
-    });
+      dispatch(switchRenderBool())
+    })
+
+    mySession.on("signal:gameStatus", (event) => {
+      if (event.data === "") {
+        setGameStatus(true)
+      } else  {
+        setGameStatus(false)
+      }
+      
+    })
+  
 
     if (nicknameFromUrl === null) {
       setMyUserName(hostNickname);
@@ -283,7 +308,7 @@ function CustomRoom(props) {
       data: "렌더링",
       to: [],
       type: "render",
-    });
+    })
   };
 
   const deleteSubscriber = (streamManager) => {
@@ -420,36 +445,30 @@ function CustomRoom(props) {
 
       {/* 게임 중 */}
       {gameStatus ? (
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-          }}
-        >
+        <div style={{ display: "flex", flexDirection: "column" }}>
           {join === true && (
             <div
               id="video-container"
               style={{
-                height: "10%",
+                width: "100%",
                 display: "flex",
                 flexDirection: "row",
-                justifyContent: "center",
               }}
             >
-              <div onClick={() => handleMainVideoStream(publisher)}>
-                <UserVideoComponent
-                  streamManager={publisher}
-                  gameStatus={gameStatus}
-                />
+              <div
+                className="stream-container"
+                onClick={() => handleMainVideoStream(publisher)}
+              >
+                <UserVideoComponent streamManager={publisher} />
               </div>
               {subscribers.map((sub, i) => (
-                <div key={sub.id} onClick={() => handleMainVideoStream(sub)}>
+                <div
+                  key={sub.id}
+                  className="stream-container"
+                  onClick={() => handleMainVideoStream(sub)}
+                >
                   <span>{sub.id}</span>
-                  <UserVideoComponent
-                    streamManager={sub}
-                    gameStatus={gameStatus}
-                  />
+                  <UserVideoComponent streamManager={sub} />
                 </div>
               ))}
             </div>
@@ -458,51 +477,51 @@ function CustomRoom(props) {
             style={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "center",
+              justifyContent: "space-around",
             }}
-            className="row"
           >
-            <div id="main-video" className="col-5">
-              <div>
-                <div className="game-stream">
-                  <video src={NarangNorangIntro} autoPlay></video>
-                </div>
-              </div>
+            <div style={{ width: "50%", height: "auto" }}>
+              <video src={NarangNorangIntro} autoPlay></video>
             </div>
             {mainStreamManager !== undefined && join === true ? (
-              <div id="main-video" className="col-5">
-                <MainVideoComponent
-                  streamManager={mainStreamManager}
-                  gameStatus={gameStatus}
-                />
+              <div id="main-video" style={{ width: "50%", height: "auto" }}>
+                <MainVideoComponent streamManager={mainStreamManager} />
               </div>
             ) : null}
           </div>
         </div>
-      ) : (
         // 방에 모여있을 때
-        <div
-          style={{
-            display: "flex",
-            flexFlow: "row wrap",
-            justifyContent: "space-evenly",
-            alignItems: "center" }}
-          className="row"
-        >
+      ) : ( 
+        <div style={{ display: "flex", flexFlow: "row wrap" }}>
           {mainStreamManager !== undefined && join === true ? (
-            <div style={{padding:"0px"}} id="main-video" className="col-5">
+            <div id="main-video" style={{ width: "50%", height: "auto" }}>
               <MainVideoComponent streamManager={mainStreamManager} />
             </div>
           ) : null}
-          <div style={{padding:"0px"}} id="video-container" className="col-6">
+
+          <div
+            id="video-container"
+            style={{
+              width: "50%",
+              height: "auto",
+              padding: "0px",
+            }}
+          >
             {join === true && (
-              <div style={{ display: "flex", flexFlow: "row wrap", justifyContent: "space-evenly" }}>
-                <div onClick={() => handleMainVideoStream(publisher)}>
+              <div style={{ display: "flex", flexFlow: "row wrap" }}>
+                <div
+                  className="stream-container"
+                  onClick={() => handleMainVideoStream(publisher)}
+                >
                   <UserVideoComponent streamManager={publisher} />
                 </div>
                 {subscribers.map((sub, i) => (
-                  <div key={sub.id} onClick={() => handleMainVideoStream(sub)}>
-                    {/* <span>{sub.id}</span> */}
+                  <div
+                    key={sub.id}
+                    className="stream-container"
+                    onClick={() => handleMainVideoStream(sub)}
+                  >
+                    <span>{sub.id}</span>
                     <UserVideoComponent streamManager={sub} />
                   </div>
                 ))}
@@ -512,9 +531,8 @@ function CustomRoom(props) {
         </div>
       )}
 
-      {sessionIdFromUrl === null && join === true ? (
-        <Game1 streamManager={publisher} />
-      ) : null}
+      {sessionIdFromUrl === null && join === true ?
+        <Game1 streamManager={publisher} /> : null}
       {sessionIdFromUrl === null || join === true ? (
         <div>
           <div
