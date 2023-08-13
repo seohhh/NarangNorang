@@ -11,7 +11,6 @@ import Frog from "../assets/game/Frog.mp4";
 import Cat from "../assets/game/Cat.mp4";
 import Tiger from "../assets/game/Tiger.mp4";
 
-import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
 import userpose from "../utils/userpose";
 import html2canvas from "html2canvas";
 

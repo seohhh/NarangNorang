@@ -8,7 +8,8 @@ const gameSlice = createSlice({
     name: 'game',
     initialState : {
       showCanvas: false,
-      gameStart: false
+      gameStart: false,
+      renderBool: false
     },
     reducers: {
       switchShowCanvas(state) {
@@ -16,6 +17,9 @@ const gameSlice = createSlice({
       },
       switchGameStart(state) {
         state.gameStart = !state.gameStart
+      },
+      switchRenderBool(state) {
+        state.renderBool = !state.renderBool
       }
     },
   });
@@ -62,5 +66,9 @@ export const handleGetScore = (video) => async (dispatch) => {
   }
 }
 
-export const { switchShowCanvas, switchGameStart } = gameSlice.actions;
+export const render = (dispatch) => {
+  dispatch(switchRenderBool())
+}
+
+export const { switchShowCanvas, switchGameStart, switchRenderBool } = gameSlice.actions;
 export default gameSlice.reducer;
