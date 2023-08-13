@@ -49,3 +49,7 @@
 #toolbar-container {
   position: fixed;
 }
+
+#main-video {
+  margin: 5px;
+}
