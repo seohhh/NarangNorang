@@ -226,7 +226,6 @@ const ToolbarComponent = (props) => {
               </span>
             </div>
           </div>
-        </div>
       </Modal.Body>
     </Modal>
 
