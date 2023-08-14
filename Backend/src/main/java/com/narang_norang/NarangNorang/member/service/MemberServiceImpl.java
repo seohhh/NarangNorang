@@ -10,11 +10,13 @@ import com.narang_norang.NarangNorang.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
 @Service("memberService")
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class MemberServiceImpl implements MemberService {
 
     private final MemberRepository memberRepository;
@@ -22,6 +24,7 @@ public class MemberServiceImpl implements MemberService {
     private final PasswordEncoder passwordEncoder;
 
     @Override
+    @Transactional
     public Member createMember(CreateMemberRequest createMemberRequest) {
         Member member = createMemberRequest.toMember(passwordEncoder);
 
@@ -40,6 +43,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public UpdateMemberResponse updateMember(String memberId, UpdateMemberRequest updateMemberRequest) {
         Optional<Member> member = memberRepository.findByMemberId(memberId);
 
@@ -56,6 +60,7 @@ public class MemberServiceImpl implements MemberService {
     }
 
     @Override
+    @Transactional
     public boolean deleteMember(String memberId) {
         Optional<Member> member = memberRepository.findByMemberId(memberId);
 

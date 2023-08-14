@@ -150,6 +150,7 @@ function Game1(props) {
     return () => {
       clearInterval(interval); // 컴포넌트가 언마운트되면 interval을 정리
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentVideoIndex, gameRef]);
 
   const handleVideoEnded = async () => {
