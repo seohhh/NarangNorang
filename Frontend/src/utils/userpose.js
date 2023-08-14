@@ -58,12 +58,17 @@ const loadDetector = async () => {
   return detector;
 };
 
-const detectPose = async (video) => {
+const detectPose = async (videoRef) => {
+  // if (!videoRef || !videoRef.current) {
+  //   console.error('Invalid video reference');
+  //   return null;
+  // }
+  const videoElement = videoRef.current;
+
   let poses = null;
   if (detector) {
-    poses = await detector.estimatePoses(video, estimationConfig);
+    poses = await detector.estimatePoses(videoElement, estimationConfig);
   }
-
   // console.log(poses);
   return poses;
 };
@@ -169,16 +174,24 @@ const drawSkeleton = (ctx, keypoints, poseId, color) => {
   });
 };
 
-const getScore = async (poseIdx, videoref) => {
-  const poses = await detectPose(videoref);
-  console.log("poses", poses);
+const getScore = async (gameRef, webcamRef) => {
+  console.log("userpose getscore", gameRef, webcamRef);
+  const gpose = await detectPose(gameRef);
+  const wpose = await detectPose(webcamRef);
+  console.log("gpose", gpose);
+  console.log("wpose", wpose);
+   // gpose와 wpose의 유효성 검사
+   if (!gpose || !gpose[0] || !wpose) {
+    console.error('Invalid pose detected');
+    return 0;
+  }
 
   let total = 0;
   let count = 0;
-  for (const pose of poses) {
+  for (const pose of wpose) {
     if (pose.score >= scoreThreshold) {
       count++;
-      let score = computeScore(POSE[poseIdx], pose.keypoints);
+      let score = computeScore(gpose[0].keypoints, pose.keypoints);
       total += score > similarityThreshold ? score : 0.5;
     }
   }

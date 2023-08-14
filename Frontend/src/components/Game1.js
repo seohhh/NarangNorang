@@ -39,8 +39,17 @@ const GameVideo = styled.video`
 
 function Game1(props) {
   const { session } = props;
-  const webcamRef = useSelector((state) => state.game.webcamRef)
+  const webcamElementId   = useSelector((state) => state.game.webcamElementId)
+  const webcamRef = useRef(null);
+
   console.log(webcamRef, "useSelector로 game1에서 받은 값")
+  useEffect(() => {
+    // 웹캠 ID를 사용하여 웹캠 요소 참조
+    webcamRef.current = document.getElementById(webcamElementId );
+    if (webcamRef.current) {
+      // 웹캠 요소 사용 코드
+    }
+  }, [webcamElementId ]);
 
   const gameStart = props.gameStart;
 
@@ -81,26 +90,38 @@ function Game1(props) {
     }
   };
 
-  const getScore = async (poseIdx) => {
+  const getScore = async () => {
     try {
       console.log("webcamRef", webcamRef);
-      // 웹캠에서 사용자 포즈 감지
-      if (webcamRef) {
-        // const detectedPose = await userpose.detectPose(webcamRef.current);
-        // const score = userpose.getScore(poseIdx, webcamRef.current)
-        // const score = POSE.compare(detectedPose, currentVideoIndex); // 정답 코드와 사용자 포즈 비교
+      console.log("gameRef", gameRef.current);
+  
+      // gameRef가 유효한 경우에만 비디오의 너비와 높이 얻기 시도
+      if (gameRef.current) {
+        const gameVideoElement = gameRef.current;
+        const videoWidth = gameVideoElement.videoWidth;
+        const videoHeight = gameVideoElement.videoHeight;
+        gameVideoElement.width = videoWidth; // 원하는 너비 값으로 변경
+        gameVideoElement.height = videoHeight; // 원하는 높이 값으로 변경
 
-        // 비교 결과를 바탕으로 점수 계산 및 저장
-        const score = dispatch(handleGetScore(poseIdx, webcamRef));
+
+        // 비디오가 로드되지 않은 경우 함수 종료
+        if (!videoWidth || !videoHeight) {
+          console.log("비디오가 로드되지 않았거나 올바르지 않은 크기의 비디오입니다.");
+          return;
+        }
+        console.log(gameVideoElement, "gameVideoElement")
+        const score = dispatch(handleGetScore(gameVideoElement, webcamRef));
+        // 이후 사용자 포즈 비교 및 점수 계산 등을 처리
+        // const detectedPose = await userpose.detectPose(webcamRef.current);
+        // const score = userpose.getScore(detectedPose, currentVideoIndex);
+  
         console.log("점수 계산 완료");
-        // console.log("점수는?", score);
         return score;
       }
     } catch (error) {
       console.log(error, "점수계산 에러");
     }
   };
-
   // const getScore = () => {
   //   if (videoRef.current) dispatch(handleGetScore(videoRef.current));
   // };
