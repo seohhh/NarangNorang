@@ -115,6 +115,7 @@ function Game1(props) {
     if (gameStart) {
       handleGameStartClick();
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

@@ -21,7 +21,7 @@ public class MakeRoomRequest {
                 .hostName(hostName)
                 .hostSeq(hostSeq)
                 .roomStatus(RoomStatus.WAIT)
-                .participantCount(1)
+                .participantCount(0)
                 .build();
     }
 }
