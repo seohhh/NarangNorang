@@ -3,12 +3,39 @@
   padding : 5px;
   color: #777777;
   font-weight: bold;
+  position: relative;
   /* border-bottom-right-radius: 4px; */
   /* z-index: 2; */
   /* width: 810px;
   height: 650px; */
 }
 
-p{
-  margin: 0;
+#name {
+  background-color: grey;
+  color: white;
+  border-radius: 25px;
+  padding: 2px 10px;
+}
+
+.name-tag {
+  z-index: 3;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin: 0px 10px;
+}
+
+.audio-icon {
+  width: 30px;
+  height: 30px;
+  position: absolute;
+  z-index: 3;
+  margin: 5px;
+}
+
+@media (max-width: 992px) {
+  .audio-icon {
+    width: 15px;
+    height: 15px;
+  }
 }

@@ -45,14 +45,14 @@ export default class OpenViduVideoComponent extends Component {
         
         { !this.guest && !this.rank && !this.gameStatus ? (
           <video
-            style={{ width: "220px", height: "220px" }}
+            style={{ width: "100%", height: "100%" }}
             autoPlay={true}
             ref={this.videoRef}
           />) : null }
 
         { !this.guest && !this.rank && this.gameStatus ? (
           <video
-          style={{ width: "150px", height: "150px" }}
+          style={{ width: "150px", height: "auto" }}
           autoPlay={true}
           ref={this.videoRef}
         />

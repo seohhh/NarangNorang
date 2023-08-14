@@ -443,32 +443,38 @@ function CustomRoom(props) {
         </div>
       ) : null}
 
-      {/* 게임 중 */}
-      {gameStatus ? (
-        <div style={{ display: "flex", flexDirection: "column" }}>
+     {/* 게임 중 */}
+     {gameStatus ? (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+          }}
+        >
           {join === true && (
             <div
               id="video-container"
               style={{
-                width: "100%",
+                height: "10%",
                 display: "flex",
-                flexDirection: "row",
+                flexFlow: "row-wrap",
+                justifyContent: "center",
               }}
             >
-              <div
-                className="stream-container"
-                onClick={() => handleMainVideoStream(publisher)}
-              >
-                <UserVideoComponent streamManager={publisher} />
+              <div onClick={() => handleMainVideoStream(publisher)}>
+                <UserVideoComponent
+                  streamManager={publisher}
+                  gameStatus={gameStatus}
+                />
               </div>
               {subscribers.map((sub, i) => (
-                <div
-                  key={sub.id}
-                  className="stream-container"
-                  onClick={() => handleMainVideoStream(sub)}
-                >
+                <div key={sub.id} onClick={() => handleMainVideoStream(sub)}>
                   <span>{sub.id}</span>
-                  <UserVideoComponent streamManager={sub} />
+                  <UserVideoComponent
+                    streamManager={sub}
+                    gameStatus={gameStatus}
+                  />
                 </div>
               ))}
             </div>
@@ -477,51 +483,51 @@ function CustomRoom(props) {
             style={{
               display: "flex",
               flexDirection: "row",
-              justifyContent: "space-around",
+              justifyContent: "center",
             }}
+            className="row"
           >
-            <div style={{ width: "50%", height: "auto" }}>
-              <video src={NarangNorangIntro} autoPlay></video>
+            <div id="main-video" className="col-5">
+              <div>
+                <div className="game-stream">
+                  <video src={NarangNorangIntro} autoPlay></video>
+                </div>
+              </div>
             </div>
             {mainStreamManager !== undefined && join === true ? (
-              <div id="main-video" style={{ width: "50%", height: "auto" }}>
-                <MainVideoComponent streamManager={mainStreamManager}  />
+              <div id="main-video" className="col-5">
+                <MainVideoComponent
+                  streamManager={mainStreamManager}
+                  gameStatus={gameStatus}
+                />
               </div>
             ) : null}
           </div>
         </div>
+      ) : (
         // 방에 모여있을 때
-      ) : ( 
-        <div style={{ display: "flex", flexFlow: "row wrap" }}>
+        <div
+          style={{
+            display: "flex",
+            flexFlow: "row wrap",
+            justifyContent: "space-evenly",
+            alignItems: "center" }}
+          className="row"
+        >
           {mainStreamManager !== undefined && join === true ? (
-            <div id="main-video" style={{ width: "50%", height: "auto" }}>
+            <div style={{padding:"0px"}} id="main-video" className="col-5">
               <MainVideoComponent streamManager={mainStreamManager} />
             </div>
           ) : null}
-
-          <div
-            id="video-container"
-            style={{
-              width: "50%",
-              height: "auto",
-              padding: "0px",
-            }}
-          >
+          <div style={{padding:"0px"}} id="video-container" className="col-6">
             {join === true && (
-              <div style={{ display: "flex", flexFlow: "row wrap" }}>
-                <div
-                  className="stream-container"
-                  onClick={() => handleMainVideoStream(publisher)}
-                >
+              <div style={{ display: "flex", flexFlow: "row wrap", justifyContent: "space-evenly" }} className="row">
+                <div onClick={() => handleMainVideoStream(publisher)} className="col-4">
                   <UserVideoComponent streamManager={publisher} />
                 </div>
                 {subscribers.map((sub, i) => (
-                  <div
-                    key={sub.id}
-                    className="stream-container"
-                    onClick={() => handleMainVideoStream(sub)}
-                  >
-                    <span>{sub.id}</span>
+                  <div key={sub.id} onClick={() => handleMainVideoStream(sub)} className="col-4">
+                    {/* <span>{sub.id}</span> */}
                     <UserVideoComponent streamManager={sub} />
                   </div>
                 ))}
