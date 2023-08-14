@@ -39,7 +39,7 @@ const GameVideo = styled.video`
 
 function Game1(props) {
   const { session } = props;
-  const webcamRef = useSelector((state) => state.game.videoRef)
+  const webcamRef = useSelector((state) => state.game.webcamRef)
   console.log(webcamRef, "useSelector로 game1에서 받은 값")
 
   const [introOpen, setIntroOpen] = useState(false);
@@ -50,7 +50,7 @@ function Game1(props) {
   const videos = [Gorilla, Elephant, Eagle, Frog, Cat, Tiger];
 
 
-  const videoRef = useRef(null); // 게임 비디오 참조
+  const gameRef = useRef(null); // 게임 비디오 참조
 
   
   const dispatch = useDispatch();
@@ -159,7 +159,7 @@ function Game1(props) {
       {gameStart && (
         <div>
           <GameVideo
-            ref={videoRef}// 게임 비디오 참조
+            ref={gameRef}// 게임 비디오 참조
             src={videos[currentVideoIndex]}
             autoPlay
             crossOrigin="anonymous"
