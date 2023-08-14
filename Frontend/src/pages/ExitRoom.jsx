@@ -41,10 +41,23 @@ function ExitRoom() {
     .catch((err) => {
       console.log(err)
     })
-  }, [sessionIdFromUrl, subscriberIdFromUrl, navigate, images])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [sessionIdFromUrl, subscriberIdFromUrl])
 
-  const goToMain = () => {
-    navigate('/')
+  const goToMain = async() => {
+     const params = {
+      "roomCode": sessionIdFromUrl,
+      "subscriberId": subscriberIdFromUrl
+    }
+
+    await axios.post('/album/capture/delete', params)
+    .then((res) => {
+      console.log(res)
+      navigate("/")
+    })
+    .catch((error) => {
+      console.log(error)
+    })
   }
 
 
@@ -62,7 +75,6 @@ function ExitRoom() {
     axios.post('/album/upload', data)
     .then((res) => {
       console.log(res)
-      navigate("/")
     })
     .catch((error) => {
       console.log(error)

@@ -94,10 +94,7 @@ const MainVideoComponent = (props) => {
     videoDimensions.height,
   ]);
 
-  // const roomCode = props.streamManager.stream.session.sessionId;
-  // const subscriberId = props.streamManager.stream.connection.connectionId;
 
-  // const video = videoRef.current;
   // const roomCode = props.streamManager.stream.session.sessionId;
   // const subscriberId = props.streamManager.stream.connection.connectionId;
 

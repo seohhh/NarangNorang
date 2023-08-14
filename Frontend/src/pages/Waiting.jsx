@@ -7,6 +7,9 @@ import { useParams, Link, useNavigate } from 'react-router-dom';
 import { login } from "../slice/authSlice";
 import styled from "styled-components";
 import logo from "../assets/logo.png";
+import axios from "axios";
+
+const APPLICATION_SERVER_URL = "https://i9c208.p.ssafy.io/api/v1";
 
 const Wrapper = styled.div`
   display: flex;
@@ -53,8 +56,9 @@ function Waiting() {
   const isLoggedin = sessionStorage.getItem('isLoggedin')
   useEffect(() => {
     if (isLoggedin === 'true' && userNickname) {
-      navigate(`/room?sessionId=${sessionId}&nickname=${userNickname}`)
+      joinCheck()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedin, navigate, sessionId, userNickname]);
 
   const handleInputId = (e) => {
@@ -75,10 +79,24 @@ function Waiting() {
     dispatch(login(inputId, inputPw));
   };
 
+  const joinCheck = () => {
+    axios.get(APPLICATION_SERVER_URL + "/room/read/" + sessionId)
+    .then((res) => {
+      if (res.data.roomStatus === "WAIT" && res.data.participantCount < 6) {
+        navigate(`/room?sessionId=${sessionId}&nickname=${nickname}`);
+      }
+      console.log(res)
+    })
+    .catch((err) =>  {
+      console.log(err)
+    })
+  }
+  
+
 
 
   const onClickJoin = (e) => {
-    navigate(`/room?sessionId=${sessionId}&nickname=${nickname}`);
+    joinCheck()
   }
 
   const [show, setShow] = useState(false);
