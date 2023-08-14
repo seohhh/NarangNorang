@@ -490,7 +490,7 @@ function CustomRoom(props) {
             <div id="main-video" className="col-5">
               <div>
                 <div className="game-stream">
-                  <video src={NarangNorangIntro} autoPlay></video>
+                  <Game1 streamManager={publisher} gameStart={gameStatus}></Game1>
                 </div>
               </div>
             </div>
@@ -536,9 +536,9 @@ function CustomRoom(props) {
           </div>
         </div>
       )}
-
+{/* 
       {sessionIdFromUrl === null && join === true ?
-        <Game1 streamManager={publisher} /> : null}
+        <Game1 streamManager={publisher} /> : null} */}
       {sessionIdFromUrl === null || join === true ? (
         <div>
           <div
