@@ -65,6 +65,9 @@ function Ask() {
 
   const submitAsk = (event) => {
     event.preventDefault();
+    if (!questionContent) {
+      setConfirmContent(false)
+    }
 
     if (confirmEmail && confirmContent) {
       axios.post('/question', { email, questionContent })
