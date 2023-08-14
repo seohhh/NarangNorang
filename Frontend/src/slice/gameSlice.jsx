@@ -9,7 +9,7 @@ const gameSlice = createSlice({
     initialState : {
       showCanvas: false,
       gameStart: false,
-      videoRef: null,
+      webcamRef: null,
       renderBool: false
     },
     reducers: {
@@ -21,7 +21,10 @@ const gameSlice = createSlice({
       },
       switchRenderBool(state) {
         state.renderBool = !state.renderBool
-      }
+      },
+      setWebcamRef(state, actions) {
+        state.webcamRef = actions.payload
+      },
     },
   });
 
@@ -69,17 +72,18 @@ export const handleGetScore = (poseIdx, videoRef) => async (dispatch) => {
   }
 }
 
-export const handleVideoRef = (videoRef) => async (dispatch) => {
+export const handleWebcamRef = (webcamRef) => async (dispatch) => {
   try {
-    dispatch(setVideoRef(videoRef))
+    dispatch(setWebcamRef(webcamRef))
   } catch (error) {
-    console.log(error, "videoRef 에러")
+    console.log(error, "webcamRef 에러")
   }
 } 
+
 
 export const render = (dispatch) => {
   dispatch(switchRenderBool())
 }
 
-export const { switchShowCanvas, switchGameStart, setVideoRef, switchRenderBool } = gameSlice.actions;
+export const { switchShowCanvas, switchGameStart, setWebcamRef, switchRenderBool, setGameRef } = gameSlice.actions;
 export default gameSlice.reducer;
