@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
-// import Ask from "../components/Ask";
-import { Form, Button, Row, Col, InputGroup } from "react-bootstrap";
 import styled from "styled-components";
 import axios from "axios";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 const Wrapper = styled.div`
   display: flex;
@@ -15,8 +12,6 @@ const Wrapper = styled.div`
 axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 
 function Mypage() {
-  const { userId } = useParams();
-  const [validated, setValidated] = useState(false);
   const token = useSelector((state) => state.login.token);
   const [userName, setUserName] = useState(undefined);
   const [userEmail, setUserEmail] = useState(undefined);
@@ -29,6 +24,7 @@ function Mypage() {
       headers: {
         Authorization: `Bearer ${token}`,
       },
+    
     })
       .then((res) => {
         // console.log(res.data);
@@ -39,19 +35,12 @@ function Mypage() {
       .catch((err) => {
         console.log(err);
       });
+      // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   console.log(userName, userEmail, userNickname);
 
-  const handleSubmit = (event) => {
-    const form = event.currentTarget;
-    if (form.checkValidity() === false) {
-      event.preventDefault();
-      event.stopPropagation();
-    }
-
-    setValidated(true);
-  };
+  
 
   return (
     <Wrapper>
@@ -92,7 +81,7 @@ function Mypage() {
               </InputGroup>
             </Form.Group> */}
 
-        <Form.Group as={Row} lg="12" controlId="validationCustom02">
+        {/* <Form.Group as={Row} lg="12" controlId="validationCustom02">
           <Form.Label column lg="2">
             이메일
           </Form.Label>
