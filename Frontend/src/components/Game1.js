@@ -39,18 +39,20 @@ const GameVideo = styled.video`
 
 function Game1(props) {
   const { session } = props;
-  const webcamRef = useSelector((state) => state.game.videoRef)
+  const webcamRef = useSelector((state) => state.game.webcamRef)
   console.log(webcamRef, "useSelector로 game1에서 받은 값")
 
+  const gameStart = props.gameStart;
+
   const [introOpen, setIntroOpen] = useState(false);
-  const [gameStart, setGameStart] = useState(false);
+  const [gameVideoStart, setGameVideoStart] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
 
   const videos = [Gorilla, Elephant, Eagle, Frog, Cat, Tiger];
 
 
-  const videoRef = useRef(null); // 게임 비디오 참조
+  const gameRef = useRef(null); // 게임 비디오 참조
 
   
   const dispatch = useDispatch();
@@ -109,13 +111,19 @@ function Game1(props) {
     setIntroOpen(true);
   };
   
+  useEffect(() => {
+    if (gameStart) {
+      handleGameStartClick();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (session) {
       const handleSignal = (event) => {
         console.log("세션 Received signal event:", event);
         if (event.type === "startGame") {
-          setGameStart(true);
+          setGameVideoStart(true);
         }
       };
 
@@ -128,47 +136,79 @@ function Game1(props) {
     // console.log("props", props);
   }, [session]);
 
-  const handleIntroEnded = () => {
-    setIntroOpen(false);
-    setGameStart(true);
-  };
+
+  // 비디오가 재생 중일 때마다 1초 간격으로 getScore 함수를 호출하고 그 점수를 합산
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (gameRef.current) {
+        getScore(currentVideoIndex).then(score => {
+          setScoreSum(prevScore => prevScore + score);
+        });
+      }
+    }, 1000); // 1초마다 호출
+  
+    return () => {
+      clearInterval(interval); // 컴포넌트가 언마운트되면 interval을 정리
+    };
+  }, [currentVideoIndex, gameRef]);
+
   const handleVideoEnded = async () => {
     if (currentVideoIndex < videos.length - 1) {
       await capture();
-      const score = await getScore(currentVideoIndex);
-      setScoreSum(prevScore => prevScore + score); // 점수를 더해 상태 업데이트
-      console.log("handleVideoEnded", scoreSum, score);
       setTimeout(() => {
         setCurrentVideoIndex(currentVideoIndex + 1);
       }, 3000);
-    }
-    else{
-      
+    } else {
+      setGameVideoStart(false); // 게임 비디오 재생을 종료
+      // 여기에서 랭크로 넘어가기!!
     }
   };
+
+  const handleIntroEnded = () => {
+    setIntroOpen(false);
+    setGameVideoStart(true);
+  };
+
+  // const handleVideoEnded = async () => {
+  //   if (currentVideoIndex < videos.length - 1) {
+  //     await capture();
+  //     const score = await getScore(currentVideoIndex);
+  //     setScoreSum(prevScore => prevScore + score); // 점수를 더해 상태 업데이트
+  //     console.log("handleVideoEnded", scoreSum, score);
+  //     setTimeout(() => {
+  //       setCurrentVideoIndex(currentVideoIndex + 1);
+  //     }, 3000);
+  //   }
+  //   else{
+  //     setGameVideoStart(false); // 게임 비디오 재생을 종료
+  //     // 여기에서 랭크로 넘어가기!!
+  //   }
+  // };
 
 
 
   return (
     <div>
-      {!gameStart && (
+      <div>점수 합계: {scoreSum}</div>
+      {/* {!gameStart && (
         <div>
           <button onClick={() => handleGameStartClick()}>게임 시작</button>
         </div>
-      )}
-      {gameStart && (
+      )} */}
+
+      {gameVideoStart && (
         <div>
           <GameVideo
-            ref={videoRef}// 게임 비디오 참조
+            ref={gameRef}// 게임 비디오 참조
             src={videos[currentVideoIndex]}
             autoPlay
             crossOrigin="anonymous"
             onEnded={handleVideoEnded}
-
           ></GameVideo>
 
         </div>
       )}
+
       <Dialog
         fullWidth
         maxWidth={"lg"}

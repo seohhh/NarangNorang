@@ -78,6 +78,7 @@ function CustomRoom(props) {
   // const myUserNameFromUrl = urlParams.get("nickname");
 
   const hostNickname = useSelector((state) => state.login.userNickname);
+  const hostSeq = useSelector((state) => state.login.userSeq)
   const checkStatus = useSelector((state) => state.game.gameStart);
   const [gameStatus, setGameStatus] = useState(false)
 
@@ -184,6 +185,18 @@ function CustomRoom(props) {
       }
 
       console.log(mySession, "여기");
+
+      await axios.post(APPLICATION_SERVER_URL + "api/v1/participant/save",
+      {
+        "participantId": mySession.connection.connectionId,
+        "roomCode": mySession.sessionId,
+        "score": 0
+      })
+      console.log("참여자 정보 저장")
+
+      await axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/plus/" + mySession.sessionId)
+      console.log("방인원 추가")
+
       let newpublisher = await OV.initPublisherAsync(undefined, {
         audioSource: undefined,
         videoSource: undefined,
@@ -226,6 +239,14 @@ function CustomRoom(props) {
     if (mySessionId === null) {
       const createSessionId = await createSession(mySessionId);
       setSessionId(createSessionId);
+
+      await axios.post(APPLICATION_SERVER_URL + "api/v1/room/save", {
+        "roomCode": createSessionId,
+        "hostName": hostNickname,
+        "hostSeq": hostSeq
+      })
+      console.log("방생성")
+
       return await createToken(createSessionId);
     }
     return await createToken(mySessionId);
@@ -246,6 +267,8 @@ function CustomRoom(props) {
   };
 
   const createToken = async (sessionId) => {
+
+
     const response = await axios.post(
       APPLICATION_SERVER_URL + "api/v1/sessions/" + sessionId + "/connections",
       {},
@@ -256,12 +279,25 @@ function CustomRoom(props) {
         },
       }
     );
-    console.log(response.data, "크리에이트토큰");
+
     return response.data; // The token
   };
 
-  const leaveSession = () => {
+  const leaveSession = async () => {
     const mySession = session;
+
+    await axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + sessionId)
+    console.log("방인원 삭제")
+
+    console.log("mySession.connection.connectionId : "  + mySession.connection.connectionId)
+    console.log("sessionId : "  + sessionId)
+
+    await axios.post(APPLICATION_SERVER_URL + "api/v1/participant/delete", {
+      "participantId": mySession.connection.connectionId,
+      "roomCode": sessionId
+    })
+    console.log("참여자 정보 삭제")
+
 
     console.log(publisher);
 
@@ -490,7 +526,7 @@ function CustomRoom(props) {
             <div id="main-video" className="col-5">
               <div>
                 <div className="game-stream">
-                  <video src={NarangNorangIntro} autoPlay></video>
+                  <Game1 streamManager={publisher} gameStart={gameStatus}></Game1>
                 </div>
               </div>
             </div>
@@ -536,9 +572,9 @@ function CustomRoom(props) {
           </div>
         </div>
       )}
-
+{/* 
       {sessionIdFromUrl === null && join === true ?
-        <Game1 streamManager={publisher} /> : null}
+        <Game1 streamManager={publisher} /> : null} */}
       {sessionIdFromUrl === null || join === true ? (
         <div>
           <div

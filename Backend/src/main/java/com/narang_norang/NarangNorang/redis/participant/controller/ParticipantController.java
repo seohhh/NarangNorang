@@ -35,7 +35,7 @@ public class ParticipantController {
         return ResponseEntity.ok(participantResponse);
     }
 
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     @ApiOperation(value = "참여자 정보 삭제", notes = "참여자 정보 레디스에서 삭제.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -48,7 +48,7 @@ public class ParticipantController {
         return ResponseEntity.ok(participantService.delete(findParticipantRequest));
     }
 
-    @DeleteMapping("/deleteAll")
+    @PostMapping("/deleteAll")
     @ApiOperation(value = "참여자 정보 삭제", notes = "참여자 정보 레디스에서 삭제.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

@@ -6,7 +6,7 @@ import "./MainVideoComponent.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
 // import axios from "axios";
 import { useSelector } from "react-redux";
-import { handleVideoRef } from "../slice/gameSlice";
+import { handleWebcamRef } from "../slice/gameSlice";
 import { useDispatch } from "react-redux";
 // import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
@@ -21,7 +21,7 @@ const MainVideoComponent = (props) => {
   });
   const dispatch = useDispatch()
   console.log(videoRef, "videoRef확인")
-  dispatch(handleVideoRef(videoRef.current))
+  dispatch(handleWebcamRef(videoRef.current))
   const showCanvas = useSelector((state) => state.game.showCanvas);
   const detectorRef = useRef(null);
 
