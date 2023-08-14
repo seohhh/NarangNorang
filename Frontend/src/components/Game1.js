@@ -162,6 +162,7 @@ function Game1(props) {
     } else {
       setGameVideoStart(false); // 게임 비디오 재생을 종료
       // 여기에서 랭크로 넘어가기!!
+      
     }
   };
 

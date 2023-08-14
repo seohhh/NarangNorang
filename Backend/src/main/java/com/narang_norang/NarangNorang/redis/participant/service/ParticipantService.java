@@ -46,7 +46,11 @@ public class ParticipantService {
                 findParticipantRequest.getRoomCode(),
                 findParticipantRequest.getParticipantId());
 
-        participant.ifPresent(participantRepository::delete);
+        if (participant.isEmpty()) {
+            return false;
+        }
+
+        participantRepository.delete(participant.get());
         return true;
     }
 

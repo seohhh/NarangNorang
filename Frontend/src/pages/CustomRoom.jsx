@@ -94,6 +94,11 @@ function CustomRoom(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // const preventClose = (e) => {
+  //   e.preventDefault();
+  //   e.returnValue = onbeforeunload(); // chrome에서는 설정이 필요해서 넣은 코드
+  // }
+
   useEffect(() => {
     if (session) {
       session.signal({
@@ -286,19 +291,6 @@ function CustomRoom(props) {
   const leaveSession = async () => {
     const mySession = session;
 
-    await axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + sessionId)
-    console.log("방인원 삭제")
-
-    console.log("mySession.connection.connectionId : "  + mySession.connection.connectionId)
-    console.log("sessionId : "  + sessionId)
-
-    await axios.post(APPLICATION_SERVER_URL + "api/v1/participant/delete", {
-      "participantId": mySession.connection.connectionId,
-      "roomCode": sessionId
-    })
-    console.log("참여자 정보 삭제")
-
-
     console.log(publisher);
 
     if (mySession) {
@@ -347,13 +339,31 @@ function CustomRoom(props) {
     })
   };
 
-  const deleteSubscriber = (streamManager) => {
+  const deleteSubscriber = async(streamManager) => {
     // let removedSubscribers = subscribers;
     // let index = removedSubscribers.indexOf(streamManager, 0);
     // if (index > -1) {
     //   removedSubscribers.splice(index, 1);
     //   setSubscribers(removedSubscribers);
     // }
+
+    console.log("나간 사람")
+    console.log(streamManager)
+
+    console.log("streamManager.connection.connectionId : "  + streamManager.stream.connection.connectionId)
+
+    await axios.post(APPLICATION_SERVER_URL + "api/v1/participant/delete", {
+      "participantId": streamManager.stream.connection.connectionId,
+      "roomCode": streamManager.stream.session.sessionId
+    })
+    .then((res) => {
+      if (res.data) {
+        axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + streamManager.stream.session.sessionId)
+        console.log("방인원 삭제")
+      }
+    })
+    console.log("참여자 정보 삭제")
+
     setSubscribers((prevSubscribers) =>
       prevSubscribers.filter((sub) => sub !== streamManager)
     );
