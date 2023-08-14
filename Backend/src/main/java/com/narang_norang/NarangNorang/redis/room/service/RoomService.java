@@ -42,7 +42,12 @@ public class RoomService {
     public void updateRoomParticipantCountMinus(String roomCode) {
         Room room = findRoomByRoomCode(roomCode);
         room.updateParticipantCountMinus();
-        roomRepository.save(room);
+        if (room.getParticipantCount() < 1) {
+            roomRepository.delete(room);
+        }
+        else  {
+            roomRepository.save(room);
+        }
     }
 
     public Room findRoomByHostSeq(Long hostSeq) {
