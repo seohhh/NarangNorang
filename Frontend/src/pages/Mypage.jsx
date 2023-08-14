@@ -63,7 +63,7 @@ function Mypage() {
             <Form.Control required type="text" defaultValue={userName} />
           </Col>
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-        </Form.Group>
+  </Form.Group>*/}
 
         {/* <Form.Group as={Row} lg="12" controlId="validationCustomUsername">
               <Form.Label column md="2">비밀번호</Form.Label>
@@ -81,7 +81,7 @@ function Mypage() {
               </InputGroup>
             </Form.Group> */}
 
-        {/* <Form.Group as={Row} lg="12" controlId="validationCustom02">
+        {/*<Form.Group as={Row} lg="12" controlId="validationCustom02">
           <Form.Label column lg="2">
             이메일
           </Form.Label>
