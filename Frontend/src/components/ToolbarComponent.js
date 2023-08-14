@@ -24,7 +24,7 @@ import styled from "styled-components";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
-import { Card, Button } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { Fade } from "react-awesome-reveal";
 import stopImage from "../assets/contents/stop.png";
 import tryImage from "../assets/contents/try.png";
