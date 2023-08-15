@@ -1,5 +1,5 @@
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Nav from './components/Nav';
 import './App.css'
@@ -35,7 +35,7 @@ function App() {
                           location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room') ||
                           location.pathname.startsWith('/exit') || location.pathname === '/notfound');
   const isMainPage = location.pathname === '/';
-  const isLoggedIn = useSelector(state => state.login.isLoggedin);
+  const isLoggedIn = sessionStorage.getItem('isLoggedin')
   const noBackground = (location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room') ||
                         location.pathname.startsWith('/exit') || location.pathname === '/notfound');
   const shouldShowBackground = isMainPage && !noBackground;

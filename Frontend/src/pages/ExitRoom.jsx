@@ -44,13 +44,13 @@ function ExitRoom() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sessionIdFromUrl, subscriberIdFromUrl])
 
+  
   const goToMain = async() => {
-     const params = {
+     const data = {
       "roomCode": sessionIdFromUrl,
       "subscriberId": subscriberIdFromUrl
     }
-
-    await axios.post('/album/capture/delete', params)
+    await axios.post('/album/capture/delete', data)
     .then((res) => {
       console.log(res)
       navigate("/")
