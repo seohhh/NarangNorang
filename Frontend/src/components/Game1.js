@@ -14,7 +14,7 @@ import Tiger from "../assets/game/Tiger.mp4";
 import html2canvas from "html2canvas";
 
 import { useSelector, useDispatch } from "react-redux";
-import { handleCapture, handleGetScore } from "../slice/gameSlice";
+import { handleCapture, handleGetScore, setNowScore, setTotalScore } from "../slice/gameSlice";
 
 // 나랑노랑 인트로
 const IntroMp4 = styled.video`
@@ -143,6 +143,8 @@ function Game1(props) {
       if (gameRef.current) {
         getScore(currentVideoIndex).then(score => {
           setScoreSum(prevScore => prevScore + score);
+          // dispatch(setNowScore(score));
+          // console.log(score, "이게 내 점수");
         });
       }
     }, 1000); // 1초마다 호출
@@ -156,9 +158,13 @@ function Game1(props) {
   const handleVideoEnded = async () => {
     if (currentVideoIndex < videos.length - 1) {
       await capture();
+      const score = await getScore(currentVideoIndex);
+      console.log(score);
+      dispatch(setNowScore(score));
+      dispatch(setTotalScore(score));
       setTimeout(() => {
         setCurrentVideoIndex(currentVideoIndex + 1);
-      }, 3000);
+      }, 2000);
     } else {
       setGameVideoStart(false); // 게임 비디오 재생을 종료
       // 여기에서 랭크로 넘어가기!!
