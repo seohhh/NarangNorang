@@ -84,22 +84,22 @@ function CustomRoom(props) {
   const [gameStatus, setGameStatus] = useState(false)
 
   useEffect(() => {
-    window.addEventListener("beforeunload", preventClose);
+    window.addEventListener("beforeunload", onbeforeunload);
     // url 확인
     joinSession();
 
     // 나가기
     return () => {
-      window.removeEventListener("beforeunload", preventClose);
+      window.removeEventListener("beforeunload", onbeforeunload);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const preventClose = (e) => {
-    e.preventDefault();
-    e.returnValue = ""; // chrome에서는 설정이 필요해서 넣은 코드
-    window.location.href=`https://i9c208.p.ssafy.io/exit?sessionId=${sessionId}&subscriberId=${connectionId}`
-  }
+  // const preventClose = (e) => {
+  //   e.preventDefault();
+  //   e.returnValue = ""; // chrome에서는 설정이 필요해서 넣은 코드
+  //   window.location.href=`https://i9c208.p.ssafy.io/exit?sessionId=${sessionId}&subscriberId=${connectionId}`
+  // }
 
   useEffect(() => {
     if (session) {
