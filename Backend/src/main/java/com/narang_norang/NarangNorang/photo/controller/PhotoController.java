@@ -168,7 +168,7 @@ public class PhotoController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/capture/delete")
+    @PostMapping("/capture/delete")
     @ApiOperation(value = "캡처 삭제", notes = "캡처 사진을 레디스에서 삭제한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
