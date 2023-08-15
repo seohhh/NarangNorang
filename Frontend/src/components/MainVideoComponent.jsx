@@ -119,6 +119,13 @@ const MainVideoComponent = (props) => {
             ref={canvasRef}
             width={videoDimensions.width}
             height={videoDimensions.height}
+            style={{position: "absolute",
+                    top: "0",
+                    left: "0",
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "fill",
+                    zIndex: "2"}}
           ></canvas>
           <video
             autoPlay={true}
@@ -137,6 +144,13 @@ const MainVideoComponent = (props) => {
             ref={canvasRef}
             width={videoDimensions.width}
             height={videoDimensions.height}
+            style={{position: "absolute",
+                    top: "0",
+                    left: "0",
+                    width: "100%",
+                    height: "100%",
+                    objectFit: "fill",
+                    zIndex: "2"}}
           ></canvas>
           <video
             autoPlay={true}

@@ -31,7 +31,7 @@ const gameSlice = createSlice({
 
 export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async (dispatch) => {
   try {
-    if (!videoRef.current) return;
+    if (!videoRef) return;
 
     canvas.toBlob((blob) => {
       if (blob !== null) {

@@ -67,9 +67,9 @@ function Game1(props) {
 
   const capture = async () => {
     if (webcamRef) {
-      console.log("videoRef.current:",webcamRef )
       try {
         const canvas = await html2canvas(webcamRef, { scale: 2 });
+        
         console.log("캡쳐 시작");
         dispatch(
           handleCapture(webcamRef, canvas, roomCode, subscriberId)
