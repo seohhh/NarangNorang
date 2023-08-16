@@ -17,7 +17,7 @@ const Askbutton = styled.div`
   align-items: center; // 세로 중앙 정렬
   background-color: white;
   border-radius: 99px;
-  position: sticky;
+  position: fixed;
   right: 40px;
   bottom: 40px;
   box-shadow: 0 0 20px -10px rgba(0, 0, 0, 2);

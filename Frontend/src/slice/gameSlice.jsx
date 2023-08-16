@@ -37,6 +37,7 @@ const gameSlice = createSlice({
       },
       setStretchingId(state, actions) {
         state.videoId = actions.payload
+        console.log(state.videoId, "gameSlice에서 확인")
       },
       setNowScore(state, actions) {
         state.nowScore = actions.payload
@@ -53,7 +54,7 @@ const gameSlice = createSlice({
 export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async (dispatch) => {
   try {
     if (!videoRef) return;
-
+    
     canvas.toBlob((blob) => {
       if (blob !== null) {
 

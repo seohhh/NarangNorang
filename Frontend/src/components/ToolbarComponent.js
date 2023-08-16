@@ -7,8 +7,10 @@ import { handleCapture } from "../slice/gameSlice";
 import html2canvas from "html2canvas";
 import "./Toolbar.css";
 import GameTab from "./GameTab";
+import Dialog from "@material-ui/core/Dialog";
+// import camera from "../assets/music/camera.mp3";
 
-// icon
+// icon 
 import inviteIcon from "../assets/icon/invite.png";
 import leaveIcon from "../assets/icon/leave.png";
 import xrayIcon from "../assets/icon/xray.png";
@@ -20,12 +22,12 @@ import audioOffIcon from "../assets/icon/audioOff.png";
 import noXrayIcon from "../assets/icon/noXray.png";
 import cameraIcon from "../assets/icon/camera.png";
 
-import Dialog from "@material-ui/core/Dialog";
 
 
 const ToolbarComponent = (props) => {
   const [audioOn, setAudioOn] = useState(props.audioOn);
   const [videoOn, setVideoOn] = useState(props.videoOn);
+  // const [sound, setSound] = useState(false);
   const dispatch = useDispatch();
 
   const webcamRef = useSelector((state) => state.game.webcamRef)
@@ -91,6 +93,7 @@ const ToolbarComponent = (props) => {
         dispatch(
           handleCapture(webcamRef, canvas, roomCode, subscriberId)
         );
+
       } catch (error) {
         console.error("캡쳐 실패", error);
       }
@@ -198,7 +201,6 @@ const ToolbarComponent = (props) => {
           </div>
         </OverlayTrigger>
       </div>
-
       {/* 초대링크 모달 */}
       <Modal
         show={show}
