@@ -11,7 +11,9 @@ const gameSlice = createSlice({
       videoId: null,
       gameStart: false,
       webcamRef: null,
-      renderBool: false
+      renderBool: false,
+      nowScore: 0,
+      totalScore: 0,
     },
     reducers: {
       switchShowCanvas(state) {
@@ -26,10 +28,14 @@ const gameSlice = createSlice({
       setWebcamRef(state, actions) {
         state.webcamRef = actions.payload
       },
-      setStretchingId(state, actions) {
-        state.videoId = actions.payload
-        console.log(state.videoId, "게임슬라이스 비디오아이디 확인!!!!!!!!!!!")
+      setNowScore(state, actions) {
+        state.nowScore = actions.payload
+        console.log(state.nowScore);
+        console.log(actions.payload);
       },
+      setTotalScore(state, actions) {
+        state.totalScore += actions.payload
+      }
     },
   });
 
@@ -65,12 +71,12 @@ export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async
   }
 
 }
-export const handleGetScore = (poseIdx, videoRef) => async (dispatch) => {
+export const handleGetScore = (gameRef, webcamRef) => async (dispatch) => {
   
   try {
-    const score = userpose.getScore(poseIdx, videoRef);
-    console.log("getScore videoRef", videoRef)
-    console.log("getScore", poseIdx, score);
+    const score = userpose.getScore(gameRef, webcamRef);
+    // console.log("getScore videoRef", videoRef)
+    console.log("getScore", score);
     return score;
   } catch (error) {
     console.log(error, "점수계산 에러")
@@ -89,5 +95,5 @@ export const render = (dispatch) => {
   dispatch(switchRenderBool())
 }
 
-export const { switchShowCanvas, switchGameStart, setWebcamRef, switchRenderBool, setGameRef, setStretchingId } = gameSlice.actions;
+export const { switchShowCanvas, switchGameStart, setWebcamRef, switchRenderBool, setGameRef, setNowScore, setTotalScore } = gameSlice.actions;
 export default gameSlice.reducer;

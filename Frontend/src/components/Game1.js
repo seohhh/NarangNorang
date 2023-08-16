@@ -14,7 +14,7 @@ import Tiger from "../assets/game/Tiger.mp4";
 import html2canvas from "html2canvas";
 
 import { useSelector, useDispatch } from "react-redux";
-import { handleCapture, handleGetScore } from "../slice/gameSlice";
+import { handleCapture, handleGetScore, setNowScore, setTotalScore } from "../slice/gameSlice";
 
 // 나랑노랑 인트로
 const IntroMp4 = styled.video`
@@ -81,26 +81,38 @@ function Game1(props) {
     }
   };
 
-  const getScore = async (poseIdx) => {
+  const getScore = async () => {
     try {
       console.log("webcamRef", webcamRef);
-      // 웹캠에서 사용자 포즈 감지
-      if (webcamRef) {
-        // const detectedPose = await userpose.detectPose(webcamRef.current);
-        // const score = userpose.getScore(poseIdx, webcamRef.current)
-        // const score = POSE.compare(detectedPose, currentVideoIndex); // 정답 코드와 사용자 포즈 비교
+      console.log("gameRef", gameRef.current);
+  
+      // gameRef가 유효한 경우에만 비디오의 너비와 높이 얻기 시도
+      if (gameRef.current) {
+        const gameVideoElement = gameRef.current;
+        const videoWidth = gameVideoElement.videoWidth;
+        const videoHeight = gameVideoElement.videoHeight;
+        gameVideoElement.width = videoWidth; // 원하는 너비 값으로 변경
+        gameVideoElement.height = videoHeight; // 원하는 높이 값으로 변경
 
-        // 비교 결과를 바탕으로 점수 계산 및 저장
-        const score = dispatch(handleGetScore(poseIdx, webcamRef));
+
+        // 비디오가 로드되지 않은 경우 함수 종료
+        if (!videoWidth || !videoHeight) {
+          console.log("비디오가 로드되지 않았거나 올바르지 않은 크기의 비디오입니다.");
+          return;
+        }
+        console.log(gameVideoElement, "gameVideoElement")
+        const score = dispatch(handleGetScore(gameVideoElement, webcamRef));
+        // 이후 사용자 포즈 비교 및 점수 계산 등을 처리
+        // const detectedPose = await userpose.detectPose(webcamRef.current);
+        // const score = userpose.getScore(detectedPose, currentVideoIndex);
+  
         console.log("점수 계산 완료");
-        // console.log("점수는?", score);
         return score;
       }
     } catch (error) {
       console.log(error, "점수계산 에러");
     }
   };
-
   // const getScore = () => {
   //   if (videoRef.current) dispatch(handleGetScore(videoRef.current));
   // };
@@ -143,6 +155,8 @@ function Game1(props) {
       if (gameRef.current) {
         getScore(currentVideoIndex).then(score => {
           setScoreSum(prevScore => prevScore + score);
+          // dispatch(setNowScore(score));
+          // console.log(score, "이게 내 점수");
         });
       }
     }, 1000); // 1초마다 호출
@@ -156,9 +170,13 @@ function Game1(props) {
   const handleVideoEnded = async () => {
     if (currentVideoIndex < videos.length - 1) {
       await capture();
+      const score = await getScore(currentVideoIndex);
+      console.log(score);
+      dispatch(setNowScore(score));
+      dispatch(setTotalScore(score));
       setTimeout(() => {
         setCurrentVideoIndex(currentVideoIndex + 1);
-      }, 3000);
+      }, 2000);
     } else {
       setGameVideoStart(false); // 게임 비디오 재생을 종료
       // 여기에서 랭크로 넘어가기!!
