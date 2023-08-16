@@ -22,6 +22,9 @@ const UserVideoComponent = (props) => {
 
   useEffect(() => {
     console.log(props.streamManager);
+
+    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [render]);
 

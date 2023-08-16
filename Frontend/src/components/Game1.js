@@ -37,7 +37,8 @@ const IntroDialogContent = styled(DialogContent)`
 // 게임영상 크기
 const GameVideo = styled.video`
   width: 100%;
-  height: 100%;
+  height: 471px;
+  object-fit: cover;
 `;
 
 axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";

@@ -117,21 +117,11 @@ const MainVideoComponent = (props) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalScore]);
 
-  // const video = videoRef.current;
-  // const roomCode = props.streamManager.stream.session.sessionId;
-  // const subscriberId = props.streamManager.stream.connection.connectionId;
-
-  // const capture = async () => {
-  //   if (webcamRef.current) {
-  //     const canvas = await html2canvas(webcamRef.current, { scale: 2 });
-  //     dispatch(handleCapture(webcamRef, canvas, roomCode, subscriberId));
-  //   }
-  // };
-
-  // const getScore = () => {
-  //   if (webcamRef.current)
-  //     dispatch(handleGetScore(webcamRef.current))
-  // }
+  const getNicknameTag = () => {
+    if (props.streamManager && props.streamManager.stream && props.streamManager.stream.connection) {
+      return JSON.parse(props.streamManager.stream.connection.data).clientData;
+    }
+  };
 
   // 컴포넌트 렌더링
   return (
@@ -158,6 +148,9 @@ const MainVideoComponent = (props) => {
             width={videoDimensions.width}
             height={videoDimensions.height}
           />
+          <div className="name-tag">
+            <p id="name">{getNicknameTag()}</p>
+          </div>
         </div>
       ) : null}
 
@@ -183,6 +176,10 @@ const MainVideoComponent = (props) => {
             width={videoDimensions.width}
             height={videoDimensions.height}
           />
+          <div className="name-tag">
+            <p id="name">{getNicknameTag()}</p>
+          </div>
+          
           {great ? (
             <img
               style={{
