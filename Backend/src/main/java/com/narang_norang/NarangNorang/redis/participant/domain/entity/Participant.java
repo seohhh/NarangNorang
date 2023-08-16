@@ -1,6 +1,5 @@
 package com.narang_norang.NarangNorang.redis.participant.domain.entity;
 
-import io.swagger.models.auth.In;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
