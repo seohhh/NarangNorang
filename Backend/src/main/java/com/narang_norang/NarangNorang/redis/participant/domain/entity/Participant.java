@@ -10,7 +10,7 @@ import org.springframework.data.redis.core.index.Indexed;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 
-@RedisHash(value = "participant")
+@RedisHash(value = "participant", timeToLive = 86400L)
 @Builder
 @Getter
 public class Participant {

@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { switchRenderBool } from '../slice/gameSlice';
+import { switchGameEnded, switchGameStuatus, switchRenderBool } from '../slice/gameSlice';
 
 // component
 import UserVideoComponent from "../components/UserVideoComponent";
@@ -73,15 +73,23 @@ function CustomRoom(props) {
   const [gameStart, setGameStart] = useState(false);
   const [rank, setRank] = useState(false);
   const [connectionId, setConnectionId] = useState("")
-  const dispatch = useDispatch()
-  
 
+  const dispatch = useDispatch()
+
+  const [first, setFirst] = useState(null);
+  const [second, setSecond] = useState(null);
+  const [third, setThird] = useState(null);
+  
   // const myUserNameFromUrl = urlParams.get("nickname");
 
   const hostNickname = useSelector((state) => state.login.userNickname);
   const hostSeq = useSelector((state) => state.login.userSeq)
   const checkStatus = useSelector((state) => state.game.gameStart);
+  // const scoreRlt = useSelector((state) => state.game.scoreRlt);
+  const gameEnded = useSelector((state) => state.game.gameEnded);
+  
   const [gameStatus, setGameStatus] = useState(false)
+  const [scoreRlt, setScoreRlt] = useState([])
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -110,10 +118,94 @@ function CustomRoom(props) {
       })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checkStatus])
+  }, [checkStatus]);
+  
+  useEffect(() => {
+    if (scoreRlt && session && sessionId) {
+      
+      const Ranker = []
+      console.log(scoreRlt, "스코어rlt");
+      console.log(session);
+
+      
+
+      scoreRlt.forEach((connectionId) => {
+        session.streamManagers.forEach((streamManager) => {
+          if (streamManager.stream && streamManager.stream.session && streamManager.stream.session.connection && streamManager.stream.session.connection.connectionId === connectionId) {
+            Ranker.push(streamManager);
+          }
+        })
+      })
+      console.log(Ranker, "여기 랭커!!");
+      if (Ranker.length === 1) {
+        setFirst(Ranker[0]);
+      } else if (Ranker.length === 2 ) {
+        setFirst(Ranker[0]);
+        setSecond(Ranker[1]);
+      } else if (Ranker.length === 3) {
+        setFirst(Ranker[0]);
+        setSecond(Ranker[1]);
+        setThird(Ranker[2]);
+      }
+
+      setRank(true);
+
+      setTimeout(() => {
+        closeRankModal();
+      }, 16800);
+      
+      console.log("게임 끝!!!@!@!!@!@@121!@!@!@!@$!#@%#$^%!@#$%&*")
+      dispatch(switchGameEnded())
+      dispatch(switchGameStuatus(sessionId))
+
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scoreRlt])
+
+  useEffect(() => {
+    if (gameEnded && session) {
+      axios({
+        method: 'GET',
+        url: `/participant/room/${session.sessionId}`
+      }).then((res) => {
+        setScoreRlt(res.data);
+      }).catch((err) => {
+        console.log(err);
+      })
+
+      console.log(scoreRlt, "점수데이터!!!!!!")
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameEnded])
+
+  // useEffect(() => {
+  //   if (scoreRlt && session) {
+  //     const Ranker = []
+  //     console.log(scoreRlt, "스코어rlt");
+  //     console.log(session);
+  //     scoreRlt.map((connectionId) => {
+  //       session.streamManagers.map((streamManager) => {
+  //         if (streamManager.stream && streamManager.stream.session && streamManager.stream.session.connection && streamManager.stream.session.connection.connectionId === connectionId) {
+  //           Ranker.push(streamManager);
+  //         }
+  //       })
+  //     })
+  //     console.log(Ranker, "여기 랭커!!");
+  //     if (Ranker.length === 1) {
+  //       setFirst(Ranker[0]);
+  //     } else if (Ranker.length === 2 ) {
+  //       setFirst(Ranker[0]);
+  //       setSecond(Ranker[1]);
+  //     } else if (Ranker.length === 3) {
+  //       setFirst(Ranker[0]);
+  //       setSecond(Ranker[1]);
+  //       setThird(Ranker[2]);
+  //     }
+  //   }
+  // }, [scoreRlt])
 
 
-  const onbeforeunload = (event) => {   
+  const onbeforeunload = (event) => {
     leaveSession();
   };
 
@@ -122,6 +214,7 @@ function CustomRoom(props) {
 
     const mySession = OV.initSession();
     setSession(mySession);
+    console.log(session);
 
     mySession.on("streamCreated", (event) => {
       
@@ -156,6 +249,33 @@ function CustomRoom(props) {
       }, 16800);
     });
 
+    mySession.on("signal:rankRegist", (event) => {
+      const Ranker = []
+      console.log(scoreRlt, "스코어rlt");
+      console.log(session);
+
+      
+
+      scoreRlt.forEach((connectionId) => {
+        session.streamManagers.forEach((streamManager) => {
+          if (streamManager.stream && streamManager.stream.session && streamManager.stream.session.connection && streamManager.stream.session.connection.connectionId === connectionId) {
+            Ranker.push(streamManager);
+          }
+        })
+      })
+      console.log(Ranker, "여기 랭커!!");
+      if (Ranker.length === 1) {
+        setFirst(Ranker[0]);
+      } else if (Ranker.length === 2 ) {
+        setFirst(Ranker[0]);
+        setSecond(Ranker[1]);
+      } else if (Ranker.length === 3) {
+        setFirst(Ranker[0]);
+        setSecond(Ranker[1]);
+        setThird(Ranker[2]);
+      }
+    })
+
     mySession.on("signal:rank", (event) => {
       setRank(true);
 
@@ -176,6 +296,10 @@ function CustomRoom(props) {
       }
       
     })
+
+    mySession.on("signal:rankData", (event) => {
+      setScoreRlt(scoreRlt)
+    })
   
 
     if (nicknameFromUrl === null) {
@@ -190,6 +314,8 @@ function CustomRoom(props) {
       } else {
         await mySession.connect(token, { clientData: myUserName });
       }
+
+      console.log(mySession, "여기");
 
       setConnectionId(mySession.connection.connectionId)
 
@@ -295,8 +421,6 @@ function CustomRoom(props) {
   const leaveSession = async () => {
     const mySession = session;
 
-    console.log(publisher);
-    console.log(mySession);
     console.log("participantId : " + connectionId)
     console.log("roomCode : " + sessionId)
     axios.post(APPLICATION_SERVER_URL + "api/v1/participant/delete", {
@@ -306,7 +430,9 @@ function CustomRoom(props) {
     console.log("참여자 정보 삭제")
     axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + sessionId)
     console.log("방인원 삭제")
-    
+
+
+    console.log(publisher);
 
     if (mySession) {
       mySession.disconnect();
@@ -354,7 +480,7 @@ function CustomRoom(props) {
     })
   };
 
-  const deleteSubscriber = async(streamManager) => {
+  const deleteSubscriber = (streamManager) => {
     // let removedSubscribers = subscribers;
     // let index = removedSubscribers.indexOf(streamManager, 0);
     // if (index > -1) {
@@ -373,13 +499,6 @@ function CustomRoom(props) {
         console.log("방인원 삭제")
       }
     })
-
-    console.log("나간 사람")
-    console.log(streamManager)
-
-    console.log("streamManager.connection.connectionId : "  + streamManager.stream.connection.connectionId)
-
-    
 
     setSubscribers((prevSubscribers) =>
       prevSubscribers.filter((sub) => sub !== streamManager)
@@ -405,6 +524,7 @@ function CustomRoom(props) {
   };
 
   const displayRank = () => {
+    setFirst(publisher)
     session
       .signal({
         data: "순위 버튼",
@@ -420,6 +540,7 @@ function CustomRoom(props) {
   };
 
   const closeRankModal = () => {
+    
     setRank(false);
   };
 
@@ -445,7 +566,7 @@ function CustomRoom(props) {
         aria-labelledby="form-dialog-title"
       >
         <ContentDialog>
-          <Rank first={mainStreamManager} second={null} third={null} />
+          <Rank first={first} second={second} third={third} />
         </ContentDialog>
       </Dialog>
 

@@ -11,8 +11,8 @@ const gameSlice = createSlice({
       gameStart: false,
       webcamRef: null,
       renderBool: false,
-      nowScore: 0,
-      totalScore: 0,
+      gameEnded: false,
+      scoreRlt: [],
     },
     reducers: {
       switchShowCanvas(state) {
@@ -27,21 +27,19 @@ const gameSlice = createSlice({
       setWebcamRef(state, actions) {
         state.webcamRef = actions.payload
       },
-      setNowScore(state, actions) {
-        state.nowScore = actions.payload
-        console.log(state.nowScore);
-        console.log(actions.payload);
+      setScoreRlt(state, actions) {
+        state.scoreRlt = actions.payload
       },
-      setTotalScore(state, actions) {
-        state.totalScore += actions.payload
-      }
+      switchGameEnded(state) {
+        state.gameEnded = !state.gameEnded
+      },
     },
   });
 
 
 export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async (dispatch) => {
   try {
-    if (!videoRef) return;
+    if (!videoRef.current) return;
 
     canvas.toBlob((blob) => {
       if (blob !== null) {
@@ -95,5 +93,16 @@ export const render = (dispatch) => {
   dispatch(switchRenderBool())
 }
 
-export const { switchShowCanvas, switchGameStart, setWebcamRef, switchRenderBool, setGameRef, setNowScore, setTotalScore } = gameSlice.actions;
+export const switchGameStuatus = (roomCode) => async (dispatch) => {
+  console.log(roomCode, "방정보!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
+  axios.put('/room/update/status/' + roomCode)
+  .then((res) => {
+    console.log(res)
+  })
+  .catch((err) => {
+    console.log(err)
+  })
+}
+
+export const { switchShowCanvas, switchGameStart, switchGameEnded, setScoreRlt, setWebcamRef, switchRenderBool, setGameRef, setGameStarter } = gameSlice.actions;
 export default gameSlice.reducer;

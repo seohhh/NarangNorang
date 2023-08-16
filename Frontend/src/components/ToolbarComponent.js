@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
-import { switchShowCanvas, switchGameStart } from "../slice/gameSlice";
+import { switchShowCanvas, switchGameStart, setGameStarter, switchGameStuatus } from "../slice/gameSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import "./Toolbar.css";
@@ -87,6 +87,7 @@ const ToolbarComponent = (props) => {
 
   const gameStatusChanged = () => {
     dispatch(switchGameStart());
+    dispatch(switchGameStuatus(props.sessionId))
     SetGameSelect(false);
   };
 
