@@ -72,6 +72,7 @@ function CustomRoom(props) {
   const [join, setJoin] = useState(false);
   const [gameStart, setGameStart] = useState(false);
   const [rank, setRank] = useState(false);
+  const [connectionId, setConnectionId] = useState("")
   const dispatch = useDispatch()
   
 
@@ -94,6 +95,12 @@ function CustomRoom(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // const preventClose = (e) => {
+  //   e.preventDefault();
+  //   e.returnValue = ""; // chrome에서는 설정이 필요해서 넣은 코드
+  //   window.location.href=`https://i9c208.p.ssafy.io/exit?sessionId=${sessionId}&subscriberId=${connectionId}`
+  // }
+
   useEffect(() => {
     if (session) {
       session.signal({
@@ -106,7 +113,7 @@ function CustomRoom(props) {
   }, [checkStatus])
 
 
-  const onbeforeunload = (event) => {
+  const onbeforeunload = (event) => {   
     leaveSession();
   };
 
@@ -183,6 +190,8 @@ function CustomRoom(props) {
       } else {
         await mySession.connect(token, { clientData: myUserName });
       }
+
+      setConnectionId(mySession.connection.connectionId)
 
       console.log(mySession, "여기");
 
@@ -286,20 +295,18 @@ function CustomRoom(props) {
   const leaveSession = async () => {
     const mySession = session;
 
-    await axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + sessionId)
-    console.log("방인원 삭제")
-
-    console.log("mySession.connection.connectionId : "  + mySession.connection.connectionId)
-    console.log("sessionId : "  + sessionId)
-
-    await axios.post(APPLICATION_SERVER_URL + "api/v1/participant/delete", {
-      "participantId": mySession.connection.connectionId,
+    console.log(publisher);
+    console.log(mySession);
+    console.log("participantId : " + connectionId)
+    console.log("roomCode : " + sessionId)
+    axios.post(APPLICATION_SERVER_URL + "api/v1/participant/delete", {
+      "participantId": connectionId,
       "roomCode": sessionId
     })
     console.log("참여자 정보 삭제")
-
-
-    console.log(publisher);
+    axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + sessionId)
+    console.log("방인원 삭제")
+    
 
     if (mySession) {
       mySession.disconnect();
@@ -347,13 +354,33 @@ function CustomRoom(props) {
     })
   };
 
-  const deleteSubscriber = (streamManager) => {
+  const deleteSubscriber = async(streamManager) => {
     // let removedSubscribers = subscribers;
     // let index = removedSubscribers.indexOf(streamManager, 0);
     // if (index > -1) {
     //   removedSubscribers.splice(index, 1);
     //   setSubscribers(removedSubscribers);
     // }
+
+    axios.post(APPLICATION_SERVER_URL + "api/v1/participant/delete", {
+      "participantId": streamManager.stream.connection.connectionId,
+      "roomCode": streamManager.stream.session.sessionId
+    })
+    .then((res) => {
+      console.log("참여자 정보 삭제")
+      if (res.data) {
+        axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + streamManager.stream.session.sessionId)
+        console.log("방인원 삭제")
+      }
+    })
+
+    console.log("나간 사람")
+    console.log(streamManager)
+
+    console.log("streamManager.connection.connectionId : "  + streamManager.stream.connection.connectionId)
+
+    
+
     setSubscribers((prevSubscribers) =>
       prevSubscribers.filter((sub) => sub !== streamManager)
     );

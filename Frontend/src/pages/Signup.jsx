@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { useDispatch } from "react-redux";
-import { signUp } from "../slice/authSlice";
-import { Form, Button } from 'react-bootstrap';
-import { Link } from "react-router-dom";
+import { Form, Button, Modal } from 'react-bootstrap';
+import { Link, useNavigate } from "react-router-dom";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import axios from 'axios';
@@ -47,67 +45,124 @@ const NavLink = styled(Link)`
   margin-bottom: 5px;
 `
 
+const Formtext = styled(Form.Text)`
+  color: red;
+  font-family: Pretendard-bold;
+  padding-left: 5px;
+`
+
+
 function Signup() {
-  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  // 유효성 확인
   const [idValidation, setIdValidation] = useState('')
+  const [emailConfirm, setEmailConfirm] = useState("")
   const [passwordConfirm, setPasswordConfirm] = useState('')
   const [passwordValidation, setPasswordValidation] = useState('')
+  const [nameConfirm, setNameConfirm] = useState("")
+  const [nicknameConfirm, setNickameConfirm] = useState("")
 
-  const [member_id, setMemberId] = useState('')
-  const [password, setPassword] = useState('')
+  const [memberId, setMemberId] = useState('')
+  const [memberPassword, setMemeberPassword] = useState('')
   const [confirm_password, setConfirmPassword] = useState('')
-  const [member_name, setMemberName] = useState('')
-  const [member_nickname, setMemberNickname] = useState('')
-  const [member_email, setMemberEmail] = useState('')
+  const [memberName, setMemberName] = useState('')
+  const [memberNickname, setMemberNickname] = useState('')
+  const [memberEmail, setMemberEmail] = useState('')
+
+  // 회원가입 실패 모달 -> 모든 내용이 채워지지 않았을 때
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
+  // 회원가입 성공
+  const [signup, setSignup] = useState(false);
+  const handleSignupClose = () => setSignup(false);
+  const handleSignupSuccess = () => setSignup(true);
+
 
   const handleMemberId = (e) => {
     setMemberId(e.target.value);
   };
+
   const handlePassword = (e) => {
-    setPassword(e.target.value);
-  };
-  const handleConfirmPassword = (e) => {
-    setConfirmPassword(e.target.value);
-  };
-  const handleMemberName = (e) => {
-    setMemberName(e.target.value);
-  };
-  const handleMemberNickname = (e) => {
-    setMemberNickname(e.target.value);
-  };
-  const handleMemberEmail = (e) => {
-    setMemberEmail(e.target.value);
-  };
+    setMemeberPassword(e.target.value);
+    var passwordCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
 
-
-  const passwordCheck = /^(?=.*[a-zA-Z])(?=.*[!@#$%^*+=-])(?=.*[0-9]).{8,25}$/;
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    // 비밀번호 유효성 검사
-    if (!passwordCheck.test(password)) {
+    if (!passwordCheck.test(e.target.value)) {
       setPasswordValidation(false);
     } else {
       setPasswordValidation(true);
     }
+  };
 
-    // 비밀번호 입력 확인
-    if (password !== confirm_password) {
+  const handleConfirmPassword = (e) => {
+    setConfirmPassword(e.target.value);
+    if (memberPassword !== e.target.value) {
       setPasswordConfirm(false);
     } else {
       setPasswordConfirm(true);
     }
+  };
 
-    if (passwordConfirm && passwordValidation) {
-      dispatch(
-        signUp(
-          member_id,
-          password,
-          member_name,
-          member_nickname,
-          member_email,
-        )
-      );
+  const handleMemberName = (e) => {
+    setMemberName(e.target.value);
+    if (e.target.value) {
+      setNameConfirm(true)
+    } else {
+      setNameConfirm(false)
+    }
+  };
+
+  const handleMemberNickname = (e) => {
+    setMemberNickname(e.target.value);
+    if (e.target.value) {
+      setNickameConfirm(true)
+    } else {
+      setNickameConfirm(false)
+    }
+  };
+
+  const handleMemberEmail = (e) => {
+    setMemberEmail(e.target.value);
+    var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    if (regExp.test(e.target.value)) {
+      setEmailConfirm(true)
+    } else {
+      setEmailConfirm(false)
+    }
+  };
+
+  // 회원가입
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    
+    if (!memberId||!memberPassword||!confirm_password||!memberName||!memberNickname||!memberEmail) {
+      handleShow();
+      setTimeout(() => {
+        handleClose()
+      }, 500);
+    }
+
+    if (memberId && memberPassword && memberName && memberNickname && emailConfirm && passwordConfirm && passwordValidation) {
+      axios({
+        method: 'POST',
+        url: '/member',
+        data: {memberId, memberPassword, memberName, memberNickname, memberEmail}
+      })
+      .then((res) => {
+        console.log(res)
+        handleSignupSuccess()
+        setTimeout(() => {
+          handleSignupClose()
+        }, 500);
+        setTimeout(() => {
+          navigate(-1)
+        }, 800);
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     }
   };
 
@@ -115,12 +170,14 @@ function Signup() {
   const idCheckHandler = (e) => {
     axios({
       method: "Get",
-      url: `/member/${member_id}`,
+      url: `/member/${memberId}`,
     })
       .then((res) => {
         if (res.data === false) {
           setIdValidation(true);
-        } else setIdValidation(false);
+        } else {
+          setIdValidation(false)
+        };
       })
       .catch((err) => {
         console.log(err);
@@ -135,7 +192,7 @@ function Signup() {
       <TextContent>
         <SignupForm>
           <div style={{marginBottom: "3rem"}}>
-            <h1><span style={{color: "#FFE600"}}>나랑노랑</span>에 오신것을 환영합니다.</h1>
+            <h1><span style={{color: "#FFE600"}}>나랑노랑</span>에 오신것을 환영합니다</h1>
           </div>
           <Form onSubmit={handleSubmit}>
             <Form.Group as={Row} className="mb-3" controlId="member_name">
@@ -144,10 +201,12 @@ function Signup() {
                 <Form.Control
                   type="text"
                   name="member_name"
-                  value={member_name}
+                  value={memberName}
                   placeholder='이름을 입력하세요'
                   onChange={handleMemberName}
                 />
+                {nameConfirm===false
+                  ? <Formtext>이름을 입력하세요</Formtext> : null}
               </Col>
             </Form.Group>
 
@@ -157,13 +216,13 @@ function Signup() {
                 <Form.Control
                   type="text"
                   name="member_id"
-                  value={member_id}
+                  value={memberId}
                   placeholder='아이디를 입력하세요'
                   onChange={handleMemberId}
                 />
                 {idValidation===true
-                    ? <Form.Text className="text-muted">사용 가능한 아이디입니다</Form.Text>
-                    : (idValidation===false ? <Form.Text className="text-muted">사용 불가능한 아이디입니다</Form.Text> : null)}
+                    ? <Form.Text className="text-muted" style={{fontColor: "red", fontFamily: "Pretendard-bold"}}>사용 가능한 아이디입니다</Form.Text>
+                    : (idValidation===false ? <Formtext>사용 불가능한 아이디입니다</Formtext> : null)}
               </Col>
               <Col sm="4">
                 <Button variant="primary" type="button" onClick={idCheckHandler}
@@ -177,12 +236,12 @@ function Signup() {
                 <Form.Control
                   type="password"
                   name="password"
-                  value={password}
+                  value={memberPassword}
                   placeholder='비밀번호를 입력하세요'
                   onChange={handlePassword}
                   />
                 {passwordValidation===false 
-                  ? <Form.Text className="text-muted">영문, 숫자, 특수기호 조합으로 8-20자리 이상 입력해주세요</Form.Text> : null}
+                  ? <Formtext>영문, 숫자, 특수기호 조합으로 8-20자리 이상 입력해주세요</Formtext> : null}
               </Col>
             </Form.Group>
 
@@ -197,7 +256,7 @@ function Signup() {
                   onChange={handleConfirmPassword}
                 />
                 {passwordConfirm===false 
-                  ? <Form.Text className="text-muted">비밀번호를 확인하세요</Form.Text> : null}
+                  ? <Formtext>비밀번호를 확인하세요</Formtext> : null}
                 </Col>
             </Form.Group>
 
@@ -205,12 +264,14 @@ function Signup() {
               <Form.Label column sm="3">이메일</Form.Label>
               <Col sm="9">
                 <Form.Control
-                  type="email"
+                  type="text"
                   name="member_email"
-                  value={member_email}
+                  value={memberEmail}
                   placeholder='이메일을 입력하세요'
                   onChange={handleMemberEmail}
                 />
+                {emailConfirm===false 
+                  ? <Formtext>올바른 형태의 이메일을 입력하세요</Formtext> : null}
               </Col>
             </Form.Group>
 
@@ -220,10 +281,12 @@ function Signup() {
                 <Form.Control
                   type="text"
                   name="member_nickname"
-                  value={member_nickname}
+                  value={memberNickname}
                   placeholder='닉네임을 입력하세요'
                   onChange={handleMemberNickname}
                 />
+                {nicknameConfirm===false
+                  ? <Formtext>닉네임을 입력하세요</Formtext> : null}
               </Col>
             </Form.Group>
             <Button type="submit" style={{ width: "100%", backgroundColor: "#fff9be", color: "#000", borderColor: "#fff9be" }}>회원가입</Button>
@@ -234,6 +297,25 @@ function Signup() {
           </div>
         </SignupForm>
       </TextContent>
+      
+
+      {/* 회원가입 성공 모달 */}
+      <Modal show={signup} onHide={handleSignupClose} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Modal.Body className="modalbody">
+          <div>
+            <div>회원가입이 완료되었습니다</div>
+          </div>
+        </Modal.Body>
+      </Modal>
+
+
+      {/* 회원가입 실패 모달 */}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Body className="modalbody">
+          <div>모든 내용을 입력하세요</div>
+        </Modal.Body>
+      </Modal>
+    
     </Container>
   );
 }

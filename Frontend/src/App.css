@@ -50,3 +50,10 @@
     transform: rotate(360deg);
   }
 }
+
+.modalbody{
+  font-family: "Pretendard-bold";
+  font-size: 1.2rem; 
+  display: flex; 
+  justify-content: flex-start;
+}

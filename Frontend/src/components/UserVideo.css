@@ -11,10 +11,12 @@
 }
 
 #name {
-  background-color: grey;
+  background-color: #535353;
+  opacity:0.8;
   color: white;
   border-radius: 25px;
   padding: 2px 10px;
+  font-family: Pretendard-bold;
 }
 
 .name-tag {

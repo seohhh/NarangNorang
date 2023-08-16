@@ -24,7 +24,7 @@ import styled from "styled-components";
 import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 
-import { Card, Button } from "react-bootstrap";
+import { Card } from "react-bootstrap";
 import { Fade } from "react-awesome-reveal";
 import stopImage from "../assets/contents/stop.png";
 import tryImage from "../assets/contents/try.png";
@@ -71,7 +71,7 @@ const ToolbarComponent = (props) => {
   const [gameKey, setGameKey] = useState("game");
 
   const mySessionId = props.sessionId;
-  const inviteLink = `http://i9c208.p.ssafy.io/waiting/${mySessionId}`;
+  const inviteLink = `https://i9c208.p.ssafy.io/waiting/${mySessionId}`
 
   const guest = props.guest;
 
@@ -226,17 +226,17 @@ const ToolbarComponent = (props) => {
               </span>
             </div>
           </div>
-        </Modal.Body>
-      </Modal>
+      </Modal.Body>
+    </Modal>
 
-      {/* 복사성공 모달 */}
-      <Modal show={copyShow} onHide={handleCopyClose}>
-        <Modal.Body>
-          <p>링크가 복사되었습니다</p>
-        </Modal.Body>
-      </Modal>
+    {/* 복사성공 모달 */}
+    <Modal show={copyShow} onHide={handleCopyClose}>
+      <Modal.Body className='modalbody'>
+        <div>링크가 복사되었습니다</div>
+      </Modal.Body>
+    </Modal>
 
-      <Dialog
+    <Dialog
         fullWidth
         maxWidth={"lg"}
         open={gameSelect}

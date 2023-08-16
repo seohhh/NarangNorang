@@ -64,7 +64,7 @@ public class MemberController {
         return ResponseEntity.ok(memberService.checkMemberIdDuplicate(memberId));
     }
 
-    @PutMapping ("/me/{memberId}")
+    @PutMapping ("/me/update/{memberId}")
     @ApiOperation(value = "회원 본인 정보 수정", notes = "로그인한 회원 본인의 정보를 수정한다.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),
@@ -73,14 +73,14 @@ public class MemberController {
             @ApiResponse(code = 500, message = "서버 오류")
     })
     public ResponseEntity<UpdateMemberResponse> update(@PathVariable("memberId") final String memberId,
-                                                       @RequestBody @Valid final UpdateMemberRequest request) {
+            @RequestBody @Valid final UpdateMemberRequest request) {
 
         UpdateMemberResponse response = memberService.updateMember(memberId, request);
 
         return ResponseEntity.ok(response);
     }
 
-    @DeleteMapping("/me/{memberId}")
+    @DeleteMapping("/me/delete/{memberId}")
     @ApiOperation(value = "회원 본인 정보 삭제", notes = "로그인한 회원 본인의 정보를 응답삭제.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "성공"),

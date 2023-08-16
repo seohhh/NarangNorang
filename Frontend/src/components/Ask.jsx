@@ -36,7 +36,7 @@ function Ask() {
   const [show, setShow] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  const [email, setEmail] = useState("");
+  const [questionEmail, setQuestionEmail] = useState("");
   const [questionContent, setQuestionContent] = useState("");
   const [confirmEmail, setConfirmEmail] = useState("");
   const [confirmContent, setConfirmContent] = useState("");
@@ -52,11 +52,10 @@ function Ask() {
   const handleSuccessShow = () => setSuccess(true);
 
   const handleEmail = (e) => {
-    setEmail(e.target.value);
-    var regExp =
-      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
-    if (regExp.test(email)) {
-      setConfirmEmail(true);
+    setQuestionEmail(e.target.value);
+    var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    if (regExp.test(questionEmail)) {
+      setConfirmEmail(true)
     } else {
       setConfirmEmail(false);
     }
@@ -74,21 +73,23 @@ function Ask() {
 
   const submitAsk = (event) => {
     event.preventDefault();
+    if (!questionContent) {
+      setConfirmContent(false)
+    }
 
     if (confirmEmail && confirmContent) {
-      axios
-        .post("/question", { email, questionContent })
-        .then((res) => {
-          console.log(res);
-          handleClose();
-          handleSuccessShow();
-          setTimeout(() => {
-            handleSuccessClose();
-          }, 500);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
+      axios.post('/question', { questionContent, questionEmail })
+      .then((res) => {
+        console.log(res)
+        handleClose()
+        handleSuccessShow();
+        setTimeout(() => {
+          handleSuccessClose()
+        }, 500);
+      })
+      .catch((err) => {
+        console.log(err)
+      })
     }
   };
 
