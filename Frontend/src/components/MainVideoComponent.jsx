@@ -45,7 +45,7 @@ const MainVideoComponent = (props) => {
     // 스켈레톤 표시 버튼 클릭 핸들러
     const handleSkeletonClick = async () => {
       if (showCanvas) {
-        if (detectorRef.current) {
+        if (detectorRef.current && webcamRef.current !== null) {
           // 감지기가 이미 로드되어 있을 경우
           canvasRef.current.width = videoDimensions.width; // 캔버스 너비를 비디오 너비로 설정
           canvasRef.current.height = videoDimensions.height; // 캔버스 높이를 비디오 높이로 설정

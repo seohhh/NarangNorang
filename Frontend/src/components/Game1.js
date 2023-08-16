@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import styled from "styled-components";
+import axios from "axios";
 
 import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 import Gorilla from "../assets/game/Gorilla.mp4";
@@ -10,11 +11,13 @@ import Eagle from "../assets/game/Eagle.mp4";
 import Frog from "../assets/game/Frog.mp4";
 import Cat from "../assets/game/Cat.mp4";
 import Tiger from "../assets/game/Tiger.mp4";
+import Wow1 from "../assets/game/Wow1.mp4";
+import Wow2 from "../assets/game/Wow2.mp4";
 
 import html2canvas from "html2canvas";
 
 import { useSelector, useDispatch } from "react-redux";
-import { handleCapture, handleGetScore, setNowScore, setTotalScore } from "../slice/gameSlice";
+import { handleCapture, handleGetScore, setNowScore, setTotalScore, switchGameEnded, switchGameStart } from "../slice/gameSlice";
 
 // 나랑노랑 인트로
 const IntroMp4 = styled.video`
@@ -36,9 +39,11 @@ const GameVideo = styled.video`
   height: 100%;
 `;
 
+axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 
 function Game1(props) {
   const { session } = props;
+  console.log(props.streamManager, "여기 프롭!!");
   const webcamRef = useSelector((state) => state.game.webcamRef)
   console.log(webcamRef, "useSelector로 game1에서 받은 값")
 
@@ -49,7 +54,10 @@ function Game1(props) {
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
 
-  const videos = [Gorilla, Elephant, Eagle, Frog, Cat, Tiger];
+  const scoreRlt = useSelector((state) => state.game.scoreRlt);
+  console.log(scoreRlt, '스코어 결과');
+
+  const videos = [Wow1, Gorilla, Wow2, Elephant, Wow1, Eagle, Wow2, Frog, Wow1, Cat, Wow2, Tiger];
 
 
   const gameRef = useRef(null); // 게임 비디오 참조
@@ -59,7 +67,7 @@ function Game1(props) {
 
 
   const roomCode = props.streamManager.stream.session.sessionId;
-  const subscriberId = props.streamManager.stream.connection.connectionId;
+  const participantId = props.streamManager.stream.connection.connectionId;
   // let scoreSum = 0;
   const [scoreSum, setScoreSum] = useState(0);
 
@@ -67,12 +75,12 @@ function Game1(props) {
 
   const capture = async () => {
     if (webcamRef) {
+      console.log("videoRef.current:",webcamRef )
       try {
         const canvas = await html2canvas(webcamRef, { scale: 2 });
-        
         console.log("캡쳐 시작");
         dispatch(
-          handleCapture(webcamRef, canvas, roomCode, subscriberId)
+          handleCapture(webcamRef, canvas, roomCode, participantId)
         );
         console.log("캡쳐 성공");
       } catch (error) {
@@ -153,13 +161,14 @@ function Game1(props) {
   useEffect(() => {
     const interval = setInterval(() => {
       if (gameRef.current) {
-        getScore(currentVideoIndex).then(score => {
+        getScore().then((score) => {
+          console.log(score, "1초마다 점수");
+          dispatch(setNowScore(score));
+          dispatch(setTotalScore(score));
           setScoreSum(prevScore => prevScore + score);
-          // dispatch(setNowScore(score));
-          // console.log(score, "이게 내 점수");
         });
       }
-    }, 1000); // 1초마다 호출
+    }, 2000); // 2초마다 호출
   
     return () => {
       clearInterval(interval); // 컴포넌트가 언마운트되면 interval을 정리
@@ -174,13 +183,29 @@ function Game1(props) {
       console.log(score);
       dispatch(setNowScore(score));
       dispatch(setTotalScore(score));
-      setTimeout(() => {
-        setCurrentVideoIndex(currentVideoIndex + 1);
-      }, 2000);
+      setCurrentVideoIndex(currentVideoIndex + 1);
+      // setTimeout(() => {
+      // }, 2000);
     } else {
       setGameVideoStart(false); // 게임 비디오 재생을 종료
-      // 여기에서 랭크로 넘어가기!!
+      // 여기에서 방 점수 넘기고, 게임 종료 상태 만들기
+
+      setTimeout(() => {
+        dispatch(switchGameStart());
+      }, 1000)
+
       
+
+      await axios({
+        method: "PUT",
+        url: "/participant/update",
+        data: {participantId, roomCode, "score": scoreSum}
+      }).then((res) => {
+        console.log(res);
+        dispatch(switchGameEnded());
+      }).catch((err) => {
+        console.log(err);
+      })
     }
   };
 
@@ -188,23 +213,6 @@ function Game1(props) {
     setIntroOpen(false);
     setGameVideoStart(true);
   };
-
-  // const handleVideoEnded = async () => {
-  //   if (currentVideoIndex < videos.length - 1) {
-  //     await capture();
-  //     const score = await getScore(currentVideoIndex);
-  //     setScoreSum(prevScore => prevScore + score); // 점수를 더해 상태 업데이트
-  //     console.log("handleVideoEnded", scoreSum, score);
-  //     setTimeout(() => {
-  //       setCurrentVideoIndex(currentVideoIndex + 1);
-  //     }, 3000);
-  //   }
-  //   else{
-  //     setGameVideoStart(false); // 게임 비디오 재생을 종료
-  //     // 여기에서 랭크로 넘어가기!!
-  //   }
-  // };
-
 
 
   return (

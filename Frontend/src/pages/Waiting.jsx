@@ -50,6 +50,7 @@ function Waiting() {
   const [nickname, setNickname] = useState("");
   const dispatch = useDispatch();
   const navigate = useNavigate ();
+  const [roomAlert, setRoomAlert] = useState(false)
 
   const userNickname = useSelector((state) => state.login.userNickname);
 
@@ -84,12 +85,22 @@ function Waiting() {
     .then((res) => {
       if (res.data.roomStatus === "WAIT" && res.data.participantCount < 6) {
         navigate(`/room?sessionId=${sessionId}&nickname=${nickname}`);
+      } else {
+        setRoomAlert(true)
+        handleClose()
+        setTimeout(() => {
+          handleRoomAlertClose()
+        }, 800)
       }
       console.log(res)
     })
     .catch((err) =>  {
       console.log(err)
     })
+  }
+
+  const handleRoomAlertClose = () => {
+    setRoomAlert(false)
   }
   
 
@@ -170,6 +181,14 @@ function Waiting() {
             참여하기
           </Button>
         </Modal.Footer>
+      </Modal>
+
+      <Modal show={roomAlert} onHide={handleRoomAlertClose} style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Modal.Body className="modalbody">
+          <div>
+            <div>인원이 다 찼거나, 게임중인 방은 들어갈 수 없습니다.</div>
+          </div>
+        </Modal.Body>
       </Modal>
     </>
   )

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
-import { switchShowCanvas, switchGameStart, setStretchingId } from "../slice/gameSlice";
+import { switchShowCanvas, switchGameStart, switchGameStuatus, setStretchingId } from "../slice/gameSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import { handleCapture } from "../slice/gameSlice";
@@ -63,6 +63,7 @@ const ToolbarComponent = (props) => {
 
   const gameStatusChanged = () => {
     dispatch(switchGameStart());
+    dispatch(switchGameStuatus(props.sessionId))
     SetGameSelect(false);
   };
 
@@ -114,7 +115,6 @@ const ToolbarComponent = (props) => {
     }
   };
 
-
   return (
     <div className="toolbar-container">
       <div className="iconGroup">
@@ -134,7 +134,6 @@ const ToolbarComponent = (props) => {
             />
           </div>
         </OverlayTrigger>
-
         <OverlayTrigger
           placement="top"
           overlay={
@@ -151,7 +150,6 @@ const ToolbarComponent = (props) => {
             />
           </div>
         </OverlayTrigger>
-
         <OverlayTrigger
           placement="top"
           overlay={<Tooltip id="tooltip-invite">초대링크</Tooltip>}
@@ -201,7 +199,6 @@ const ToolbarComponent = (props) => {
         </OverlayTrigger>
       </div>
 
-
       {/* 초대링크 모달 */}
       <Modal
         show={show}
@@ -240,7 +237,7 @@ const ToolbarComponent = (props) => {
         <div>링크가 복사되었습니다</div>
       </Modal.Body>
     </Modal>
-    
+
     <Dialog
         fullWidth
         maxWidth={"lg"}

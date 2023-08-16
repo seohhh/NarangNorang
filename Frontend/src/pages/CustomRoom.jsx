@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { switchRenderBool, setStretchingId } from '../slice/gameSlice';
+import { switchGameEnded, switchGameStuatus, switchRenderBool } from '../slice/gameSlice';
 
 // component
 import UserVideoComponent from "../components/UserVideoComponent";
@@ -76,7 +76,10 @@ function CustomRoom(props) {
   const [stretchingStart, setStretchingStart] = useState(false);
   const [connectionId, setConnectionId] = useState("")
   const dispatch = useDispatch()
-  
+
+  const [first, setFirst] = useState(null);
+  const [second, setSecond] = useState(null);
+  const [third, setThird] = useState(null);
 
   // const myUserNameFromUrl = urlParams.get("nickname");
 
@@ -84,10 +87,15 @@ function CustomRoom(props) {
   const hostSeq = useSelector((state) => state.login.userSeq)
 
   const checkStatus = useSelector((state) => state.game.gameStart);
+  // const scoreRlt = useSelector((state) => state.game.scoreRlt);
+  const gameEnded = useSelector((state) => state.game.gameEnded);
+
   const [gameStatus, setGameStatus] = useState(false)
+  const [scoreRlt, setScoreRlt] = useState([])
 
   const checkVideoId = useSelector((state) => state.game.videoId)
-  const [stretchingStatus, setStretchingStatus] = useState(false)
+  // const [stretchingStatus, setStretchingStatus] = useState(false)
+  const [videoId, setVideoId] = useState(null)
 
 
   useEffect(() => {
@@ -117,12 +125,96 @@ function CustomRoom(props) {
       })
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [checkStatus])
+  }, [checkStatus]);
+
+  useEffect(() => {
+    if (scoreRlt && session && sessionId) {
+
+      const Ranker = []
+      console.log(scoreRlt, "스코어rlt");
+      console.log(session);
+
+
+
+      scoreRlt.forEach((connectionId) => {
+        session.streamManagers.forEach((streamManager) => {
+          if (streamManager.stream && streamManager.stream.session && streamManager.stream.session.connection && streamManager.stream.session.connection.connectionId === connectionId) {
+            Ranker.push(streamManager);
+          }
+        })
+      })
+      console.log(Ranker, "여기 랭커!!");
+      if (Ranker.length === 1) {
+        setFirst(Ranker[0]);
+      } else if (Ranker.length === 2 ) {
+        setFirst(Ranker[0]);
+        setSecond(Ranker[1]);
+      } else if (Ranker.length === 3) {
+        setFirst(Ranker[0]);
+        setSecond(Ranker[1]);
+        setThird(Ranker[2]);
+      }
+
+      setRank(true);
+
+      setTimeout(() => {
+        closeRankModal();
+      }, 16800);
+
+      console.log("게임 끝!!!@!@!!@!@@121!@!@!@!@$!#@%#$^%!@#$%&*")
+      dispatch(switchGameEnded())
+      dispatch(switchGameStuatus(sessionId))
+
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [scoreRlt])
+
+  useEffect(() => {
+    if (gameEnded && session) {
+      axios({
+        method: 'GET',
+        url: `/participant/room/${session.sessionId}`
+      }).then((res) => {
+        setScoreRlt(res.data);
+      }).catch((err) => {
+        console.log(err);
+      })
+
+      console.log(scoreRlt, "점수데이터!!!!!!")
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gameEnded])
+
+  // useEffect(() => {
+  //   if (scoreRlt && session) {
+  //     const Ranker = []
+  //     console.log(scoreRlt, "스코어rlt");
+  //     console.log(session);
+  //     scoreRlt.map((connectionId) => {
+  //       session.streamManagers.map((streamManager) => {
+  //         if (streamManager.stream && streamManager.stream.session && streamManager.stream.session.connection && streamManager.stream.session.connection.connectionId === connectionId) {
+  //           Ranker.push(streamManager);
+  //         }
+  //       })
+  //     })
+  //     console.log(Ranker, "여기 랭커!!");
+  //     if (Ranker.length === 1) {
+  //       setFirst(Ranker[0]);
+  //     } else if (Ranker.length === 2 ) {
+  //       setFirst(Ranker[0]);
+  //       setSecond(Ranker[1]);
+  //     } else if (Ranker.length === 3) {
+  //       setFirst(Ranker[0]);
+  //       setSecond(Ranker[1]);
+  //       setThird(Ranker[2]);
+  //     }
+  //   }
+  // }, [scoreRlt])
 
   useEffect(() => {
     if (session && checkVideoId!==null) {
       session.signal({
-        data: stretchingStatus,
+        data: checkVideoId.toString(),
         to: [],
         type: "stretchingStatus"
       })
@@ -131,7 +223,7 @@ function CustomRoom(props) {
   }, [checkVideoId])
 
 
-  const onbeforeunload = (event) => {   
+  const onbeforeunload = (event) => {
     leaveSession();
   };
 
@@ -140,6 +232,7 @@ function CustomRoom(props) {
 
     const mySession = OV.initSession();
     setSession(mySession);
+    console.log(session);
 
     mySession.on("streamCreated", (event) => {
       
@@ -174,6 +267,33 @@ function CustomRoom(props) {
       }, 16800);
     });
 
+    mySession.on("signal:rankRegist", (event) => {
+      const Ranker = []
+      console.log(scoreRlt, "스코어rlt");
+      console.log(session);
+
+
+
+      scoreRlt.forEach((connectionId) => {
+        session.streamManagers.forEach((streamManager) => {
+          if (streamManager.stream && streamManager.stream.session && streamManager.stream.session.connection && streamManager.stream.session.connection.connectionId === connectionId) {
+            Ranker.push(streamManager);
+          }
+        })
+      })
+      console.log(Ranker, "여기 랭커!!");
+      if (Ranker.length === 1) {
+        setFirst(Ranker[0]);
+      } else if (Ranker.length === 2 ) {
+        setFirst(Ranker[0]);
+        setSecond(Ranker[1]);
+      } else if (Ranker.length === 3) {
+        setFirst(Ranker[0]);
+        setSecond(Ranker[1]);
+        setThird(Ranker[2]);
+      }
+    })
+
     mySession.on("signal:rank", (event) => {
       setRank(true);
 
@@ -195,9 +315,16 @@ function CustomRoom(props) {
     })
 
     mySession.on("signal:stretchingStatus", (event) => {
-      setStretchingStart(true)
+      if (event.data) {
+        setVideoId(event.data)
+        setStretchingStart(true)
+      }
     })
-  
+
+    mySession.on("signal:rankData", (event) => {
+      setScoreRlt(scoreRlt)
+    })
+
 
     if (nicknameFromUrl === null) {
       setMyUserName(hostNickname);
@@ -211,6 +338,8 @@ function CustomRoom(props) {
       } else {
         await mySession.connect(token, { clientData: myUserName });
       }
+
+      console.log(mySession, "여기");
 
       setConnectionId(mySession.connection.connectionId)
 
@@ -316,8 +445,6 @@ function CustomRoom(props) {
   const leaveSession = async () => {
     const mySession = session;
 
-    console.log(publisher);
-    console.log(mySession);
     console.log("participantId : " + connectionId)
     console.log("roomCode : " + sessionId)
     axios.post(APPLICATION_SERVER_URL + "api/v1/participant/delete", {
@@ -375,7 +502,7 @@ function CustomRoom(props) {
     })
   };
 
-  const deleteSubscriber = async(streamManager) => {
+  const deleteSubscriber = (streamManager) => {
     // let removedSubscribers = subscribers;
     // let index = removedSubscribers.indexOf(streamManager, 0);
     // if (index > -1) {
@@ -394,13 +521,6 @@ function CustomRoom(props) {
         console.log("방인원 삭제")
       }
     })
-
-    console.log("나간 사람")
-    console.log(streamManager)
-
-    console.log("streamManager.connection.connectionId : "  + streamManager.stream.connection.connectionId)
-
-    
 
     setSubscribers((prevSubscribers) =>
       prevSubscribers.filter((sub) => sub !== streamManager)
@@ -426,6 +546,7 @@ function CustomRoom(props) {
   };
 
   const displayRank = () => {
+    setFirst(publisher)
     session
       .signal({
         data: "순위 버튼",
@@ -456,6 +577,7 @@ function CustomRoom(props) {
         open={gameStart}
         onClose={() => closeIntroModal()}
         aria-labelledby="form-dialog-title"
+        disableBackdropClick
       >
         <ContentDialog>
           <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
@@ -470,7 +592,7 @@ function CustomRoom(props) {
         aria-labelledby="form-dialog-title"
       >
         <ContentDialog>
-          <Stretching videoId={checkVideoId}></Stretching>
+          <Stretching videoId={videoId}></Stretching>
         </ContentDialog>
       </Dialog>
 
@@ -482,7 +604,7 @@ function CustomRoom(props) {
         aria-labelledby="form-dialog-title"
       >
         <ContentDialog>
-          <Rank first={mainStreamManager} second={null} third={null} />
+          <Rank first={first} second={second} third={third} />
         </ContentDialog>
       </Dialog>
 
@@ -607,13 +729,12 @@ function CustomRoom(props) {
       ) : (
         // 방에 모여있을 때
         <div
-          className="videoContainer"
           style={{
             display: "flex",
             flexFlow: "row wrap",
-            flexDirection: "row",
             justifyContent: "space-evenly",
             alignItems: "center" }}
+          className="row"
         >
           {mainStreamManager !== undefined && join === true ? (
             <div style={{padding:"0px"}} id="main-video" className="col-5">
@@ -637,7 +758,7 @@ function CustomRoom(props) {
           </div>
         </div>
       )}
-    {/* 
+{/* 
       {sessionIdFromUrl === null && join === true ?
         <Game1 streamManager={publisher} /> : null} */}
       {sessionIdFromUrl === null || join === true ? (
@@ -660,6 +781,8 @@ function CustomRoom(props) {
               publisher={publisher}
             />
           </div>
+          <button onClick={displayEvery}>버튼</button>
+          <button onClick={displayRank}>랭크컴포넌트</button>
         </div>
       ) : null}
     </div>

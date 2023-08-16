@@ -104,6 +104,10 @@ const renderResult = async () => {
   let poses = null;
   let color = "White";
 
+  if (video === null) {
+    return;
+  }
+  
   if (detector != null) {
     poses = await detector.estimatePoses(video, estimationConfig);
   }
@@ -175,6 +179,10 @@ const getScore = async (gameRef, webcamRef) => {
   const wpose = await detectPose(webcamRef);
   console.log("gpose", gpose);
   console.log("wpose", wpose);
+
+  if (gpose.length === 0) {
+    return 0;
+  }
 
   let total = 0;
   let count = 0;
