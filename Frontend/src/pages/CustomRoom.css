@@ -1,8 +1,14 @@
-#wrapper {
+.wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   height: 100vh;
+}
+
+#videoContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 #container {
@@ -29,6 +35,8 @@
 }
 
 .button {
+  width: 140px;
+  font-size: 20px;
   background-color: #F7DB42;
   border-radius: 8px;
   color: white;

@@ -8,6 +8,7 @@ const gameSlice = createSlice({
     name: 'game',
     initialState : {
       showCanvas: false,
+      videoId: null,
       gameStart: false,
       webcamRef: null,
       renderBool: false,
@@ -89,7 +90,6 @@ export const handleWebcamRef = (webcamRef) => async (dispatch) => {
     console.log(error, "webcamRef 에러")
   }
 } 
-
 
 export const render = (dispatch) => {
   dispatch(switchRenderBool())
