@@ -8,6 +8,7 @@ const gameSlice = createSlice({
     name: 'game',
     initialState : {
       showCanvas: false,
+      videoId: null,
       gameStart: false,
       webcamRef: null,
       renderBool: false
@@ -24,6 +25,10 @@ const gameSlice = createSlice({
       },
       setWebcamRef(state, actions) {
         state.webcamRef = actions.payload
+      },
+      setStretchingId(state, actions) {
+        state.videoId = actions.payload
+        console.log(state.videoId, "게임슬라이스 비디오아이디 확인!!!!!!!!!!!")
       },
     },
   });
@@ -80,10 +85,9 @@ export const handleWebcamRef = (webcamRef) => async (dispatch) => {
   }
 } 
 
-
 export const render = (dispatch) => {
   dispatch(switchRenderBool())
 }
 
-export const { switchShowCanvas, switchGameStart, setWebcamRef, switchRenderBool, setGameRef } = gameSlice.actions;
+export const { switchShowCanvas, switchGameStart, setWebcamRef, switchRenderBool, setGameRef, setStretchingId } = gameSlice.actions;
 export default gameSlice.reducer;

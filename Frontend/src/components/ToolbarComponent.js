@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
-import { switchShowCanvas, switchGameStart } from "../slice/gameSlice";
+import { switchShowCanvas, switchGameStart, setStretchingId } from "../slice/gameSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
+import { handleCapture } from "../slice/gameSlice";
+import html2canvas from "html2canvas";
 import "./Toolbar.css";
+import GameTab from "./GameTab";
 
-// icone
+// icon
 import inviteIcon from "../assets/icon/invite.png";
 import leaveIcon from "../assets/icon/leave.png";
 import xrayIcon from "../assets/icon/xray.png";
@@ -15,42 +18,19 @@ import videoOffIcon from "../assets/icon/videoOff.png";
 import audioOnIcon from "../assets/icon/audioOn.png";
 import audioOffIcon from "../assets/icon/audioOff.png";
 import noXrayIcon from "../assets/icon/noXray.png";
-import gamestartIcon from "../assets/icon/gamestart.png";
+import cameraIcon from "../assets/icon/camera.png";
 
 import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@mui/material/DialogContent";
-import styled from "styled-components";
 
-import Tab from "react-bootstrap/Tab";
-import Tabs from "react-bootstrap/Tabs";
-
-import { Card } from "react-bootstrap";
-import { Fade } from "react-awesome-reveal";
-import stopImage from "../assets/contents/stop.png";
-import tryImage from "../assets/contents/try.png";
-
-const MyDiv = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-`;
-
-const MyCard = styled.div`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-`;
-
-const ContentDialog = styled(DialogContent)`
-  height: 750px;
-`;
 
 const ToolbarComponent = (props) => {
   const [audioOn, setAudioOn] = useState(props.audioOn);
   const [videoOn, setVideoOn] = useState(props.videoOn);
   const dispatch = useDispatch();
 
+  const webcamRef = useSelector((state) => state.game.webcamRef)
   const showCanvas = useSelector((state) => state.game.showCanvas);
+
 
   // 초대링크 모달
   const [show, setShow] = useState(false);
@@ -66,14 +46,10 @@ const ToolbarComponent = (props) => {
   const [gameSelect, SetGameSelect] = useState(false);
   const handleGameSelect = () => {
     SetGameSelect(!gameSelect);
-    setGameKey("game");
   };
-  const [gameKey, setGameKey] = useState("game");
 
   const mySessionId = props.sessionId;
   const inviteLink = `https://i9c208.p.ssafy.io/waiting/${mySessionId}`
-
-  const guest = props.guest;
 
   const micStatusChanged = () => {
     props.micStatusChanged();
@@ -90,6 +66,11 @@ const ToolbarComponent = (props) => {
     SetGameSelect(false);
   };
 
+  const setStretchingStatus = (videoId) => {
+    dispatch(setStretchingId(videoId))
+    SetGameSelect(false);
+  }
+
   // const toggleFullscreen = () => {
   //     setState({ fullscreen: !this.state.fullscreen });
   //     props.toggleFullscreen();
@@ -98,6 +79,22 @@ const ToolbarComponent = (props) => {
   const leaveSession = () => {
     props.leaveSession();
   };
+
+  const handleCamera = async() => {
+    if (webcamRef) {
+      try {
+        const canvas = await html2canvas(webcamRef, { scale: 2 });
+        const roomCode = props.sessionId;
+        const subscriberId = props.publisher.stream.connection.connectionId;
+
+        dispatch(
+          handleCapture(webcamRef, canvas, roomCode, subscriberId)
+        );
+      } catch (error) {
+        console.error("캡쳐 실패", error);
+      }
+    }
+  }
 
   const clickShowCanvas = () => {
     dispatch(switchShowCanvas());
@@ -116,6 +113,7 @@ const ToolbarComponent = (props) => {
       console.log(error);
     }
   };
+
 
   return (
     <div className="toolbar-container">
@@ -136,6 +134,7 @@ const ToolbarComponent = (props) => {
             />
           </div>
         </OverlayTrigger>
+
         <OverlayTrigger
           placement="top"
           overlay={
@@ -152,6 +151,7 @@ const ToolbarComponent = (props) => {
             />
           </div>
         </OverlayTrigger>
+
         <OverlayTrigger
           placement="top"
           overlay={<Tooltip id="tooltip-invite">초대링크</Tooltip>}
@@ -160,6 +160,20 @@ const ToolbarComponent = (props) => {
             <img src={inviteIcon} alt="invite" className="icon" />
           </div>
         </OverlayTrigger>
+
+        <div onClick={handleGameSelect} id="gameStartBtn">
+          <div>게임시작</div>
+        </div>
+
+        <OverlayTrigger
+          placement="top"
+          overlay={<Tooltip id="tooltip-camera">사진찍기</Tooltip>}
+        >
+          <div onClick={handleCamera}>
+            <img src={cameraIcon} alt="camera" className="icon" />
+          </div>
+        </OverlayTrigger>
+
         <OverlayTrigger
           placement="top"
           overlay={
@@ -176,17 +190,7 @@ const ToolbarComponent = (props) => {
             />
           </div>
         </OverlayTrigger>
-        {/* 방장인 경우 게임스타트 버튼 */}
-        {!guest && (
-          <OverlayTrigger
-            placement="top"
-            overlay={<Tooltip id="tooltip-gamestart">게임시작</Tooltip>}
-          >
-            <div onClick={handleGameSelect}>
-              <img src={gamestartIcon} alt="gamestart" className="icon" />
-            </div>
-          </OverlayTrigger>
-        )}
+
         <OverlayTrigger
           placement="top"
           overlay={<Tooltip id="tooltip-leave">방나가기</Tooltip>}
@@ -196,6 +200,7 @@ const ToolbarComponent = (props) => {
           </div>
         </OverlayTrigger>
       </div>
+
 
       {/* 초대링크 모달 */}
       <Modal
@@ -235,113 +240,18 @@ const ToolbarComponent = (props) => {
         <div>링크가 복사되었습니다</div>
       </Modal.Body>
     </Modal>
-
+    
     <Dialog
         fullWidth
         maxWidth={"lg"}
         open={gameSelect}
         onClose={() => handleGameSelect()}
         aria-labelledby="form-dialog-title"
+        style={{fontFamily: "Happiness-Sans-Bold"}}
       >
-        <ContentDialog>
-          <Tabs
-            id="controlled-tab-example"
-            activeKey={gameKey}
-            onSelect={(k) => setGameKey(k)}
-            className="mb-3"
-          >
-            <Tab eventKey="game" title="Game">
-              <div>날따라해봐요 썸네일</div>
+      <GameTab gameStatusChanged={gameStatusChanged} setStretchingStatus={setStretchingStatus}/>
+    </Dialog>
 
-              <MyDiv>
-                <Fade cascade damping={0.2}>
-                  <MyCard>
-                    <div>
-                      <Card
-                        style={{
-                          width: "24rem",
-                          height: "30rem",
-                          margin: "3rem",
-                        }}
-                      >
-                        <Card.Img variant="top" src={tryImage} />
-                        <Card.Body>
-                          <Card.Title style={{ margin: "1rem" }}>
-                            날 따라해봐요
-                          </Card.Title>
-                          <Card.Text style={{ margin: "1rem" }}>
-                            술래의 자세를 따라해보세요. 잘 따라 한다면 좋은
-                            결과를 받을 수 있을 거에요.
-                          </Card.Text>
-
-                          <div
-                            className="btn btn-warning"
-                            style={{ position: "absolute" }}
-                            onClick={gameStatusChanged}
-                          >
-                            동물따라해봐요 시작!
-                          </div>
-                        </Card.Body>
-                      </Card>
-                    </div>
-                    <div>
-                      <Card
-                        style={{
-                          width: "24rem",
-                          height: "30rem",
-                          margin: "3rem",
-                        }}
-                      >
-                        <Card.Img variant="top" src={stopImage} />
-                        <Card.Body>
-                          <Card.Title style={{ margin: "1rem" }}>
-                            그대로 멈춰라
-                          </Card.Title>
-                          <Card.Text style={{ margin: "1rem" }}>
-                            노래에 맞춰 멈춰라!! 노래가 다시 시작되기 전까지
-                            움직이지 않는다면 좋은 결과를 받을 수 있을 거에요.
-                          </Card.Text>
-
-                          <div
-                            className="btn btn-warning"
-                            style={{ position: "absolute" }}
-                            onClick={gameStatusChanged}
-                          >
-                            대왕모기 잡자 시작!
-                          </div>
-                        </Card.Body>
-                      </Card>
-                    </div>
-                  </MyCard>
-                </Fade>
-              </MyDiv>
-            </Tab>
-            <Tab eventKey="stretching" title="Stretching">
-              <p>다함께 따라해봐요 어린이 체조!</p>
-              <div className="d-flex">
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/etlOSulXA_8"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
-                <iframe
-                  width="560"
-                  height="315"
-                  src="https://www.youtube.com/embed/sYvmTUNGqPs"
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowfullscreen
-                ></iframe>
-              </div>
-            </Tab>
-          </Tabs>
-        </ContentDialog>
-      </Dialog>
     </div>
   );
 };

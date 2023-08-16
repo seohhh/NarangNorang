@@ -24,3 +24,16 @@
   display: flex;
   justify-content: space-between;
 }
+
+#gameStartBtn {
+  font-family: "GmarketSansMedium";
+  font-size: 20px;
+  background-color: #F7DB42;
+  border-radius: 20px;
+  width: 140px;
+  height: 45px;
+  margin: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

@@ -4,12 +4,13 @@ import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { switchRenderBool } from '../slice/gameSlice';
+import { switchRenderBool, setStretchingId } from '../slice/gameSlice';
 
 // component
 import UserVideoComponent from "../components/UserVideoComponent";
 import MainVideoComponent from "../components/MainVideoComponent";
 import ToolbarComponent from "../components/ToolbarComponent";
+import Stretching from "../components/Stretching";
 import Game1 from "../components/Game1";
 import "./CustomRoom.css";
 import Rank from "../components/Rank";
@@ -72,6 +73,7 @@ function CustomRoom(props) {
   const [join, setJoin] = useState(false);
   const [gameStart, setGameStart] = useState(false);
   const [rank, setRank] = useState(false);
+  const [stretchingStart, setStretchingStart] = useState(false);
   const [connectionId, setConnectionId] = useState("")
   const dispatch = useDispatch()
   
@@ -80,8 +82,13 @@ function CustomRoom(props) {
 
   const hostNickname = useSelector((state) => state.login.userNickname);
   const hostSeq = useSelector((state) => state.login.userSeq)
+
   const checkStatus = useSelector((state) => state.game.gameStart);
   const [gameStatus, setGameStatus] = useState(false)
+
+  const checkVideoId = useSelector((state) => state.game.videoId)
+  const [stretchingStatus, setStretchingStatus] = useState(false)
+
 
   useEffect(() => {
     window.addEventListener("beforeunload", onbeforeunload);
@@ -111,6 +118,17 @@ function CustomRoom(props) {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [checkStatus])
+
+  useEffect(() => {
+    if (session && checkVideoId!==null) {
+      session.signal({
+        data: stretchingStatus,
+        to: [],
+        type: "stretchingStatus"
+      })
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [checkVideoId])
 
 
   const onbeforeunload = (event) => {   
@@ -174,7 +192,10 @@ function CustomRoom(props) {
       } else  {
         setGameStatus(false)
       }
-      
+    })
+
+    mySession.on("signal:stretchingStatus", (event) => {
+      setStretchingStart(true)
     })
   
 
@@ -423,8 +444,12 @@ function CustomRoom(props) {
     setRank(false);
   };
 
+  const closeStretcingModal = () => {
+    setStretchingStart(false);
+  };
+
   return (
-    <div className="CustomRoomRoot" style={{ backgroundColor: "#F1F0F0" }}>
+    <div style={{ backgroundColor: "#F1F0F0", overflow: "hidden", height: "100vh" }}>
       <Dialog
         fullWidth
         maxWidth={"lg"}
@@ -434,6 +459,18 @@ function CustomRoom(props) {
       >
         <ContentDialog>
           <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
+        </ContentDialog>
+      </Dialog>
+
+      <Dialog
+        fullWidth
+        maxWidth={"lg"}
+        open={stretchingStart}
+        onClose={() => closeStretcingModal()}
+        aria-labelledby="form-dialog-title"
+      >
+        <ContentDialog>
+          <Stretching videoId={checkVideoId}></Stretching>
         </ContentDialog>
       </Dialog>
 
@@ -451,9 +488,9 @@ function CustomRoom(props) {
 
       {/* 초대링크로 접속한 경우: 입장 대기실 */}
       {sessionIdFromUrl != null && join === false ? (
-        <div id="wrapper">
+        <div className="wrapper">
           <div id="container">
-            <h3 style={{ marginBottom: "20px" }}> 입장 대기실 </h3>
+            <h2 style={{ marginBottom: "20px" }}> 입장 대기실 </h2>
             <div id="content">
               <div style={{ width: "35rem", position: "relative" }}>
                 {/* 입장 대기실 화면 크기 props.guest 여부로 확인 */}
@@ -463,21 +500,21 @@ function CustomRoom(props) {
                 />
                 <div id="buttongroup">
                   {!videoOn ? (
-                    <div style={{ margin: "5px" }} onClick={camStatusChanged}>
-                      <img src={videoOnIcon} alt="videoOn" />
+                    <div onClick={camStatusChanged}>
+                      <img src={videoOnIcon} alt="videoOn" style={{ margin: "8px", width: "53px" }}/>
                     </div>
                   ) : (
-                    <div style={{ margin: "5px" }} onClick={camStatusChanged}>
-                      <img src={videoOffIcon} alt="videoOff" />
+                    <div onClick={camStatusChanged}>
+                      <img src={videoOffIcon} alt="videoOff" style={{ margin: "8px", width: "53px" }}/>
                     </div>
                   )}
                   {!audioOn ? (
-                    <div style={{ margin: "5px" }} onClick={micStatusChanged}>
-                      <img src={audioOnIcon} alt="audioOn" />
+                    <div onClick={micStatusChanged}>
+                      <img src={audioOnIcon} alt="audioOn" style={{ margin: "8px", width: "53px" }}/>
                     </div>
                   ) : (
-                    <div style={{ margin: "5px" }} onClick={micStatusChanged}>
-                      <img src={audioOffIcon} alt="audioOff" />
+                    <div onClick={micStatusChanged}>
+                      <img src={audioOffIcon} alt="audioOff" style={{ margin: "8px", width: "53px" }}/>
                     </div>
                   )}
                 </div>
@@ -485,7 +522,7 @@ function CustomRoom(props) {
               <div style={{ width: "40vw" }} className="center">
                 <div className="center">
                   <p style={{ fontSize: "30px" }}>참여할 준비가 되셨나요?</p>
-                  <div id="button">
+                  <div>
                     <input
                       type="button"
                       className="button"
@@ -570,12 +607,13 @@ function CustomRoom(props) {
       ) : (
         // 방에 모여있을 때
         <div
+          className="videoContainer"
           style={{
             display: "flex",
             flexFlow: "row wrap",
+            flexDirection: "row",
             justifyContent: "space-evenly",
             alignItems: "center" }}
-          className="row"
         >
           {mainStreamManager !== undefined && join === true ? (
             <div style={{padding:"0px"}} id="main-video" className="col-5">
@@ -599,7 +637,7 @@ function CustomRoom(props) {
           </div>
         </div>
       )}
-{/* 
+    {/* 
       {sessionIdFromUrl === null && join === true ?
         <Game1 streamManager={publisher} /> : null} */}
       {sessionIdFromUrl === null || join === true ? (
@@ -620,11 +658,8 @@ function CustomRoom(props) {
               micStatusChanged={micStatusChanged}
               leaveSession={leaveSession}
               publisher={publisher}
-              guest={sessionIdFromUrl}
             />
           </div>
-          <button onClick={displayEvery}>버튼</button>
-          <button onClick={displayRank}>랭크컴포넌트</button>
         </div>
       ) : null}
     </div>
