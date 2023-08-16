@@ -15,6 +15,7 @@ import com.narang_norang.NarangNorang.redis.picture.service.PictureService;
 import com.narang_norang.NarangNorang.util.S3Uploader;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,6 +25,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Api(value = "사진 API", tags = {"Photo"})
@@ -51,7 +53,6 @@ public class PhotoController {
     public ResponseEntity<Boolean> uploadPhoto(@RequestBody UploadPictureRequest uploadPictureRequest) {
         try {
             Member member = memberService.getMemberByMemberSeq(uploadPictureRequest.getMemberSeq());
-
             for (Integer pictureSeq : uploadPictureRequest.getRedisImageSeqs()) {
                 Picture picture = pictureService.getPictureByPictureSeq(pictureSeq);
                 String[] texts = s3Uploader.uploadFiles(picture, "static/"+member.getMemberId());
@@ -65,6 +66,7 @@ public class PhotoController {
             }
 
         } catch (Exception e) {
+            System.out.println(e);
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.CREATED);
