@@ -8,6 +8,7 @@ const gameSlice = createSlice({
     name: 'game',
     initialState : {
       showCanvas: false,
+      videoId: null,
       gameStart: false,
       webcamRef: null,
       renderBool: false,
@@ -68,12 +69,12 @@ export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async
   }
 
 }
-export const handleGetScore = (poseIdx, videoRef) => async (dispatch) => {
+export const handleGetScore = (gameRef, webcamRef) => async (dispatch) => {
   
   try {
-    const score = userpose.getScore(poseIdx, videoRef);
-    console.log("getScore videoRef", videoRef)
-    console.log("getScore", poseIdx, score);
+    const score = userpose.getScore(gameRef, webcamRef);
+    // console.log("getScore videoRef", videoRef)
+    console.log("getScore", score);
     return score;
   } catch (error) {
     console.log(error, "점수계산 에러")
@@ -87,7 +88,6 @@ export const handleWebcamRef = (webcamRef) => async (dispatch) => {
     console.log(error, "webcamRef 에러")
   }
 } 
-
 
 export const render = (dispatch) => {
   dispatch(switchRenderBool())
