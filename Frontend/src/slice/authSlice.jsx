@@ -29,6 +29,7 @@ const authSlice = createSlice({
       sessionStorage.setItem('isLoggedin', 'true');
       sessionStorage.setItem('user', JSON.stringify(action.payload[0]));
       sessionStorage.setItem('userSeq', JSON.stringify(action.payload[0].memberSeq));
+      sessionStorage.setItem('userNickname', JSON.stringify(action.payload[0].memberNickname));
     },
     loginFailure(state, action) {
       state.isLoggedin = false
@@ -46,6 +47,9 @@ const authSlice = createSlice({
       state.userId = null
       sessionStorage.removeItem('isLoggedin');
       sessionStorage.removeItem('user');
+      sessionStorage.removeItem('userSeq');
+      sessionStorage.removeItem('userNickname');
+      
     }
   },
 });

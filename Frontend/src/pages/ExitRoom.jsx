@@ -23,6 +23,17 @@ function ExitRoom() {
   const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  // 앨범 저장 성공 모달
+  const [albumSuccessShow, setAlbumSuccessShow] = useState(false);
+  const handleSuccessClose = () => setAlbumSuccessShow(false);
+  const handleSuccessShow = () => setAlbumSuccessShow(true);
+
+  // 앨범 저장 성공 모달
+  const [albumFailShow, setAlbumFailShow] = useState(false);
+  const handleFailClose = () => setAlbumFailShow(false);
+  const handleFailShow = () => setAlbumFailShow(true);
+
   
 
   useEffect(() => {
@@ -75,17 +86,20 @@ function ExitRoom() {
     axios.post('/album/upload', data)
     .then((res) => {
       console.log(res)
+      handleSuccessShow();
+      setTimeout(() => {
+        handleSuccessClose();
+      }, 500);
     })
     .catch((error) => {
       console.log(error)
+      console.log(memberSeq, selectedPictureSeq, sessionIdFromUrl, subscriberIdFromUrl)
+      handleFailShow();
+      setTimeout(() => {
+        handleFailClose();
+      }, 500);
     })
   }
-
-  // 이미지 정보 확인
-  // const imageInfo = () => {
-  //   console.log(images)
-  // }
-
 
   // 사진 선택
   const selectImageSeq = (seq) => {
@@ -149,14 +163,17 @@ function ExitRoom() {
     URL.revokeObjectURL(url);
     document.body.removeChild(a);
   };
+
+  const handleImageClick = (image) => {
+    selectImageSeq(image.pictureSeq);
+  };
   
 
 
   return (
     <div className="wrapper">
       <div className="ShadowContainer">
-        <img src={exitIcon} alt="exit" onClick={handleShow} 
-          style={{width: "30px", position: "absolute", top: "2rem", right: "2rem"}}/>
+        <img src={exitIcon} alt="exit" onClick={handleShow} id="exitIcon"/>
         <div style={{paddingBottom: "3rem"}}>
             <div style={{fontSize: "33px"}}>
               <span style={{color: "#FFE600"}} onClick={goToMain}>나랑노랑</span>과 함께 즐거운 시간 보내셨나요?
@@ -168,7 +185,8 @@ function ExitRoom() {
           {images.map((image) => {
             const isSelected = selectedPictureSeq.includes(image.pictureSeq);
             return (
-              <div key={image.pictureSeq} className="imageContent">
+              <div key={image.pictureSeq} className="imageContent" style={{ cursor: 'pointer' }}
+              onClick={() => handleImageClick(image)}>
                 <img src={`data:image/png;base64,${image.pictureData}`} alt="test"
                   style={{width: "10rem", borderRadius: "5px"}} />
                 <label style={{position: "absolute", top: "20px", left: "20px"}}>
@@ -205,10 +223,22 @@ function ExitRoom() {
         <div>
           <div style={{paddingBottom: "15px"}}>이 창을 나가면 사진들은 모두 삭제됩니다. 그래도 나가시겠습니까?</div>
           <div style={{ display: "flex", justifyContent: "center"}}>
-            <div className="modalBtn" style={{backgroundColor: "#F7DB42"}} onClick={handleClose}>사진 둘러보기</div>
-            <div className="modalBtn" style={{backgroundColor: "grey", color: "white"}} onClick={goToMain}>나가기</div>
+            <div id="modalphotoBtn" onClick={handleClose}>사진 둘러보기</div>
+            <div id="modalExitBtn" onClick={goToMain}>나가기</div>
           </div>
         </div>
+      </Modal.Body>
+    </Modal>
+    
+    <Modal show={albumSuccessShow} onHide={handleSuccessClose}>
+      <Modal.Body className='modalbody'>
+        <div>앨범에 저장되었습니다</div>
+      </Modal.Body>
+    </Modal>
+
+    <Modal show={albumFailShow} onHide={handleFailClose}>
+      <Modal.Body className='modalbody'>
+        <div>앨범 저장에 실패하였습니다</div>
       </Modal.Body>
     </Modal>
 

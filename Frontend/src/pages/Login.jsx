@@ -61,7 +61,7 @@ const TogglePasswordButton = styled(Button)`
 
 function Login() {
   const [memberId, setMemberId] = useState("");
-  const [memberPassword, setMemeberPassword] = useState("");
+  const [memberPassword, setMemberPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -83,7 +83,7 @@ function Login() {
   };
 
   const handleMemberPassword = (e) => {
-    setMemeberPassword(e.target.value);
+    setMemberPassword(e.target.value);
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -112,7 +112,7 @@ function Login() {
         handleClose();
       }, 600);
       setMemberId('')
-      setMemeberPassword('')
+      setMemberPassword('')
     })
 
   };
