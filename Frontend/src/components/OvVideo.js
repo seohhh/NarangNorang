@@ -52,7 +52,7 @@ export default class OpenViduVideoComponent extends Component {
 
         { !this.guest && !this.rank && this.gameStatus ? (
           <video
-          style={{ width: "150px", height: "auto" }}
+          style={{ width: "200px", height: "auto" }}
           autoPlay={true}
           ref={this.videoRef}
         />

@@ -657,7 +657,7 @@ function CustomRoom(props) {
               flexDirection: "row",
               justifyContent: "center",
               maxHeight: "100%",
-              marginTop: "2%",
+              // marginTop: "2%",
             }}
             className="row"
           >
