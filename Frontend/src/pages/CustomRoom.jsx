@@ -534,28 +534,28 @@ function CustomRoom(props) {
     }
   };
 
-  const displayEvery = () => {
-    session
-      .signal({
-        data: "인트로 영상 버튼",
-        to: [],
-        type: "intro",
-      })
-      .then(() => {})
-      .catch(() => {});
-  };
+  // const displayEvery = () => {
+  //   session
+  //     .signal({
+  //       data: "인트로 영상 버튼",
+  //       to: [],
+  //       type: "intro",
+  //     })
+  //     .then(() => {})
+  //     .catch(() => {});
+  // };
 
-  const displayRank = () => {
-    setFirst(publisher)
-    session
-      .signal({
-        data: "순위 버튼",
-        to: [],
-        type: "rank",
-      })
-      .then(() => {})
-      .catch(() => {});
-  };
+  // const displayRank = () => {
+  //   setFirst(publisher)
+  //   session
+  //     .signal({
+  //       data: "순위 버튼",
+  //       to: [],
+  //       type: "rank",
+  //     })
+  //     .then(() => {})
+  //     .catch(() => {});
+  // };
 
   const closeIntroModal = () => {
     setGameStart(false);
@@ -781,8 +781,6 @@ function CustomRoom(props) {
               publisher={publisher}
             />
           </div>
-          <button onClick={displayEvery}>버튼</button>
-          <button onClick={displayRank}>랭크컴포넌트</button>
         </div>
       ) : null}
     </div>
