@@ -5,6 +5,7 @@ import PlayImg from "../assets/mainPlayImg.PNG";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Fade } from "react-awesome-reveal";
+import { Button } from "react-bootstrap";
 import ContentsComponent from "../components/ContentsComponent";
 import IntroComponent from "../components/IntroComponent";
 import Ask from "../components/Ask";
@@ -18,7 +19,6 @@ const Container = styled.div`
   padding-right: 600px;
   justify-content: center;
 `;
-
 
 // const TextContent = styled.div`
 //   flex: 1; /* 텍스트 부분이 화면 가로 방향을 반반으로 차지 */
@@ -38,7 +38,7 @@ function Main() {
   return (
     <div>
       <Container>
-        <div className="align-self-center" style={{ paddingBottom: "120px"}}>
+        <div className="align-self-center" style={{ paddingBottom: "15%"}}>
           {" "}
           {/* 왼쪽 영역 */}
           <Fade cascade damping={0.2}>
@@ -61,11 +61,14 @@ function Main() {
       <div id="mainContent">
         <img id="mainImage" src={PlayImg} alt="PlayImg" />
       </div>
-      <div style={{ marginBottom: "250px"}}>
+      <div style={{marginBottom: "250px"}}>
         <IntroComponent />
       </div>
-      <div style={{ marginBottom: "250px"}}>
+      <div style={{marginBottom: "250px"}}>
         <ContentsComponent />
+        <Link to="/contents">
+          <Button variant="outline-warning" size="lg">더 알아보기</Button>
+        </Link>
       </div>
       <Ask />
       <Footer />

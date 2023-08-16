@@ -28,6 +28,7 @@ const authSlice = createSlice({
       state.userId = action.payload[1]
       sessionStorage.setItem('isLoggedin', 'true');
       sessionStorage.setItem('user', JSON.stringify(action.payload[0]));
+      sessionStorage.setItem('userSeq', JSON.stringify(action.payload[0].memberSeq));
     },
     loginFailure(state, action) {
       state.isLoggedin = false

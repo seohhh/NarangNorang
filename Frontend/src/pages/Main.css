@@ -1,7 +1,6 @@
 .container{
   display: flex;
   margin-left: 100px;
-  padding-top: 300px;
   padding-right: 600px;
   justify-content: center;
 }
@@ -13,16 +12,19 @@
 }
 
 #button{
+  width: 25%;
+  font-size: 1.1rem;
   padding: 13px;
   border-radius: 20px;
   background-color: white;
   border: none;
   box-shadow: 0 0 20px -10px rgba(0, 0, 0, 2);
+  transition: transform 0.3s ease;
 }
 
-/* #button:hover{
-  
-} */
+#button:hover{
+  transform: scale(1.1);
+}
 
 #mainImage{
  border-radius: 1%;
