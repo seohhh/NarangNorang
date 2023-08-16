@@ -5,7 +5,6 @@ import PlayImg from "../assets/mainPlayImg.PNG";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Fade } from "react-awesome-reveal";
-import { Button } from "react-bootstrap";
 import ContentsComponent from "../components/ContentsComponent";
 import IntroComponent from "../components/IntroComponent";
 import Ask from "../components/Ask";
@@ -61,14 +60,14 @@ function Main() {
       <div id="mainContent">
         <img id="mainImage" src={PlayImg} alt="PlayImg" />
       </div>
-      <div style={{marginBottom: "250px"}}>
+      <div style={{marginBottom: "150px"}}>
         <IntroComponent />
       </div>
-      <div style={{marginBottom: "250px"}}>
+      <div style={{marginBottom: "150px"}}>
         <ContentsComponent />
         <Link to="/contents" style={{display:"flex", justifyContent:"center", flexDirection:"column", alignContent:"center", 
         textDecorationLine:"none"}}>
-          <Button style={{width:"10%"}} variant="outline-warning" size="lg">더 알아보기</Button>
+          {/* <Button style={{width:"10%"}} variant="outline-warning" size="lg">더 알아보기</Button> */}
         </Link>
       </div>
       <Ask />
