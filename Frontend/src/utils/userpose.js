@@ -31,7 +31,7 @@ const estimationConfig = {
   nmsRadius: 100,
 };
 const scoreThreshold = 0.5;
-const similarityThreshold = 0.9;
+const similarityThreshold = 0.7;
 
 // VARIABLE
 let detector;
@@ -107,7 +107,7 @@ const renderResult = async () => {
   if (video === null) {
     return;
   }
-  
+
   if (detector != null) {
     poses = await detector.estimatePoses(video, estimationConfig);
   }

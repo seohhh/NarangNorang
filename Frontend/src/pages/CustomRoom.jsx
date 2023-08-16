@@ -185,31 +185,6 @@ function CustomRoom(props) {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameEnded])
 
-  // useEffect(() => {
-  //   if (scoreRlt && session) {
-  //     const Ranker = []
-  //     console.log(scoreRlt, "스코어rlt");
-  //     console.log(session);
-  //     scoreRlt.map((connectionId) => {
-  //       session.streamManagers.map((streamManager) => {
-  //         if (streamManager.stream && streamManager.stream.session && streamManager.stream.session.connection && streamManager.stream.session.connection.connectionId === connectionId) {
-  //           Ranker.push(streamManager);
-  //         }
-  //       })
-  //     })
-  //     console.log(Ranker, "여기 랭커!!");
-  //     if (Ranker.length === 1) {
-  //       setFirst(Ranker[0]);
-  //     } else if (Ranker.length === 2 ) {
-  //       setFirst(Ranker[0]);
-  //       setSecond(Ranker[1]);
-  //     } else if (Ranker.length === 3) {
-  //       setFirst(Ranker[0]);
-  //       setSecond(Ranker[1]);
-  //       setThird(Ranker[2]);
-  //     }
-  //   }
-  // }, [scoreRlt])
 
   useEffect(() => {
     if (session && checkVideoId!==null) {
@@ -503,12 +478,6 @@ function CustomRoom(props) {
   };
 
   const deleteSubscriber = (streamManager) => {
-    // let removedSubscribers = subscribers;
-    // let index = removedSubscribers.indexOf(streamManager, 0);
-    // if (index > -1) {
-    //   removedSubscribers.splice(index, 1);
-    //   setSubscribers(removedSubscribers);
-    // }
 
     axios.post(APPLICATION_SERVER_URL + "api/v1/participant/delete", {
       "participantId": streamManager.stream.connection.connectionId,
@@ -534,28 +503,6 @@ function CustomRoom(props) {
     }
   };
 
-  // const displayEvery = () => {
-  //   session
-  //     .signal({
-  //       data: "인트로 영상 버튼",
-  //       to: [],
-  //       type: "intro",
-  //     })
-  //     .then(() => {})
-  //     .catch(() => {});
-  // };
-
-  // const displayRank = () => {
-  //   setFirst(publisher)
-  //   session
-  //     .signal({
-  //       data: "순위 버튼",
-  //       to: [],
-  //       type: "rank",
-  //     })
-  //     .then(() => {})
-  //     .catch(() => {});
-  // };
 
   const closeIntroModal = () => {
     setGameStart(false);
@@ -672,18 +619,20 @@ function CustomRoom(props) {
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
+            marginTop: "1%",
           }}
         >
           {join === true && (
             <div
               id="video-container"
               style={{
-                height: "10%",
+                height: "20%",
                 display: "flex",
                 flexFlow: "row-wrap",
                 justifyContent: "center",
               }}
-            >
+            > 
+              
               <div onClick={() => handleMainVideoStream(publisher)}>
                 <UserVideoComponent
                   streamManager={publisher}
@@ -696,6 +645,7 @@ function CustomRoom(props) {
                   <UserVideoComponent
                     streamManager={sub}
                     gameStatus={gameStatus}
+                    
                   />
                 </div>
               ))}
@@ -706,6 +656,8 @@ function CustomRoom(props) {
               display: "flex",
               flexDirection: "row",
               justifyContent: "center",
+              maxHeight: "100%",
+              marginTop: "2%",
             }}
             className="row"
           >
@@ -733,7 +685,8 @@ function CustomRoom(props) {
             display: "flex",
             flexFlow: "row wrap",
             justifyContent: "space-evenly",
-            alignItems: "center" }}
+            alignItems: "center",
+            marginTop: "5%", }}
           className="row"
         >
           {mainStreamManager !== undefined && join === true ? (
@@ -744,14 +697,21 @@ function CustomRoom(props) {
           <div style={{padding:"0px"}} id="video-container" className="col-6">
             {join === true && (
               <div style={{ display: "flex", flexFlow: "row wrap", justifyContent: "space-evenly" }} className="row">
-                <div onClick={() => handleMainVideoStream(publisher)} className="col-4">
-                  <UserVideoComponent streamManager={publisher} />
-                </div>
-                {subscribers.map((sub, i) => (
-                  <div key={sub.id} onClick={() => handleMainVideoStream(sub)} className="col-4">
-                    {/* <span>{sub.id}</span> */}
-                    <UserVideoComponent streamManager={sub} />
+                {/* {mainStreamManager !== publisher ? ( */}
+                  <div onClick={() => handleMainVideoStream(publisher)} className="col-4">
+                    <UserVideoComponent streamManager={publisher} />
                   </div>
+                {/* ): null} */}
+
+                {subscribers.map((sub, i) => (
+                  // <div>
+                  // {mainStreamManager !== sub ? (
+                    <div key={sub.id} onClick={() => handleMainVideoStream(sub)} className="col-4">
+                      {/* <span>{sub.id}</span> */}
+                      <UserVideoComponent streamManager={sub} />
+                    </div>
+                  // ): null}
+                  // </div>
                 ))}
               </div>
             )}
