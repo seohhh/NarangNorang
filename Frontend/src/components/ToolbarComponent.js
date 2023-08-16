@@ -161,10 +161,8 @@ const ToolbarComponent = (props) => {
             <img src={inviteIcon} alt="invite" className="icon" />
           </div>
         </OverlayTrigger>
-
-        <div onClick={handleGameSelect} id="gameStartBtn">
-          <div>게임시작</div>
-        </div>
+        
+        <div className="startbtn" onClick={handleGameSelect}>게임시작</div>
 
         <OverlayTrigger
           placement="top"
@@ -200,6 +198,7 @@ const ToolbarComponent = (props) => {
             <img src={leaveIcon} alt="leave" className="icon" />
           </div>
         </OverlayTrigger>
+
       </div>
       {/* 초대링크 모달 */}
       <Modal

@@ -37,3 +37,37 @@
   justify-content: center;
   align-items: center;
 }
+
+.startbtn {
+  background: #fae17b;
+  background-image: -webkit-linear-gradient(top, #fae17b, #faca08);
+  background-image: -moz-linear-gradient(top, #fae17b, #faca08);
+  background-image: -ms-linear-gradient(top, #fae17b, #faca08);
+  background-image: -o-linear-gradient(top, #fae17b, #faca08);
+  background-image: linear-gradient(to bottom, #fae17b, #faca08);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  font-family: 'Happiness-Sans-Bold';
+  width: 140px;
+  height: 45px;
+  margin: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.startbtn:hover {
+  background: #ffcb47;
+  background-image: -webkit-linear-gradient(top, #ffcb47, #f2ba11);
+  background-image: -moz-linear-gradient(top, #ffcb47, #f2ba11);
+  background-image: -ms-linear-gradient(top, #ffcb47, #f2ba11);
+  background-image: -o-linear-gradient(top, #ffcb47, #f2ba11);
+  background-image: linear-gradient(to bottom, #ffcb47, #f2ba11);
+  text-decoration: none;
+}

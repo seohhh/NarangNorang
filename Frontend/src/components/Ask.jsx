@@ -8,7 +8,7 @@ axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 
 
 const Container = styled.div`
-  position: relative; // 상위 컨테이너에 relative 설정
+  position: relative;
 `;
 
 const Askbutton = styled.div`
@@ -23,6 +23,10 @@ const Askbutton = styled.div`
   box-shadow: 0 0 20px -10px rgba(0, 0, 0, 2);
   padding: 10px 15px;
   width: 130px;
+
+  &:hover{
+    background-color: #EEEEEE;
+  }
 `;
 
 const AskImg = styled.img`
