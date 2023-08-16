@@ -7,6 +7,7 @@ import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.narang_norang.NarangNorang.redis.picture.domain.entity.Picture;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -19,12 +20,14 @@ import java.util.UUID;
 @Component
 @RequiredArgsConstructor
 public class S3Uploader {
+
     private final AmazonS3Client amazonS3Client;
 
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
     public String[] uploadFiles(Picture picture, String dirName) throws IOException {
+        System.out.println("upload 파일들어왔다");
         File uploadFile = convert(picture)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
         return upload(uploadFile, dirName);
@@ -32,9 +35,13 @@ public class S3Uploader {
 
     public String[] upload(File uploadFile, String filePath) {
         // texts[0] = fileName , texts[1] = uploadImageUrl
+        System.out.println("파일 처음 들어왔다");
         String[] texts = new String[2];
+        System.out.println("파일 텍스트명 적었다");
         texts[0] = filePath + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
+        System.out.println("파일 S3에 저장된 파일 이름 적어버려");
         texts[1] = putS3(uploadFile, texts[0]); // s3로 업로드
+        System.out.println("파일 저장 해버려");
         removeNewFile(uploadFile);
         return texts;
     }

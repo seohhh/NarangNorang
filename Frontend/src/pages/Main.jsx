@@ -66,8 +66,9 @@ function Main() {
       </div>
       <div style={{marginBottom: "250px"}}>
         <ContentsComponent />
-        <Link to="/contents">
-          <Button variant="outline-warning" size="lg">더 알아보기</Button>
+        <Link to="/contents" style={{display:"flex", justifyContent:"center", flexDirection:"column", alignContent:"center", 
+        textDecorationLine:"none"}}>
+          <Button style={{width:"10%"}} variant="outline-warning" size="lg">더 알아보기</Button>
         </Link>
       </div>
       <Ask />
