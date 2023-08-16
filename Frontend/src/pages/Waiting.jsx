@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { Form, Button, Modal } from "react-bootstrap";
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
@@ -42,32 +42,65 @@ const NavLink = styled(Link)`
   margin-bottom: 5px;
 `
 
+const LoginBtn = styled.div`
+  width: 100%; 
+  background-color: #FFEA77;
+  color: #000; 
+  padding: 1.6% 5%;
+  display: flex;
+  justify-content: center;
+  border-radius: 7px;
+
+  &:hover{
+    background-color: #FFF09A;
+  }
+`
+
+const GuestBtn = styled.div`
+  width: 100%; 
+  background-color: white;
+  border: 1.8px solid rgb(201, 201, 201);
+  color: #000; 
+  padding: 1.6% 5%;
+  display: flex;
+  justify-content: center;
+  border-radius: 7px;
+
+  &:hover{
+    background-color: rgb(201, 201, 201);
+  }
+`
+
 function Waiting() {
   const { sessionId } = useParams()
+  const isLoggedin = sessionStorage.getItem('isLoggedin')
+  // const userNickname = sessionStorage.getItem('userNickname')
+  const userNickname = useSelector((state) => (state.login.userNickname))
 
-  const [inputId, setInputId] = useState("");
-  const [inputPw, setInputPw] = useState("");
-  const [nickname, setNickname] = useState("");
+
   const dispatch = useDispatch();
-  const navigate = useNavigate ();
+  const navigate = useNavigate();
+
+  const [memberId, setMemberId] = useState("");
+  const [memberPassword, setMemberPassword] = useState("");
+  const [nickname, setNickname] = useState("");
   const [roomAlert, setRoomAlert] = useState(false)
 
-  const userNickname = useSelector((state) => state.login.userNickname);
 
-  const isLoggedin = sessionStorage.getItem('isLoggedin')
   useEffect(() => {
+    console.log(isLoggedin, userNickname)
     if (isLoggedin === 'true' && userNickname) {
-      joinCheck()
+      joinCheck(userNickname)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedin, navigate, sessionId, userNickname]);
 
-  const handleInputId = (e) => {
-    setInputId(e.target.value);
+  const handleMemberId = (e) => {
+    setMemberId(e.target.value);
   };
 
-  const handleInputPw = (e) => {
-    setInputPw(e.target.value);
+  const handleMemberPassword = (e) => {
+    setMemberPassword(e.target.value);
   };
 
   const handleNickname = (e) => {
@@ -77,14 +110,32 @@ function Waiting() {
 
   const onClickLogin = (e) => {
     e.preventDefault();
-    dispatch(login(inputId, inputPw));
+    axios({
+      method: 'POST',
+      url: '/auth/login',
+      data: { memberId, memberPassword }
+    })
+    .then((res) => {
+      console.log(res)
+      const user = [res.data, memberId] 
+      dispatch(login(user));
+    })
+    .catch((err) => {
+      console.log(err, "로그인 실패")
+      handleShow()
+      setTimeout(() => {
+        handleClose();
+      }, 600);
+      setMemberId('')
+      setMemberPassword('')
+    })
   };
 
-  const joinCheck = () => {
+  const joinCheck = (userNickname) => {
     axios.get(APPLICATION_SERVER_URL + "/room/read/" + sessionId)
     .then((res) => {
       if (res.data.roomStatus === "WAIT" && res.data.participantCount < 6) {
-        navigate(`/room?sessionId=${sessionId}&nickname=${nickname}`);
+        navigate(`/room?sessionId=${sessionId}&nickname=${userNickname}`);
       } else {
         setRoomAlert(true)
         handleClose()
@@ -102,9 +153,6 @@ function Waiting() {
   const handleRoomAlertClose = () => {
     setRoomAlert(false)
   }
-  
-
-
 
   const onClickJoin = (e) => {
     joinCheck()
@@ -125,8 +173,8 @@ function Waiting() {
               <Form.Control
                 type="id"
                 placeholder="아이디를 입력하세요."
-                value={inputId}
-                onChange={handleInputId}
+                value={memberId}
+                onChange={handleMemberId}
               />
             </Form.Group>
             <Form.Group className="mb-3" controlId="formBasicPassword" style={{ width: "100%" }}>
@@ -134,13 +182,13 @@ function Waiting() {
               <Form.Control
                 type="password"
                 placeholder="비밀번호를 입력하세요."
-                value={inputPw}
-                onChange={handleInputPw}
+                value={memberPassword}
+                onChange={handleMemberPassword}
               />
             </Form.Group>
-            <Button type="submit" onClick={onClickLogin} style={{ width: "100%", backgroundColor: "#fff9be", color: "#000", borderColor: "#fff9be" }}>
+            <LoginBtn type="submit" onClick={onClickLogin}>
               로그인
-            </Button>
+            </LoginBtn>
             <Button type="submit" onClick={handleShow} variant="outline-secondary" style={{ width: "100%", margin: "10px" }}>
               손님으로 참여하기
             </Button>
@@ -174,7 +222,7 @@ function Waiting() {
           </Form>
         </Modal.Body>
         <Modal.Footer style={{ display: "flex", justifyContent: "center"}}>
-          <Button variant="secondary" onClick={handleClose}>
+          <Button onClick={handleClose}>
             로그인하기
           </Button>
           <Button variant="warning" onClick={onClickJoin}>

@@ -37,8 +37,6 @@ const NavLink = styled(Link)`
 const NoUnderLine = styled(Link)`
   text-decoration: none;
   color: black;
-  margin: 16px;
-  font-size: 1.1rem;
 `
 
 // 컴포넌트를 정의하는 함수
@@ -73,7 +71,7 @@ function CustomNavbar() {
       <div className="align-self-center">
         {isLoggedin ? 
           <UserBtn variant="light" onClick={handleLogout}>로그아웃</UserBtn>
-          : <NoUnderLine to="/login"><UserBtn variant="light">로그인</UserBtn></NoUnderLine>}
+          : <NoUnderLine to="/login"><UserBtn variant="light">&nbsp;&nbsp;로그인&nbsp;&nbsp;</UserBtn></NoUnderLine>}
       </div>
     </Wrapper>
   );
