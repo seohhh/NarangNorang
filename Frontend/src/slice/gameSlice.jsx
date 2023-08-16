@@ -9,7 +9,7 @@ const gameSlice = createSlice({
     initialState : {
       showCanvas: false,
       gameStart: false,
-      webcamElementId: null, // webcamRef 대신 webcamElementId 사용
+      webcamRef: null,
       renderBool: false
     },
     reducers: {
@@ -22,8 +22,8 @@ const gameSlice = createSlice({
       switchRenderBool(state) {
         state.renderBool = !state.renderBool
       },
-      setWebcamElementId(state, actions) { // setWebcamRef 대신 setWebcamElementId 사용
-        state.webcamElementId = actions.payload
+      setWebcamRef(state, actions) {
+        state.webcamRef = actions.payload
       },
     },
   });
@@ -63,29 +63,27 @@ export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async
 export const handleGetScore = (gameRef, webcamRef) => async (dispatch) => {
   
   try {
-    const score = await userpose.getScore(gameRef, webcamRef);
+    const score = userpose.getScore(gameRef, webcamRef);
     // console.log("getScore videoRef", videoRef)
     console.log("getScore", score);
     return score;
   } catch (error) {
-    console.log(error, "점수계산 에러");
-    console.error("점수계산 에러:", error.message, error.stack); // 에러 메시지와 스택 트레이스 출력
+    console.log(error, "점수계산 에러")
   }
 }
-export const handleWebcamElementId = (webcamRef) => async (dispatch) => {
+
+export const handleWebcamRef = (webcamRef) => async (dispatch) => {
   try {
-    console.log('webcamRef:', webcamRef); // 로깅
-    const webcamElementId = webcamRef.current ? webcamRef.current.id : null; // webcamRef의 current에서 id 값을 추출
-    dispatch(setWebcamElementId(webcamElementId)); // setWebcamElementId action dispatch
+    dispatch(setWebcamRef(webcamRef))
   } catch (error) {
-    console.log(error, "webcamElementId 에러");
+    console.log(error, "webcamRef 에러")
   }
-}
+} 
 
 
 export const render = (dispatch) => {
   dispatch(switchRenderBool())
 }
 
-export const { switchShowCanvas, switchGameStart, setWebcamElementId, switchRenderBool, setGameRef } = gameSlice.actions;
+export const { switchShowCanvas, switchGameStart, setWebcamRef, switchRenderBool, setGameRef } = gameSlice.actions;
 export default gameSlice.reducer;

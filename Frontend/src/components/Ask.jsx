@@ -4,17 +4,25 @@ import askIcon from "../assets/icon/ask.png";
 import { Button, Modal, Form, Row, Col } from "react-bootstrap";
 import axios from "axios";
 
+axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 
-axios.defaults.baseURL = 'https://i9c208.p.ssafy.io/api/v1'
+
+const Container = styled.div`
+  position: relative; // 상위 컨테이너에 relative 설정
+`;
 
 const Askbutton = styled.div`
+  display: flex;
+  justify-content: center; // 내부 요소 간격 균등 배치
+  align-items: center; // 세로 중앙 정렬
   background-color: white;
   border-radius: 99px;
-  position: fixed;
+  position: sticky;
   right: 40px;
   bottom: 40px;
   box-shadow: 0 0 20px -10px rgba(0, 0, 0, 2);
   padding: 10px 15px;
+  width: 130px;
 `;
 
 const AskImg = styled.img`
@@ -30,13 +38,13 @@ function Ask() {
 
   const [email, setEmail] = useState("");
   const [questionContent, setQuestionContent] = useState("");
-  const [confirmEmail, setConfirmEmail] = useState("")
-  const [confirmContent, setConfirmContent] = useState("")
+  const [confirmEmail, setConfirmEmail] = useState("");
+  const [confirmContent, setConfirmContent] = useState("");
 
   const handleClose = () => {
-    setConfirmContent("")
-    setConfirmEmail("")
-    setShow(false)
+    setConfirmContent("");
+    setConfirmEmail("");
+    setShow(false);
   };
   const handleShow = () => setShow(true);
 
@@ -45,11 +53,12 @@ function Ask() {
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
-    var regExp = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
+    var regExp =
+      /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i;
     if (regExp.test(email)) {
-      setConfirmEmail(true)
+      setConfirmEmail(true);
     } else {
-      setConfirmEmail(false)
+      setConfirmEmail(false);
     }
   };
 
@@ -67,26 +76,28 @@ function Ask() {
     event.preventDefault();
 
     if (confirmEmail && confirmContent) {
-      axios.post('/question', { email, questionContent })
-      .then((res) => {
-        console.log(res)
-        handleClose()
-        handleSuccessShow();
-        setTimeout(() => {
-          handleSuccessClose()
-        }, 500);
-      })
-      .catch((err) => {
-        console.log(err)
-      })
+      axios
+        .post("/question", { email, questionContent })
+        .then((res) => {
+          console.log(res);
+          handleClose();
+          handleSuccessShow();
+          setTimeout(() => {
+            handleSuccessClose();
+          }, 500);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-  }
-
+  };
 
   return (
     <>
+    <Container>
+
       <Askbutton onClick={handleShow}>
-        <span style={{paddingRight: "5px"}}>문의하기</span>
+        <span style={{ paddingRight: "5px" }}>문의하기</span>
         <AskImg src={askIcon} alt="ask" />
       </Askbutton>
 
@@ -96,10 +107,12 @@ function Ask() {
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
-        style={{fontFamily: "Pretendard-bold"}}
+        style={{ fontFamily: "Pretendard-bold" }}
       >
         <Modal.Header closeButton>
-          <Modal.Title style={{fontFamily: "Happiness-Sans-Bold"}}>문의 남기기</Modal.Title>
+          <Modal.Title style={{ fontFamily: "Happiness-Sans-Bold" }}>
+            문의 남기기
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Row>
@@ -112,7 +125,11 @@ function Ask() {
                 placeholder="문의 답변 받을 이메일 주소를 작성해주세요."
                 onChange={handleEmail}
               />
-              {confirmEmail===false ? <Form.Text className="text-muted">알맞은 이메일을 입력해주세요.</Form.Text> : null}
+              {confirmEmail === false ? (
+                <Form.Text className="text-muted">
+                  알맞은 이메일을 입력해주세요.
+                </Form.Text>
+              ) : null}
             </Col>
           </Row>
           <Form.Group className="mt-3" controlId="exampleForm.ControlTextarea1">
@@ -120,12 +137,24 @@ function Ask() {
               as="textarea"
               rows={5}
               placeholder="문의 내용을 작성해주세요."
-              onChange={handleQuestion} />
+              onChange={handleQuestion}
+            />
           </Form.Group>
-          {confirmContent===false ? <Form.Text className="text-muted">문의 내용을 입력해주세요</Form.Text> : null}
+          {confirmContent === false ? (
+            <Form.Text className="text-muted">
+              문의 내용을 입력해주세요
+            </Form.Text>
+          ) : null}
         </Modal.Body>
         <Modal.Footer>
-          <Button type="submit" onClick={submitAsk} variant="warning" style={{width: "6rem"}}>작성</Button>
+          <Button
+            type="submit"
+            onClick={submitAsk}
+            variant="warning"
+            style={{ width: "6rem" }}
+          >
+            작성
+          </Button>
         </Modal.Footer>
       </Modal>
 
@@ -135,6 +164,8 @@ function Ask() {
           <p>메일이 발송되었습니다.</p>
         </Modal.Body>
       </Modal>
+            
+    </Container>
     </>
   );
 }

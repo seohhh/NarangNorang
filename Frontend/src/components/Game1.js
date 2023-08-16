@@ -39,17 +39,8 @@ const GameVideo = styled.video`
 
 function Game1(props) {
   const { session } = props;
-  const webcamElementId   = useSelector((state) => state.game.webcamElementId)
-  const webcamRef = useRef(null);
-
+  const webcamRef = useSelector((state) => state.game.webcamRef)
   console.log(webcamRef, "useSelector로 game1에서 받은 값")
-  useEffect(() => {
-    // 웹캠 ID를 사용하여 웹캠 요소 참조
-    webcamRef.current = document.getElementById(webcamElementId );
-    if (webcamRef.current) {
-      // 웹캠 요소 사용 코드
-    }
-  }, [webcamElementId ]);
 
   const gameStart = props.gameStart;
 

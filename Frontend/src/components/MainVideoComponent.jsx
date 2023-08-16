@@ -6,7 +6,7 @@ import "./MainVideoComponent.css";
 import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
 // import axios from "axios";
 import { useSelector } from "react-redux";
-import { handleWebcamElementId } from "../slice/gameSlice";
+import { handleWebcamRef } from "../slice/gameSlice";
 import { useDispatch } from "react-redux";
 // import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
@@ -19,8 +19,9 @@ const MainVideoComponent = (props) => {
     width: 640,
     height: 480,
   });
+  const dispatch = useDispatch()
   console.log(webcamRef, "webcamRef확인")
-  // dispatch(handleWebcamElementId(webcamRef.current))
+  dispatch(handleWebcamRef(webcamRef.current))
   const showCanvas = useSelector((state) => state.game.showCanvas);
   const detectorRef = useRef(null);
 
@@ -33,13 +34,8 @@ const MainVideoComponent = (props) => {
     });
   };
 
-  const dispatch = useDispatch()
   // 컴포넌트 마운트 시 실행
   useEffect(() => {
-    if (webcamRef.current) {
-      dispatch(handleWebcamElementId(webcamRef.current));
-
-    }
     // 스켈레톤 표시 버튼 클릭 핸들러
     const handleSkeletonClick = async () => {
       if (showCanvas) {
@@ -96,7 +92,6 @@ const MainVideoComponent = (props) => {
     showCanvas,
     videoDimensions.width,
     videoDimensions.height,
-    webcamRef.current
   ]);
 
   // const roomCode = props.streamManager.stream.session.sessionId;

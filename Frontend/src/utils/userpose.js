@@ -58,17 +58,12 @@ const loadDetector = async () => {
   return detector;
 };
 
-const detectPose = async (videoRef) => {
-  // if (!videoRef || !videoRef.current) {
-  //   console.error('Invalid video reference');
-  //   return null;
-  // }
-  const videoElement = videoRef.current;
-
+const detectPose = async (video) => {
   let poses = null;
   if (detector) {
-    poses = await detector.estimatePoses(videoElement, estimationConfig);
+    poses = await detector.estimatePoses(video, estimationConfig);
   }
+
   // console.log(poses);
   return poses;
 };
@@ -180,11 +175,6 @@ const getScore = async (gameRef, webcamRef) => {
   const wpose = await detectPose(webcamRef);
   console.log("gpose", gpose);
   console.log("wpose", wpose);
-   // gpose와 wpose의 유효성 검사
-   if (!gpose || !gpose[0] || !wpose) {
-    console.error('Invalid pose detected');
-    return 0;
-  }
 
   let total = 0;
   let count = 0;
