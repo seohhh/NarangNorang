@@ -1,6 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from 'react-redux';
-import { Link } from "react-router-dom"; // react-router-dom에서 가져온 Link 컴포넌트
+import { Link, useNavigate } from "react-router-dom"; // react-router-dom에서 가져온 Link 컴포넌트
 import styled from "styled-components"; // styled-components를 가져옴
 import logo from "../assets/logo.png"; // 로고 이미지 파일의 경로를 설정
 import { logout } from "../slice/authSlice";
@@ -45,10 +45,13 @@ function CustomNavbar() {
   const token = useSelector(state => state.login.token);
   const userId = useSelector(state => state.login.userId);
   const userSeq = sessionStorage.getItem('userSeq')
-  
+  const navigate = useNavigate();
+
   const dispatch = useDispatch()
   const handleLogout = () => {
-    dispatch(logout(token))}
+    dispatch(logout(token));
+    navigate('/');
+  }
 
   return (
     <Wrapper className="container">
