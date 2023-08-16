@@ -158,8 +158,6 @@ const MainVideoComponent = (props) => {
             width={videoDimensions.width}
             height={videoDimensions.height}
           />
-          {/* <button onClick={capture}>지금 이 순간!</button>
-          <button onClick={getScore}>유사도 계산</button> */}
         </div>
       ) : null}
 

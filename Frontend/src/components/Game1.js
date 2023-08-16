@@ -13,6 +13,7 @@ import Cat from "../assets/game/Cat.mp4";
 import Tiger from "../assets/game/Tiger.mp4";
 import Wow1 from "../assets/game/Wow1.mp4";
 import Wow2 from "../assets/game/Wow2.mp4";
+import outro from "../assets/game/outro.mp4"
 
 import html2canvas from "html2canvas";
 
@@ -57,7 +58,7 @@ function Game1(props) {
   const scoreRlt = useSelector((state) => state.game.scoreRlt);
   console.log(scoreRlt, '스코어 결과');
 
-  const videos = [Wow1, Gorilla, Wow2, Elephant, Wow1, Eagle, Wow2, Frog, Wow1, Cat, Wow2, Tiger];
+  const videos = [Wow1, Gorilla, Wow2, Elephant, Wow1, Eagle, Wow2, Frog, Wow1, Cat, Wow2, Tiger, outro];
 
 
   const gameRef = useRef(null); // 게임 비디오 참조
@@ -177,6 +178,19 @@ function Game1(props) {
   }, [currentVideoIndex, gameRef]);
 
   const handleVideoEnded = async () => {
+    if (currentVideoIndex < videos.length - 2) {
+      await axios({
+        method: "PUT",
+        url: "/participant/update",
+        data: {participantId, roomCode, "score": scoreSum}
+      }).then((res) => {
+        console.log(res);
+      }).catch((err) => {
+        console.log(err);
+      })
+    }
+    
+    
     if (currentVideoIndex < videos.length - 1) {
       await capture();
       const score = await getScore(currentVideoIndex);
@@ -185,27 +199,16 @@ function Game1(props) {
       dispatch(setTotalScore(score));
       setCurrentVideoIndex(currentVideoIndex + 1);
       // setTimeout(() => {
-      // }, 2000);
-    } else {
-      setGameVideoStart(false); // 게임 비디오 재생을 종료
-      // 여기에서 방 점수 넘기고, 게임 종료 상태 만들기
+        // }, 2000);
+      } else {
+        setGameVideoStart(false); // 게임 비디오 재생을 종료
+        // 여기에서 방 점수 넘기고, 게임 종료 상태 만들기
 
-      setTimeout(() => {
-        dispatch(switchGameStart());
-      }, 1000)
-
-      
-
-      await axios({
-        method: "PUT",
-        url: "/participant/update",
-        data: {participantId, roomCode, "score": scoreSum}
-      }).then((res) => {
-        console.log(res);
+        setTimeout(() => {
+          dispatch(switchGameStart());
+        }, 1000)
         dispatch(switchGameEnded());
-      }).catch((err) => {
-        console.log(err);
-      })
+        
     }
   };
 
@@ -217,7 +220,6 @@ function Game1(props) {
 
   return (
     <div>
-      <div>점수 합계: {scoreSum}</div>
       {/* {!gameStart && (
         <div>
           <button onClick={() => handleGameStartClick()}>게임 시작</button>
