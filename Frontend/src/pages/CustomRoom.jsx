@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { switchGameEnded, switchGameStuatus, switchRenderBool } from '../slice/gameSlice';
-import { switchRenderBool, setStretchingId } from '../slice/gameSlice';
 
 // component
 import UserVideoComponent from "../components/UserVideoComponent";
@@ -95,7 +94,8 @@ function CustomRoom(props) {
   const [scoreRlt, setScoreRlt] = useState([])
 
   const checkVideoId = useSelector((state) => state.game.videoId)
-  const [stretchingStatus, setStretchingStatus] = useState(false)
+  // const [stretchingStatus, setStretchingStatus] = useState(false)
+  const [videoId, setVideoId] = useState(null)
 
 
   useEffect(() => {
@@ -214,7 +214,7 @@ function CustomRoom(props) {
   useEffect(() => {
     if (session && checkVideoId!==null) {
       session.signal({
-        data: stretchingStatus,
+        data: checkVideoId.toString(),
         to: [],
         type: "stretchingStatus"
       })
@@ -315,7 +315,10 @@ function CustomRoom(props) {
     })
 
     mySession.on("signal:stretchingStatus", (event) => {
-      setStretchingStart(true)
+      if (event.data) {
+        setVideoId(event.data)
+        setStretchingStart(true)
+      }
     })
 
     mySession.on("signal:rankData", (event) => {
@@ -574,6 +577,7 @@ function CustomRoom(props) {
         open={gameStart}
         onClose={() => closeIntroModal()}
         aria-labelledby="form-dialog-title"
+        disableBackdropClick
       >
         <ContentDialog>
           <IntroMp4 src={NarangNorangIntro} autoPlay></IntroMp4>
@@ -588,7 +592,7 @@ function CustomRoom(props) {
         aria-labelledby="form-dialog-title"
       >
         <ContentDialog>
-          <Stretching videoId={checkVideoId}></Stretching>
+          <Stretching videoId={videoId}></Stretching>
         </ContentDialog>
       </Dialog>
 

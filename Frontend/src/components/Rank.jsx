@@ -20,7 +20,7 @@ const Rank = (props) => {
       <img style={{ objectFit: "fill", width: "100%", height: "100%" }} src={rank} alt="rank" />
       <img src={celebrate} alt="celebrate" style={{position: "absolute", top: 0, left: 0, width: "100%", height: "100%", zIndex: "1"}} />
       <audio src={bgm} autoPlay></audio>
-      <div style={{ position: "absolute", top: "15%", left: "39%", width: "15%"}}>
+      <div style={{ position: "absolute", top: "15%", left: "39%"}}>
         <OpenViduVideoComponent streamManager={first} rank={1}/>
         <div className="name-tag">
           <p id="name">{getNicknameTag(first)}</p>

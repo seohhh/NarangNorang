@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { Modal } from "react-bootstrap";
-import { switchShowCanvas, switchGameStart, setGameStarter, switchGameStuatus } from "../slice/gameSlice";
-import { switchShowCanvas, switchGameStart, setStretchingId } from "../slice/gameSlice";
+import { switchShowCanvas, switchGameStart, switchGameStuatus, setStretchingId } from "../slice/gameSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import { handleCapture } from "../slice/gameSlice";

@@ -14,6 +14,7 @@ const gameSlice = createSlice({
       renderBool: false,
       gameEnded: false,
       scoreRlt: [],
+      totalScore: 0,
     },
     reducers: {
       switchShowCanvas(state) {
@@ -34,13 +35,24 @@ const gameSlice = createSlice({
       switchGameEnded(state) {
         state.gameEnded = !state.gameEnded
       },
+      setStretchingId(state, actions) {
+        state.videoId = actions.payload
+      },
+      setNowScore(state, actions) {
+        state.nowScore = actions.payload
+        console.log(state.nowScore);
+        console.log(actions.payload);
+      },
+      setTotalScore(state, actions) {
+        state.totalScore += actions.payload
+      }
     },
   });
 
 
 export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async (dispatch) => {
   try {
-    if (!videoRef.current) return;
+    if (!videoRef) return;
 
     canvas.toBlob((blob) => {
       if (blob !== null) {
@@ -104,5 +116,6 @@ export const switchGameStuatus = (roomCode) => async (dispatch) => {
   })
 }
 
-export const { switchShowCanvas, switchGameStart, switchGameEnded, setScoreRlt, setWebcamRef, switchRenderBool, setGameRef, setGameStarter } = gameSlice.actions;
+export const { switchShowCanvas, switchGameStart, switchGameEnded, setScoreRlt, setWebcamRef, 
+  switchRenderBool, setGameRef, setGameStarter, setStretchingId, setNowScore, setTotalScore } = gameSlice.actions;
 export default gameSlice.reducer;

@@ -11,11 +11,13 @@ import Eagle from "../assets/game/Eagle.mp4";
 import Frog from "../assets/game/Frog.mp4";
 import Cat from "../assets/game/Cat.mp4";
 import Tiger from "../assets/game/Tiger.mp4";
+import Wow1 from "../assets/game/Wow1.mp4";
+import Wow2 from "../assets/game/Wow2.mp4";
 
 import html2canvas from "html2canvas";
 
 import { useSelector, useDispatch } from "react-redux";
-import { handleCapture, handleGetScore, switchGameEnded, switchGameStart } from "../slice/gameSlice";
+import { handleCapture, handleGetScore, setNowScore, setTotalScore, switchGameEnded, switchGameStart } from "../slice/gameSlice";
 
 // 나랑노랑 인트로
 const IntroMp4 = styled.video`
@@ -51,10 +53,11 @@ function Game1(props) {
   const [gameVideoStart, setGameVideoStart] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
+
   const scoreRlt = useSelector((state) => state.game.scoreRlt);
   console.log(scoreRlt, '스코어 결과');
 
-  const videos = [Gorilla, Elephant, Eagle, Frog, Cat, Tiger];
+  const videos = [Wow1, Gorilla, Wow2, Elephant, Wow1, Eagle, Wow2, Frog, Wow1, Cat, Wow2, Tiger];
 
 
   const gameRef = useRef(null); // 게임 비디오 참조
@@ -158,11 +161,14 @@ function Game1(props) {
   useEffect(() => {
     const interval = setInterval(() => {
       if (gameRef.current) {
-        getScore(currentVideoIndex).then(score => {
+        getScore().then((score) => {
+          console.log(score, "1초마다 점수");
+          dispatch(setNowScore(score));
+          dispatch(setTotalScore(score));
           setScoreSum(prevScore => prevScore + score);
         });
       }
-    }, 1000); // 1초마다 호출
+    }, 2000); // 2초마다 호출
   
     return () => {
       clearInterval(interval); // 컴포넌트가 언마운트되면 interval을 정리
@@ -173,9 +179,13 @@ function Game1(props) {
   const handleVideoEnded = async () => {
     if (currentVideoIndex < videos.length - 1) {
       await capture();
-      setTimeout(() => {
-        setCurrentVideoIndex(currentVideoIndex + 1);
-      }, 3000);
+      const score = await getScore(currentVideoIndex);
+      console.log(score);
+      dispatch(setNowScore(score));
+      dispatch(setTotalScore(score));
+      setCurrentVideoIndex(currentVideoIndex + 1);
+      // setTimeout(() => {
+      // }, 2000);
     } else {
       setGameVideoStart(false); // 게임 비디오 재생을 종료
       // 여기에서 방 점수 넘기고, 게임 종료 상태 만들기

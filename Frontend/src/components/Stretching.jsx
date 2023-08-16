@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 
 
@@ -16,7 +16,7 @@ function Stretching (props) {
   const url = `https://www.youtube.com/embed/${videoId}?autoplay=1`
   console.log()
   return (
-    <youtube>
+    <Youtube>
       <iframe
         width="560"
         height="315"
@@ -26,7 +26,7 @@ function Stretching (props) {
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
         allowfullscreen
       ></iframe>
-    </youtube>
+    </Youtube>
   )
 }
 
