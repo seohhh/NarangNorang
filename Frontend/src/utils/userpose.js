@@ -3,7 +3,6 @@ import * as poseDetection from "@tensorflow-models/pose-detection";
 // Register WebGL backend.
 import "@tensorflow/tfjs-backend-webgl";
 import "@mediapipe/pose";
-import POSE from "./POSE";
 
 // CONSTANT
 const POINTS = [5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16];
@@ -21,6 +20,7 @@ const CONNECTION = [
   [13, 15],
   [14, 16],
 ];
+const WEIGHT = [1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2];
 // const COLORS = ["White", "Gray", "Blue", "Red"];
 const estimationConfig = {
   // flipHorizontal: false, // 좌우 반전
@@ -214,21 +214,20 @@ const computeScore = (keypoints1, keypoints2) => {
 const normVector = (keypoints) => {
   let normPoints = [];
 
-  for (const con of CONNECTION) {
+  for (var i = 0; i < CONNECTION; i++) {
     const mod = Math.sqrt(
-      Math.pow(keypoints[con[0]].x - keypoints[con[1]].x, 2) +
-        Math.pow(keypoints[con[0]].y - keypoints[con[1]].y, 2)
+      Math.pow(keypoints[CONNECTION[i][0]].x - keypoints[CONNECTION[i][1]].x, 2) +
+        Math.pow(keypoints[CONNECTION[i][0]].y - keypoints[CONNECTION[i][1]].y, 2)
     );
     normPoints.push({
-      x: (keypoints[con[0]].x - keypoints[con[1]].x) / mod,
-      y: (keypoints[con[0]].y - keypoints[con[1]].y) / mod,
-      score: keypoints[con[0]].score * keypoints[con[1]].score,
+      x: (keypoints[CONNECTION[i][0]].x - keypoints[CONNECTION[i][1]].x) / mod,
+      y: (keypoints[CONNECTION[i][0]].y - keypoints[CONNECTION[i][1]].y) / mod,
+      score: keypoints[CONNECTION[i][0]].score * keypoints[CONNECTION[i][1]].score * WEIGHT[i]
     });
   }
 
   return normPoints;
 };
-
 const exportObj = {
   loadDetector,
   detectPose,
