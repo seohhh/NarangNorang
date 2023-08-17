@@ -43,9 +43,12 @@ const gameSlice = createSlice({
         state.nowScore = actions.payload
         console.log(state.nowScore);
         console.log(actions.payload);
+        setTotalScore(state.nowScore);
+
       },
       setTotalScore(state, actions) {
         state.totalScore += actions.payload
+        console.log(state.totalScore);
       }
     },
   });
@@ -85,9 +88,8 @@ export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async
 export const handleGetScore = (gameRef, webcamRef) => async (dispatch) => {
   
   try {
-    const score = userpose.getScore(gameRef, webcamRef);
+    const score = await userpose.getScore(gameRef, webcamRef);
     // console.log("getScore videoRef", videoRef)
-    console.log("getScore", score);
     return score;
   } catch (error) {
     console.log(error, "점수계산 에러")
