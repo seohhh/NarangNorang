@@ -32,7 +32,7 @@ function GameTab (props) {
         className="mb-3"
         style={{fontSize: "25px", backgroundColor: "white"}}
       >
-        <Tab eventKey="game" title="게임">
+        <Tab eventKey="game" title="게임" style={{margin: "0"}}>
           <Fade cascade damping={0.2}>
             <div id="cardContainer">
               <div>
