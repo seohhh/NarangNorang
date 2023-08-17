@@ -21,7 +21,6 @@ const CONNECTION = [
   [14, 16],
 ];
 const WEIGHT = [1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2];
-// const COLORS = ["White", "Gray", "Blue", "Red"];
 const estimationConfig = {
   // flipHorizontal: false, // 좌우 반전
 
@@ -31,7 +30,7 @@ const estimationConfig = {
   nmsRadius: 100,
 };
 const scoreThreshold = 0.5;
-const similarityThreshold = 0.7;
+const similarityThreshold = 0.9;
 
 // VARIABLE
 let detector;
@@ -68,7 +67,6 @@ const detectPose = async (video) => {
   return poses;
 };
 
-
 const startRender = async (videoref, context) => {
   video = videoref;
   ctx = context;
@@ -84,7 +82,7 @@ const stopRender = () => {
   raf = false;
   cancelAnimationFrame(rafId);
   if (ctx && video) {
-    const canvas = ctx.canvas
+    const canvas = ctx.canvas;
     ctx.clearRect(0, 0, video.width, video.height); // 스켈레톤 지우기
     canvas.width = 0;
   }
@@ -122,7 +120,6 @@ const renderResult = async () => {
   }
 
   // ctx.clearRect(0, 0, video.width, video.height);
-
 };
 
 const drawPose = (ctx, pose, color) => {
@@ -216,21 +213,36 @@ const computeScore = (keypoints1, keypoints2) => {
         normPoints1[i].y * normPoints2[i].y);
   }
 
+  console.log("점수계산끝 norm", normPoints1, normPoints2);
+  if (scoreSum === 0) {
+    console.log("점수계산끝 합=0", similarity, scoreSum);
+    return 0;
+  }
+  console.log("점수계산끝", similarity / scoreSum);
   return similarity / scoreSum;
 };
 
 const normVector = (keypoints) => {
   let normPoints = [];
 
-  for (var i = 0; i < CONNECTION; i++) {
+  for (var i = 0; i < CONNECTION.length; i++) {
     const mod = Math.sqrt(
-      Math.pow(keypoints[CONNECTION[i][0]].x - keypoints[CONNECTION[i][1]].x, 2) +
-        Math.pow(keypoints[CONNECTION[i][0]].y - keypoints[CONNECTION[i][1]].y, 2)
+      Math.pow(
+        keypoints[CONNECTION[i][0]].x - keypoints[CONNECTION[i][1]].x,
+        2
+      ) +
+        Math.pow(
+          keypoints[CONNECTION[i][0]].y - keypoints[CONNECTION[i][1]].y,
+          2
+        )
     );
     normPoints.push({
-      x: (keypoints[CONNECTION[i][0]].x - keypoints[CONNECTION[i][1]].x) / mod,
+      x: (keypoints[CONNECTION[i][1]].x - keypoints[CONNECTION[i][0]].x) / mod,
       y: (keypoints[CONNECTION[i][0]].y - keypoints[CONNECTION[i][1]].y) / mod,
-      score: keypoints[CONNECTION[i][0]].score * keypoints[CONNECTION[i][1]].score * WEIGHT[i]
+      score:
+        keypoints[CONNECTION[i][0]].score *
+        keypoints[CONNECTION[i][1]].score *
+        WEIGHT[i],
     });
   }
 
