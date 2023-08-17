@@ -1,11 +1,11 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PhotoComponent from "../components/PhotoComponent";
 import styled from "styled-components";
 import Footer from "../components/Footer";
-import { useParams, Link } from "react-router-dom";
-import { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Ask from "../components/Ask";
+import Pagination from "../components/Pagination";
 
 
 const Wrapper = styled.div`
@@ -13,19 +13,18 @@ const Wrapper = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 80vh;
+  min-height: 100vh;
   position: relative;
   padding-bottom: 60px;
-  position: relative;
-  width: 80vw;
+  width: 75vw;
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: center;
-  flex: 1;
+  justify-content: flex-start;
+  // flex: 1;
 `;
 
 const RoomBtn = styled.div`
@@ -49,13 +48,32 @@ const NavLink = styled(Link)`
   font-size: 1.1rem;
  `
 
-
 axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 
 function Album() {
-
   const { userSeq } = useParams();
   const [userImgLst, setUserImgLst] = useState([]);
+
+  const navigate = useNavigate()
+  const memberSeq = sessionStorage.getItem('userSeq')
+
+  useEffect(() => {
+    if (memberSeq !== userSeq) {
+      navigate('/notfound')
+    }
+  }, [memberSeq, userSeq, navigate]);
+
+
+  const [page, setPage] = useState(1);
+  const limit = 6;
+  const offset = (page-1)*limit;
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const visiblePhotos = userImgLst.slice(offset, offset + limit);
+
 
   useEffect(() => {
     axios({
@@ -77,10 +95,15 @@ function Album() {
           {userImgLst.length ? (
             <>
               <Container>
-                {userImgLst.map((photo, index) => (
+                {visiblePhotos.map((photo, index) => (
                   <PhotoComponent key={index} photo={photo} />
                 ))}
               </Container>
+              <Pagination
+                currentPage={page}
+                totalPages={Math.ceil(userImgLst.length / limit)}
+                onPageChange={handlePageChange}
+              />
             </>
             ) : (
               <>
@@ -93,9 +116,9 @@ function Album() {
                 </div>
               </>
             )}
-          <Ask />
         </Wrapper>
       </div>
+      <Ask />
       <Footer />
     </>
   );

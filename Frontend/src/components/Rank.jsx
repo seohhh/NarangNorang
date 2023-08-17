@@ -2,7 +2,7 @@ import React from 'react'
 import rank from '../assets/ranktest.png';
 import OpenViduVideoComponent from './OvVideo';
 import celebrate from '../assets/celebrate.gif';
-import bgm from '../assets/music/rankbgm.mp3';
+import bgm from '../assets/music/clap.mp3';
 
 const Rank = (props) => {
   const first = props.first

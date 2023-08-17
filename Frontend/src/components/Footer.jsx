@@ -11,8 +11,9 @@ const Wrapper = styled.div`
   flex-direction: column;
   background-color: #fff389;
   align-items: center;
-  position: relative; (absolute -> relative)
-  transform: translatY(-100%);
+  position: relative;
+  transform: translatY(0%);
+  bottom: 0;
 `;
 
 const Top = styled.div`
