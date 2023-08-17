@@ -22,6 +22,7 @@ const Container = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  flex-direction: column;
   width: 95vw;
   height: 90vh;
   border-radius: 25px;
@@ -65,6 +66,7 @@ const GuestBtn = styled.div`
   display: flex;
   justify-content: center;
   border-radius: 7px;
+  color: rgb(145, 145, 145);
 
   &:hover{
     background-color: rgb(201, 201, 201);
@@ -77,13 +79,12 @@ function Waiting() {
   // const userNickname = sessionStorage.getItem('userNickname')
   const userNickname = useSelector((state) => (state.login.userNickname))
 
-
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [memberId, setMemberId] = useState("");
   const [memberPassword, setMemberPassword] = useState("");
-  const [nickname, setNickname] = useState("");
+  const [nickname, setNickname] = useState(userNickname);
   const [roomAlert, setRoomAlert] = useState(false)
 
 
@@ -154,8 +155,8 @@ function Waiting() {
     setRoomAlert(false)
   }
 
-  const onClickJoin = (e) => {
-    joinCheck()
+  const onClickJoin = () => {
+    joinCheck(nickname)
   }
 
   const [show, setShow] = useState(false);
@@ -189,9 +190,9 @@ function Waiting() {
             <LoginBtn type="submit" onClick={onClickLogin}>
               로그인
             </LoginBtn>
-            <Button type="submit" onClick={handleShow} variant="outline-secondary" style={{ width: "100%", margin: "10px" }}>
+            <GuestBtn type="submit" onClick={handleShow} variant="outline-secondary" style={{ width: "100%", margin: "10px" }}>
               손님으로 참여하기
-            </Button>
+            </GuestBtn>
             <NavLink to="/signup"><span>회원이 아니신가요? <span style={{color: "#FFE600"}}>회원가입</span></span></NavLink>
           </Content>
         </Container>
@@ -201,7 +202,7 @@ function Waiting() {
         <Modal.Header closeButton>
           <Modal.Title style={{ fontFamily: "Happiness-Sans-Bold" }}>
             손님으로 참여하시겠습니까?</Modal.Title>
-        </Modal.Header>
+        </Modal.Header> 
         <Modal.Body style={{ fontFamily: "Pretendard-bold" }}>
           <div style={{ marginBottom: "20px" }}>
             손님으로 참여 시 앨범 기능을 사용할 수 없습니다. <br />그래도 계속하시겠습니까?
@@ -222,12 +223,12 @@ function Waiting() {
           </Form>
         </Modal.Body>
         <Modal.Footer style={{ display: "flex", justifyContent: "center"}}>
-          <Button onClick={handleClose}>
+          <LoginBtn style={{width: "30%", fontFamily: "Pretendard-bold"}} onClick={handleClose}>
             로그인하기
-          </Button>
-          <Button variant="warning" onClick={onClickJoin}>
+          </LoginBtn>
+          <GuestBtn style={{width: "30%", fontFamily: "Pretendard-bold"}}onClick={onClickJoin}>
             참여하기
-          </Button>
+          </GuestBtn>
         </Modal.Footer>
       </Modal>
 

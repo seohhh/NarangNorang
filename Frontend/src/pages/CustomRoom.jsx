@@ -1,7 +1,7 @@
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { switchGameEnded, switchGameStuatus, switchRenderBool } from '../slice/gameSlice';
@@ -20,6 +20,7 @@ import videoOnIcon from "../assets/icon/videoOn.png";
 import videoOffIcon from "../assets/icon/videoOff.png";
 import audioOnIcon from "../assets/icon/audioOn.png";
 import audioOffIcon from "../assets/icon/audioOff.png";
+import logo from "../assets/logo.png";
 
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@mui/material/DialogContent";
@@ -136,8 +137,6 @@ function CustomRoom(props) {
       console.log(scoreRlt, "스코어rlt");
       console.log(session);
 
-
-
       scoreRlt.forEach((connectionId) => {
         session.streamManagers.forEach((streamManager) => {
           if (streamManager.stream && streamManager.stream.session && streamManager.stream.session.connection && streamManager.stream.session.connection.connectionId === connectionId) {
@@ -163,7 +162,6 @@ function CustomRoom(props) {
         closeRankModal();
       }, 16800);
 
-      console.log("게임 끝!!!@!@!!@!@@121!@!@!@!@$!#@%#$^%!@#$%&*")
       dispatch(switchGameEnded())
       dispatch(switchGameStuatus(sessionId))
 
@@ -559,11 +557,11 @@ function CustomRoom(props) {
 
       {/* 초대링크로 접속한 경우: 입장 대기실 */}
       {sessionIdFromUrl != null && join === false ? (
-        <div className="wrapper">
-          <div id="container">
-            <h2 style={{ marginBottom: "20px" }}> 입장 대기실 </h2>
+        <div className="wrapper" style={{ backgroundColor: "white" }}>
+          <div id="shadowContainer">
+            <img src={logo} alt="logo" style={{width: "14%", marginBottom: "3%"}}/>
             <div id="content">
-              <div style={{ width: "35rem", position: "relative" }}>
+              <div style={{ width: "35rem", position: "relative"}}>
                 {/* 입장 대기실 화면 크기 props.guest 여부로 확인 */}
                 <UserVideoComponent
                   streamManager={mainStreamManager}
@@ -572,20 +570,20 @@ function CustomRoom(props) {
                 <div id="buttongroup">
                   {!videoOn ? (
                     <div onClick={camStatusChanged}>
-                      <img src={videoOnIcon} alt="videoOn" style={{ margin: "8px", width: "53px" }}/>
+                      <img src={videoOnIcon} alt="videoOn" className="iconSettting"/>
                     </div>
                   ) : (
                     <div onClick={camStatusChanged}>
-                      <img src={videoOffIcon} alt="videoOff" style={{ margin: "8px", width: "53px" }}/>
+                      <img src={videoOffIcon} alt="videoOff" className="iconSettting"/>
                     </div>
                   )}
                   {!audioOn ? (
                     <div onClick={micStatusChanged}>
-                      <img src={audioOnIcon} alt="audioOn" style={{ margin: "8px", width: "53px" }}/>
+                      <img src={audioOnIcon} alt="audioOn" className="iconSettting"/>
                     </div>
                   ) : (
                     <div onClick={micStatusChanged}>
-                      <img src={audioOffIcon} alt="audioOff" style={{ margin: "8px", width: "53px" }}/>
+                      <img src={audioOffIcon} alt="audioOff" className="iconSettting"/>
                     </div>
                   )}
                 </div>

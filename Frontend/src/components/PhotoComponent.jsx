@@ -19,6 +19,15 @@ const ButtonBox = styled.div`
   transition: opacity 0.3s ease-in-out;
 `;
 
+const Date = styled.span`
+  position: absolute; 
+  bottom: 27%; 
+  right: 5%;
+  font-size: 1.2rem;
+  color: #FFD954;
+  text-shadow: -1.2px 0 #000, 0 1.2px #000, 1.2px 0 #000, 0 -1.2px #000;
+`
+
 
 axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 
@@ -54,9 +63,8 @@ function PhotoComponent(props) {
 
   const updatePhotoContent = () => {
     // 작성 버튼 클릭 시 호출되는 함수
-    console.log('여기 오니?')
     axios({
-      method: "POST", // PUT 요청으로 변경
+      method: "PUT", // PUT 요청으로 변경
       url: `album/content/`,
       data: {
         photoContent: editedContent, // 수정된 내용을 서버로 전송
@@ -80,11 +88,14 @@ function PhotoComponent(props) {
         onMouseOver={doMouseOver}
         onMouseLeave={doMouseLeave}
       >
-        <Card.Img
-          variant="top"
-          src={photo.photoUrl}
-          style={{ height: "24rem" }}
-        />
+        <div>
+          <Card.Img
+            variant="top"
+            src={photo.photoUrl}
+            style={{ height: "24rem", position: "relative" }}
+          />
+          <Date>{photo.photoDate.substr(0,10)}</Date>
+        </div>
 
         <ButtonBox isActive={isActive}>
           <Button
@@ -103,18 +114,20 @@ function PhotoComponent(props) {
           </Button>
         </ButtonBox>
         <Card.Body>
-          <Card.Title style={{ margin: "1rem" }}>{photo.photoDate.substr(0,10)}</Card.Title>
-          <Card.Text style={{ margin: "1rem" }}>
+          {/* <Card.Title style={{ margin: "1rem" }}>{photo.photoDate.substr(0,10)}</Card.Title> */}
+          <Card.Text style={{ margin: "1rem", fontFamily: "Dovemayo_wild", fontSize: "1.3rem" }}>
             {photo.photoContent}
           </Card.Text>
         </Card.Body>
       </Card>
+
       <Modal
-        size="lg"
+        size="mx"
         show={show}
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
+        style={{fontFamily: "Happiness-Sans-Bold"}}
       >
         <Modal.Header closeButton>
           <Modal.Title>사진 내용 수정</Modal.Title>
@@ -129,7 +142,7 @@ function PhotoComponent(props) {
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="outline-warning" onClick={updatePhotoContent}>작성</Button>
+          <Button variant="warning" onClick={updatePhotoContent}>작성</Button>
         </Modal.Footer>
       </Modal>
     </div>
