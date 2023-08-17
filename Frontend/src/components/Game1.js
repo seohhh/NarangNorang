@@ -13,7 +13,7 @@ import Cat from "../assets/game/Cat.mp4";
 import Tiger from "../assets/game/Tiger.mp4";
 import Wow1 from "../assets/game/Wow1.mp4";
 import Wow2 from "../assets/game/Wow2.mp4";
-import outro from "../assets/game/outro.mp4"
+import outro from "../assets/game/outro.mp4";
 
 import html2canvas from "html2canvas";
 
@@ -37,7 +37,7 @@ const IntroDialogContent = styled(DialogContent)`
 // 게임영상 크기
 const GameVideo = styled.video`
   width: 100%;
-  height: 471px;
+  height: 100%;
   object-fit: cover;
 `;
 
@@ -228,7 +228,7 @@ function Game1(props) {
       )} */}
 
       {gameVideoStart && (
-        <div>
+        <div style={{width:"100%", height:"63vh"}}>
           <GameVideo
             ref={gameRef}// 게임 비디오 참조
             src={videos[currentVideoIndex]}

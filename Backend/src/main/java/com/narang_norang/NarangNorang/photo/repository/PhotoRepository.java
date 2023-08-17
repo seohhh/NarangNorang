@@ -12,7 +12,7 @@ import java.util.Optional;
 @Repository
 public interface PhotoRepository extends JpaRepository<Photo, Long> {
 
-    List<Photo> findByMember(Member member);
+    List<Photo> findByMemberOrderByPhotoDateDesc(Member member);
 
     Optional<Photo> findByPhotoSeq(Long photoSeq);
 

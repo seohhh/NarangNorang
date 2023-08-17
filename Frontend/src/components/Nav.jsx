@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   background-color:transparent;
-  padding: 35px 80px;
+  padding: 35px 150px;
 `
 
 const NavLink = styled(Link)`
@@ -61,7 +61,7 @@ function CustomNavbar() {
   }
 
   return (
-    <Wrapper className="container">
+    <Wrapper>
       <div className="align-self-center">
         <Link to="/">
           <img

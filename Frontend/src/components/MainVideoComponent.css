@@ -3,7 +3,7 @@
   /* 비디오와 캔버스의 위치 기준점 */
   padding: 5px;
   width: 100%;
-  height: 100%;
+  height: 63vh;
   /* width: 800px; */
   /* height: 640px; */
 }
@@ -13,7 +13,7 @@
   /* width: 575px; */
   /* height: 460px; */
   width: 100%;
-  height: 100%;
+  height: 63vh;
 }
 
 video {
@@ -27,7 +27,7 @@ video {
   cursor: pointer;
   z-index: 1;
   /* 쌓임 순서 조정 */
-  object-fit: fill;
+  object-fit: cover;
   border-radius: 5px;
 }
 

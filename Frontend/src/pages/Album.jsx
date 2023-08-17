@@ -49,6 +49,7 @@ function Album() {
       <Wrapper>
         <h1>ALBUM</h1>
         <Container>
+          
           {userImgLst.map((photo, index) => (
             <PhotoComponent key={index} photo={photo} />
           ))}
