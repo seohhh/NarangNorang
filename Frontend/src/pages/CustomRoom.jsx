@@ -118,10 +118,12 @@ function CustomRoom(props) {
       console.log(scoreRlt, "스코어rlt");
       console.log(session);
 
-      scoreRlt.forEach((connectionId) => {
-        session.streamManagers.forEach((streamManager) => {
-          if (streamManager.stream && streamManager.stream.session && streamManager.stream.session.connection && streamManager.stream.session.connection.connectionId === connectionId) {
-            Ranker.push(streamManager);
+      scoreRlt.forEach((scoreConnectionId) => {
+        session.streamManagers.forEach((scoreStreamManager) => {
+          if (scoreStreamManager.stream && scoreStreamManager.stream.connection && scoreStreamManager.stream.connection.connectionId === scoreConnectionId) {
+            console.log(scoreStreamManager, "랭크에 들어가는순서~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+            console.log(scoreConnectionId)
+            Ranker.push(scoreStreamManager);
           }
         })
       })
@@ -160,6 +162,7 @@ function CustomRoom(props) {
         url: `/participant/room/${session.sessionId}`
       }).then((res) => {
         setScoreRlt(res.data);
+        console.log(res, "등수!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
       }).catch((err) => {
         console.log(err);
       })
