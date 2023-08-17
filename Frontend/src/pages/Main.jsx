@@ -19,14 +19,6 @@ const Container = styled.div`
   justify-content: center;
 `;
 
-// const TextContent = styled.div`
-//   flex: 1; /* 텍스트 부분이 화면 가로 방향을 반반으로 차지 */
-//   display: flex;
-//   flex-direction: column;
-//   justify-content: left;
-//   align-items: center;
-// `
-
 const color = {
   color: "#FFE600",
 };

@@ -96,9 +96,9 @@ function PhotoComponent(props) {
   };
 
   return (
-    <div>
+    <div style={{display: "flex", justifyContent: "center"}}>
       <Card
-        style={{ width: "19rem", height: "28rem", margin: "2rem" }}
+        style={{ width: "20rem", height: "28rem", margin: "2rem" }}
         onMouseOver={doMouseOver}
         onMouseLeave={doMouseLeave}
       >

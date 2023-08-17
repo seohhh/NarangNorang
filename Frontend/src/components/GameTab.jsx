@@ -27,6 +27,9 @@ function GameTab (props) {
 
   return (
     <DialogContent style={{height: "750px"}}>
+      <div style={{diplay: "flex", justifyContent: "center", alignItems: "center"}}>
+
+      </div>
       <Tabs
         id="controlled-tab-example"
         className="mb-3"

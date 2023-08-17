@@ -18,6 +18,7 @@ import CustomRoom from "./pages/CustomRoom";
 import Exit from "./pages/ExitRoom"
 import NotFound from "./pages/NotFound";
 
+
 const Wrapper = styled.div`
   background-image: ${({ isMain }) => (isMain ? `url(${bgMain})` : `url(${bgImg})`)};
   background-repeat: no-repeat;
@@ -30,12 +31,13 @@ function App() {
   const location = useLocation();
   const isNavVisible = !(location.pathname === '/login' || location.pathname === '/signup' ||
                           location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room') ||
-                          location.pathname.startsWith('/exit') || location.pathname === '/notfound');
+                          location.pathname.startsWith('/exit'));
   const isMainPage = location.pathname === '/';
   const isLoggedIn = sessionStorage.getItem('isLoggedin')
   const noBackground = (location.pathname.startsWith('/waiting/') || location.pathname.startsWith('/room') ||
-                        location.pathname.startsWith('/exit') || location.pathname === '/notfound');
+                        location.pathname.startsWith('/exit'));
   const shouldShowBackground = isMainPage && !noBackground;
+
 
   return (
     <Wrapper isMain={isMainPage}
@@ -44,7 +46,7 @@ function App() {
       <div>
         <Routes>
           <Route path="/" element={<Main />} />
-          <Route path="/contents" element={<Contents />}></Route>
+          <Route path="/contents" element={<Contents />} />
           <Route path="/album/:userSeq" element={isLoggedIn ? <Album /> : <Navigate to="/login" />}/>
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

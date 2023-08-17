@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import { Form, Button, Row, Col, Modal } from "react-bootstrap";
 import axios from "axios";
 import styled from "styled-components";
 import Footer from "../components/Footer";
+import Ask from "../components/Ask";
 
 const Wrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: center;
-  margin: 0 30%; /* Add margin for left and right spacing */
+  margin: 0 30%;
   min-height: 100vh;
 `;
 
@@ -42,9 +44,19 @@ const UpdateBtn = styled.div`
 axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 
 function Mypage() {
+  const { userId } = useParams()
   const user = JSON.parse(sessionStorage.getItem('user'))
   const memberId = JSON.parse(sessionStorage.getItem('userId'))
+
   const token = user.accessToken
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (memberId !== userId) {
+      navigate('/notfound')
+    }
+  }, [memberId, userId, navigate]);
+
 
   const [memberName, setMemberName] = useState(undefined);
   const [memberEmail, setMemberEmail] = useState(undefined);
@@ -265,7 +277,7 @@ function Mypage() {
             className="mb-2"
             as={Row}
             lg="12"
-            controlId="validationCustom02"
+            controlId="validationCustom04"
           >
             <Form.Label column lg="4">
               이메일
@@ -285,7 +297,7 @@ function Mypage() {
             className="mb-2"
             as={Row}
             lg="12"
-            controlId="validationCustom02"
+            controlId="validationCustom05"
           >
             <Form.Label column lg="4">
               닉네임
@@ -388,6 +400,7 @@ function Mypage() {
           <div>변경할 비밀번호를 확인해주세요.</div>
         </Modal.Body>
       </Modal>
+      <Ask />
       <Footer />
     </>
   );

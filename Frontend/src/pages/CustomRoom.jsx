@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { switchGameEnded, switchGameStuatus, switchRenderBool } from '../slice/gameSlice';
+import Dialog from "@material-ui/core/Dialog";
+import DialogContent from "@mui/material/DialogContent";
 
 // component
 import UserVideoComponent from "../components/UserVideoComponent";
@@ -22,28 +24,9 @@ import audioOnIcon from "../assets/icon/audioOn.png";
 import audioOffIcon from "../assets/icon/audioOff.png";
 import logo from "../assets/logo.png";
 
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@mui/material/DialogContent";
 import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
-
 import gameBackgourndImg from "../assets/gamebackground2.jpg";
 
-// import Gorilla from '../assets/game/quiz/Gorilla.png';
-// import Elephant from '../assets/game/quiz/Elephant.png';
-// import Eagle from '../assets/game/quiz/Eagle.png';
-// import Frog from '../assets/game/quiz/Frog.png';
-// import Cat from '../assets/game/quiz/Cat.png';
-// import Tiger from '../assets/game/quiz/Tiger.png';
-// import StartMusic from '../assets/game/music/StartMusic.mp3';
-// import UUUU from '../assets/game/music/UUUU.wav';
-// import GorillaMusic from '../assets/game/music/GorillaMusic.wav';
-// import ElephantMusic from '../assets/game/music/ElephantMusic.wav';
-// import GorillaElephantMix from '../assets/game/music/GorillaElephantMix.wav';
-// import EagleMusic from '../assets/game/music/EagleMusic.wav';
-// import FrogMusic from '../assets/game/music/FrogMusic.wav';
-// import EagleFrogMix from '../assets/game/music/EagleFrogMix.wav';
-// import CatMusic from '../assets/game/music/CatMusic.wav';
-// import TigerMusic from '../assets/game/music/TigerMusic.wav';
 
 const APPLICATION_SERVER_URL = "https://i9c208.p.ssafy.io/";
 
@@ -275,7 +258,7 @@ function CustomRoom(props) {
 
       setTimeout(() => {
         closeRankModal();
-      }, 16800);
+      }, 13000);
     });
 
     mySession.on("signal:render", (event) => {
