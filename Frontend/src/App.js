@@ -1,5 +1,4 @@
 import { Route, Routes, useLocation, Navigate } from "react-router-dom";
-// import { useSelector } from "react-redux";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Nav from './components/Nav';
 import './App.css'
@@ -13,21 +12,18 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Album from './pages/Album';
 import Mypage from './pages/Mypage';
-import Contents from './components/ContentsComponent';
+import Contents from './pages/Contents';
 import Waiting from './pages/Waiting';
 import CustomRoom from "./pages/CustomRoom";
 import Exit from "./pages/ExitRoom"
-import Rank from "./components/Rank";
 import NotFound from "./pages/NotFound";
 
 const Wrapper = styled.div`
-  background-image: url(${bgImg});
-  background-image: ${({ isMain }) => isMain && `url(${bgMain})`};
+  background-image: ${({ isMain }) => (isMain ? `url(${bgMain})` : `url(${bgImg})`)};
   background-repeat: no-repeat;
-  background-size: contain;
+  background-size: ${({ isMain }) => (isMain ? "contain" : "cover")};
   font-family: Happiness-Sans-Bold;
   font-weight: bold;
-  
   `;
 
 function App() {
@@ -42,7 +38,7 @@ function App() {
   const shouldShowBackground = isMainPage && !noBackground;
 
   return (
-    <Wrapper ismain={{isMainPage}}
+    <Wrapper isMain={isMainPage}
       style={{ backgroundImage: shouldShowBackground ? `url(${bgMain})` : (noBackground ? 'none' : `url(${bgImg})`) }}>
       {isNavVisible && <Nav />}
       <div>
@@ -56,10 +52,8 @@ function App() {
           <Route path="/mypage/:userId" element={<Mypage />} />
           <Route path="/waiting/:sessionId" element={<Waiting />} />
           <Route path="/exit" element={<Exit />} />
-          <Route path="/test" element={<Rank />} />
           <Route path="*" element={<Navigate to="/notfound" />} />
           <Route path="/notfound" element={<NotFound />} />
-          {/* <Route path="/test" element={<VideoRoom />} /> */}
         </Routes>
       </div>
     </Wrapper>

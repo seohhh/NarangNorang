@@ -8,7 +8,7 @@ const ButtonBox = styled.div`
   position: absolute;
   top: 0;
   left: 0;
-  width: 24rem;
+  width: 100%;
   height: 100%;
   border-radius: 1% 1% 1% 1%;
   background-color: rgba(0, 0, 0, 0.8);
@@ -17,12 +17,11 @@ const ButtonBox = styled.div`
   align-items: center;
   opacity: ${(props) => (props.isActive ? 1 : 0)};
   transition: opacity 0.3s ease-in-out;
-`;
-
+`
 const Date = styled.span`
   position: absolute; 
-  bottom: 27%; 
-  right: 5%;
+  bottom: 5%; 
+  right: 7%;
   font-size: 1.2rem;
   color: #FFD954;
   text-shadow: -1.2px 0 #000, 0 1.2px #000, 1.2px 0 #000, 0 -1.2px #000;
@@ -62,9 +61,8 @@ function PhotoComponent(props) {
   };
 
   const updatePhotoContent = () => {
-    // 작성 버튼 클릭 시 호출되는 함수
     axios({
-      method: "PUT", // PUT 요청으로 변경
+      method: "PUT",
       url: `album/content/`,
       data: {
         photoContent: editedContent, // 수정된 내용을 서버로 전송
@@ -73,8 +71,7 @@ function PhotoComponent(props) {
     })
       .then((res) => {
         console.log(res);
-        // 여기서 필요한 상태 업데이트나 처리를 수행할 수 있습니다.
-        handleClose(); // 모달 닫기
+        handleClose();
       })
       .catch((err) => {
         console.log(err);
@@ -84,20 +81,20 @@ function PhotoComponent(props) {
   return (
     <div>
       <Card
-        style={{ width: "24rem", margin: "3rem", height: "32rem" }}
+        style={{ width: "20rem", height: "29rem", margin: "2rem" }}
         onMouseOver={doMouseOver}
         onMouseLeave={doMouseLeave}
       >
-        <div>
+        <div style={{position: "relative", display: "flex", justifyContent: "center", alignItems: "center", height: "100%"}}>
           <Card.Img
             variant="top"
             src={photo.photoUrl}
-            style={{ height: "24rem", position: "relative" }}
+            style={{ height: "22rem",  width: "90%", height: "90%", position: "relative", margin: "0" }}
           />
           <Date>{photo.photoDate.substr(0,10)}</Date>
         </div>
 
-        <ButtonBox isActive={isActive}>
+        {/* <ButtonBox isActive={isActive}>
           <Button
             style={{ marginLeft: "1rem" }}
             variant="outline-success"
@@ -112,22 +109,20 @@ function PhotoComponent(props) {
           >
             삭제
           </Button>
-        </ButtonBox>
-        <Card.Body>
-          {/* <Card.Title style={{ margin: "1rem" }}>{photo.photoDate.substr(0,10)}</Card.Title> */}
-          <Card.Text style={{ margin: "1rem", fontFamily: "Dovemayo_wild", fontSize: "1.3rem" }}>
+        </ButtonBox> */}
+        <Card.Body style={{padding: "0 0 16px 0"}}>
+          <Card.Text style={{ margin: "0rem 1rem", fontFamily: "Dovemayo_wild", fontSize: "1.3rem", display: "flex", justifyContent: "center"}}>
             {photo.photoContent}
           </Card.Text>
         </Card.Body>
       </Card>
 
       <Modal
-        size="mx"
         show={show}
         onHide={handleClose}
         backdrop="static"
         keyboard={false}
-        style={{fontFamily: "Happiness-Sans-Bold"}}
+        style={{fontFamily: "Happiness-Sans-Bold", width: "100%", margin: "2rem", height: "28rem"}}
       >
         <Modal.Header closeButton>
           <Modal.Title>사진 내용 수정</Modal.Title>

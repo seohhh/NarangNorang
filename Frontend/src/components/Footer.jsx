@@ -21,7 +21,7 @@ const Top = styled.div`
   flex-direction: row;
   justify-content: space-around;
   align-items: center;
-  margin-top: 4rem;
+  margin-top: 3rem;
   margin-bottom: 2rem;
   color: grey;
 `;
@@ -29,7 +29,7 @@ const Top = styled.div`
 const Bottom = styled.div`
   font-family: 'Pretendard-bold';
   width: 60%;
-  margin-bottom: 3rem;
+  margin-bottom: 2rem;
   margin-left: 20px;
   color: grey;
   display: flex;

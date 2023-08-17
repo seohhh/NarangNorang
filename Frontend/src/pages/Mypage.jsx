@@ -1,23 +1,51 @@
 import React, { useState, useEffect } from "react";
 import { Form, Button, Row, Col, Modal } from "react-bootstrap";
-import { useSelector } from "react-redux";
 import axios from "axios";
 import styled from "styled-components";
+import Footer from "../components/Footer";
 
 const Wrapper = styled.div`
   display: flex;
   flex-flow: column;
   align-items: center;
   margin: 0 30%; /* Add margin for left and right spacing */
+  min-height: 100vh;
 `;
+
+const PasswordBtn = styled.div`
+  background-color: white;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1% 0;
+  border: 1px solid #C5C5C5;
+
+  &:hover{
+    background-color: #C5C5C5;
+  } 
+`
+
+const UpdateBtn = styled.div`
+  background-color: #FFEA77;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 1% 0;
+  
+  &:hover{
+    background-color: #ffed8a;
+  } 
+`
 
 axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 
 function Mypage() {
-  const user = sessionStorage.getItem('user')
+  const user = JSON.parse(sessionStorage.getItem('user'))
   console.log(user)
   const memberId = user.memberId
-  const token = useSelector((state) => state.login.token);
+  const token = user.accessToken
 
   const [memberName, setMemberName] = useState(undefined);
   const [memberEmail, setMemberEmail] = useState(undefined);
@@ -166,7 +194,7 @@ function Mypage() {
   return (
     <>
       <Wrapper>
-        <h1>{memberNickname}의 마이페이지</h1>
+        <div style={{margin: "5% 0 10% 0", fontSize: "2rem"}}>{memberNickname}의 마이페이지</div>
         <Form
           style={{ width: "100%", display: "flex", flexDirection: "column" }}
           noValidate
@@ -273,13 +301,15 @@ function Mypage() {
             </Col>
             <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           </Form.Group>
-
-          <Button variant="outline-warning" type="submit" >
-            정보 수정
-          </Button>
-          <Button variant="outline-primary" className="mt-2" type="submit" onClick={handleShow}>
-            비밀번호변경
-          </Button>
+          
+          <div>
+            <UpdateBtn variant="outline-warning" type="submit" >
+              정보 수정
+            </UpdateBtn>
+            <PasswordBtn variant="outline-primary" className="mt-2" type="submit" onClick={handleShow}>
+              비밀번호변경
+            </PasswordBtn>
+          </div>
         </Form>
       </Wrapper>
 
@@ -359,6 +389,7 @@ function Mypage() {
           <div>변경할 비밀번호를 확인해주세요.</div>
         </Modal.Body>
       </Modal>
+      <Footer />
     </>
   );
 }
