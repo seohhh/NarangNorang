@@ -106,9 +106,9 @@ export const render = (dispatch) => {
   dispatch(switchRenderBool())
 }
 
-export const switchGameStuatus = (roomCode) => async (dispatch) => {
+export const switchGameStuatus = (roomCode, status) => async (dispatch) => {
   console.log(roomCode, "방정보!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
-  axios.put('/room/update/status/' + roomCode)
+  axios.put('/room/update/status/' + roomCode, {"status": status})
   .then((res) => {
     console.log(res)
   })

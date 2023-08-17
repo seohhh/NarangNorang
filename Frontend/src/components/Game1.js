@@ -18,7 +18,7 @@ import outro from "../assets/game/outro.mp4";
 import html2canvas from "html2canvas";
 
 import { useSelector, useDispatch } from "react-redux";
-import { handleCapture, handleGetScore, setNowScore, setTotalScore, switchGameEnded, switchGameStart } from "../slice/gameSlice";
+import { handleCapture, handleGetScore, setNowScore, setTotalScore, switchGameEnded } from "../slice/gameSlice";
 
 // 나랑노랑 인트로
 const IntroMp4 = styled.video`
@@ -205,9 +205,7 @@ function Game1(props) {
         setGameVideoStart(false); // 게임 비디오 재생을 종료
         // 여기에서 방 점수 넘기고, 게임 종료 상태 만들기
 
-        setTimeout(() => {
-          dispatch(switchGameStart());
-        }, 1000)
+        
         dispatch(switchGameEnded());
         
     }
