@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom"; // react-router-dom에서 가져온 Link 컴포넌트
 import styled from "styled-components"; // styled-components를 가져옴
@@ -42,10 +42,17 @@ const NoUnderLine = styled(Link)`
 // 컴포넌트를 정의하는 함수
 function CustomNavbar() {
   const isLoggedin = sessionStorage.getItem('isLoggedin')
-  const token = useSelector(state => state.login.token);
+  const user = JSON.parse(sessionStorage.getItem('user'));
   const userId = useSelector(state => state.login.userId);
   const userSeq = sessionStorage.getItem('userSeq')
+  const [token, setToken] = useState(null)
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (user) {
+      setToken(user.accessToken)
+    }
+  }, [user])
 
   const dispatch = useDispatch()
   const handleLogout = () => {

@@ -5,6 +5,7 @@ import Tab from "react-bootstrap/Tab";
 import Tabs from "react-bootstrap/Tabs";
 import ContentStretchingCard from "./ContentStretchingCard";
 import "./GameTab.css"
+import Footer from "../components/Footer";
 
 // photo
 import animalGame from "../assets/animalGame.png";
@@ -14,6 +15,7 @@ const MyDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  height : 100%;
 `;
 
 function Contents() {
