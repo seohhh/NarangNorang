@@ -50,8 +50,9 @@ public class RoomController {
             @ApiResponse(code = 404, message = "방 없음"),
             @ApiResponse(code = 500, message = "서버 오류")
     })
-    public ResponseEntity<Boolean> updateRoomStatus(@PathVariable("roomCode") String roomCode) {
-        roomService.updateRoomStatus(roomCode);
+    public ResponseEntity<Boolean> updateRoomStatus(@PathVariable("roomCode") String roomCode,
+                                                    @RequestBody String status) {
+        roomService.updateRoomStatus(roomCode, status);
         return ResponseEntity.ok(true);
     }
 

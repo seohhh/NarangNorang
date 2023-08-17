@@ -155,13 +155,16 @@ function CustomRoom(props) {
       }
 
       setRank(true);
+      setTimeout(() => {
+        setGameStatus(false)
+      }, 1000)
 
       setTimeout(() => {
         closeRankModal();
       }, 16800);
 
       dispatch(switchGameEnded())
-      dispatch(switchGameStuatus(sessionId))
+      dispatch(switchGameStuatus(sessionId, "wait"))
 
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
