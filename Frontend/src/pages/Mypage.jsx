@@ -43,8 +43,7 @@ axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 
 function Mypage() {
   const user = JSON.parse(sessionStorage.getItem('user'))
-  console.log(user)
-  const memberId = user.memberId
+  const memberId = JSON.parse(sessionStorage.getItem('userId'))
   const token = user.accessToken
 
   const [memberName, setMemberName] = useState(undefined);
