@@ -27,6 +27,7 @@ const Wrapper = styled.div`
   background-size: contain;
   font-family: Happiness-Sans-Bold;
   font-weight: bold;
+  
   `;
 
 function App() {
