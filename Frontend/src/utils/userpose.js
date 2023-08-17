@@ -30,7 +30,7 @@ const estimationConfig = {
   nmsRadius: 100,
 };
 const scoreThreshold = 0.5;
-const similarityThreshold = 0.9;
+const similarityThreshold = 0.8;
 
 // VARIABLE
 let detector;
@@ -237,7 +237,7 @@ const normVector = (keypoints) => {
         )
     );
     normPoints.push({
-      x: (keypoints[CONNECTION[i][1]].x - keypoints[CONNECTION[i][0]].x) / mod,
+      x: (keypoints[CONNECTION[i][0]].x - keypoints[CONNECTION[i][1]].x) / mod,
       y: (keypoints[CONNECTION[i][0]].y - keypoints[CONNECTION[i][1]].y) / mod,
       score:
         keypoints[CONNECTION[i][0]].score *
