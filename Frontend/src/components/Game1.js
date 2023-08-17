@@ -172,6 +172,7 @@ function Game1(props) {
         getScore().then((score) => {
           console.log(score, "1초마다 점수");
           dispatch(setNowScore(score));
+          dispatch(setTotalScore(score))
           setScoreSum((prevScore) => prevScore + score);
         });
       }
@@ -184,17 +185,19 @@ function Game1(props) {
   }, [currentVideoIndex, gameRef]);
 
   const handleVideoEnded = async () => {
-    if (currentVideoIndex < videos.length - 2) {
+    if (currentVideoIndex === videos.length - 2) {
       await axios({
         method: "PUT",
         url: "/participant/update",
         data: { participantId, roomCode, score: scoreSum },
       })
         .then((res) => {
-          console.log(res);
+          console.log(res, "결과~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~");
+          console.log(scoreSum)
         })
         .catch((err) => {
           console.log(err);
+          console.log(scoreSum)
         });
     }
 
