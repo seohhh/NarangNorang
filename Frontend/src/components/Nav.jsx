@@ -11,6 +11,7 @@ const Wrapper = styled.div`
   justify-content: space-between;
   background-color:transparent;
   padding: 35px 80px;
+  
 `
 
 const NavLink = styled(Link)`
