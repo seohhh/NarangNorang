@@ -8,7 +8,6 @@ import html2canvas from "html2canvas";
 import "./Toolbar.css";
 import GameTab from "./GameTab";
 import Dialog from "@material-ui/core/Dialog";
-// import camera from "../assets/music/camera.mp3";
 
 // icon 
 import inviteIcon from "../assets/icon/invite.png";
@@ -22,17 +21,21 @@ import audioOffIcon from "../assets/icon/audioOff.png";
 import noXrayIcon from "../assets/icon/noXray.png";
 import cameraIcon from "../assets/icon/camera.png";
 
+import cameraAudio from "../assets/music/camera.mp3"
+
 
 
 const ToolbarComponent = (props) => {
   const [audioOn, setAudioOn] = useState(props.audioOn);
   const [videoOn, setVideoOn] = useState(props.videoOn);
   // const [sound, setSound] = useState(false);
+  const gameStatus = props.gameStatus;
   const dispatch = useDispatch();
 
   const webcamRef = useSelector((state) => state.game.webcamRef)
   const showCanvas = useSelector((state) => state.game.showCanvas);
 
+  const setcameraAudio = new Audio(cameraAudio)
 
   // 초대링크 모달
   const [show, setShow] = useState(false);
@@ -50,8 +53,10 @@ const ToolbarComponent = (props) => {
     SetGameSelect(!gameSelect);
   };
 
+
   const mySessionId = props.sessionId;
   const inviteLink = `https://i9c208.p.ssafy.io/waiting/${mySessionId}`
+
 
   const micStatusChanged = () => {
     props.micStatusChanged();
@@ -97,6 +102,8 @@ const ToolbarComponent = (props) => {
       } catch (error) {
         console.error("캡쳐 실패", error);
       }
+
+      setcameraAudio.play().catch((e) => console.log(e))
     }
   }
 
@@ -162,7 +169,11 @@ const ToolbarComponent = (props) => {
           </div>
         </OverlayTrigger>
         
-        <div className="startbtn" onClick={handleGameSelect}>게임시작</div>
+        {gameStatus ? (
+          <div className="endbtn" onClick={gameStatusChanged}>게임중지</div>
+        ) : (
+          <div className="startbtn" onClick={handleGameSelect}>게임시작</div>
+        )}
 
         <OverlayTrigger
           placement="top"

@@ -26,6 +26,24 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
+import gameBackgourndImg from "../assets/gamebackground.png";
+
+// import Gorilla from '../assets/game/quiz/Gorilla.png';
+// import Elephant from '../assets/game/quiz/Elephant.png';
+// import Eagle from '../assets/game/quiz/Eagle.png';
+// import Frog from '../assets/game/quiz/Frog.png';
+// import Cat from '../assets/game/quiz/Cat.png';
+// import Tiger from '../assets/game/quiz/Tiger.png';
+// import StartMusic from '../assets/game/music/StartMusic.mp3';
+// import UUUU from '../assets/game/music/UUUU.wav';
+// import GorillaMusic from '../assets/game/music/GorillaMusic.wav';
+// import ElephantMusic from '../assets/game/music/ElephantMusic.wav';
+// import GorillaElephantMix from '../assets/game/music/GorillaElephantMix.wav';
+// import EagleMusic from '../assets/game/music/EagleMusic.wav';
+// import FrogMusic from '../assets/game/music/FrogMusic.wav';
+// import EagleFrogMix from '../assets/game/music/EagleFrogMix.wav';
+// import CatMusic from '../assets/game/music/CatMusic.wav';
+// import TigerMusic from '../assets/game/music/TigerMusic.wav';
 
 const APPLICATION_SERVER_URL = "https://i9c208.p.ssafy.io/";
 
@@ -604,6 +622,7 @@ function CustomRoom(props) {
             marginTop: "1%",
           }}
         >
+          <img src={gameBackgourndImg} alt="" style={{width: "100%", height: "100%", position: "absolute", top: "0px", left:"0px"}} />
           {join === true && (
             <div
               id="video-container"
@@ -721,6 +740,7 @@ function CustomRoom(props) {
               micStatusChanged={micStatusChanged}
               leaveSession={leaveSession}
               publisher={publisher}
+              gameStatus={gameStatus}
             />
           </div>
         </div>
