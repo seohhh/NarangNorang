@@ -1,7 +1,7 @@
 import { OpenVidu } from "openvidu-browser";
 import axios from "axios";
 import React, { useState, useEffect } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import { switchGameEnded, switchGameStuatus, switchRenderBool } from '../slice/gameSlice';
@@ -26,7 +26,7 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
-import gameBackgourndImg from "../assets/gamebackground.png";
+import gameBackgourndImg from "../assets/gamebackground2.jpg";
 
 // import Gorilla from '../assets/game/quiz/Gorilla.png';
 // import Elephant from '../assets/game/quiz/Elephant.png';
@@ -656,7 +656,6 @@ function CustomRoom(props) {
               flexDirection: "row",
               justifyContent: "center",
               maxHeight: "100%",
-              marginTop: "2%",
             }}
             className="row"
           >

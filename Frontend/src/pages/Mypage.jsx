@@ -35,7 +35,7 @@ const UpdateBtn = styled.div`
   padding: 1% 0;
   
   &:hover{
-    background-color: #ffed8a;
+    background-color: #FFF6A1;
   } 
 `
 

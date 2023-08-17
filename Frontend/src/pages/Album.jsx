@@ -1,13 +1,11 @@
 import React from "react";
-// import { useLocation } from 'react-router-dom';
 import PhotoComponent from "../components/PhotoComponent";
 import styled from "styled-components";
 import Footer from "../components/Footer";
 import { useParams, Link } from "react-router-dom";
-import axios from "axios";
 import { useState, useEffect } from "react";
+import axios from "axios";
 import Ask from "../components/Ask";
-import { div } from "@tensorflow/tfjs-core";
 
 
 const Wrapper = styled.div`

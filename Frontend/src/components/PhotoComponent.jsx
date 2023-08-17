@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-// import { useLocation } from 'react-router-dom';
 import { Card, Button, Modal, Form } from "react-bootstrap";
 import styled from "styled-components";
 import axios from "axios";
@@ -20,11 +19,17 @@ const ButtonBox = styled.div`
 `
 const Date = styled.span`
   position: absolute; 
-  bottom: 5%; 
-  right: 7%;
+  bottom: 6%; 
+  right: 8%;
   font-size: 1.2rem;
   color: #FFD954;
   text-shadow: -1.2px 0 #000, 0 1.2px #000, 1.2px 0 #000, 0 -1.2px #000;
+`
+
+const Formtext = styled(Form.Text)`
+  color: red;
+  font-family: Pretendard-bold;
+  padding-left: 5px;
 `
 
 
@@ -36,6 +41,7 @@ function PhotoComponent(props) {
 
   const [editedContent, setEditedContent] = useState(photo.photoContent);
   const [show, setShow] = useState(false);
+  const [confirmLimit, setConfirmLimit] = useState(true);
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -46,6 +52,15 @@ function PhotoComponent(props) {
   const doMouseLeave = () => {
     setIsActive(false);
   };
+
+  const handleEditedContent = (e) => {
+    setEditedContent(e.target.value)
+    if (e.target.value.length > 33) {
+      setConfirmLimit(false)
+    } else {
+      setConfirmLimit(true)
+    }
+  }
 
   const deletePhoto = (photoSeq) => {
     axios({
@@ -61,27 +76,29 @@ function PhotoComponent(props) {
   };
 
   const updatePhotoContent = () => {
-    axios({
-      method: "PUT",
-      url: `album/content/`,
-      data: {
-        photoContent: editedContent, // 수정된 내용을 서버로 전송
-        photoSeq: photo.photoSeq
-      },
-    })
-      .then((res) => {
-        console.log(res);
-        handleClose();
+    if (confirmLimit) {
+      axios({
+        method: "PUT",
+        url: `album/content/`,
+        data: {
+          photoContent: editedContent, // 수정된 내용을 서버로 전송
+          photoSeq: photo.photoSeq
+        },
       })
-      .catch((err) => {
-        console.log(err);
-      });
+        .then((res) => {
+          console.log(res);
+          handleClose();
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    }
   };
 
   return (
     <div>
       <Card
-        style={{ width: "20rem", height: "29rem", margin: "2rem" }}
+        style={{ width: "19rem", height: "28rem", margin: "2rem" }}
         onMouseOver={doMouseOver}
         onMouseLeave={doMouseLeave}
       >
@@ -89,12 +106,12 @@ function PhotoComponent(props) {
           <Card.Img
             variant="top"
             src={photo.photoUrl}
-            style={{ height: "22rem",  width: "90%", height: "90%", position: "relative", margin: "0" }}
+            style={{ height: "22rem",  width: "90%", position: "relative", margin: "0" }}
           />
           <Date>{photo.photoDate.substr(0,10)}</Date>
         </div>
 
-        {/* <ButtonBox isActive={isActive}>
+        <ButtonBox isActive={isActive}>
           <Button
             style={{ marginLeft: "1rem" }}
             variant="outline-success"
@@ -109,8 +126,8 @@ function PhotoComponent(props) {
           >
             삭제
           </Button>
-        </ButtonBox> */}
-        <Card.Body style={{padding: "0 0 16px 0"}}>
+        </ButtonBox>
+        <Card.Body style={{padding: "0 0 16px 0", minHeight: "4rem"}}>
           <Card.Text style={{ margin: "0rem 1rem", fontFamily: "Dovemayo_wild", fontSize: "1.3rem", display: "flex", justifyContent: "center"}}>
             {photo.photoContent}
           </Card.Text>
@@ -132,8 +149,10 @@ function PhotoComponent(props) {
             <Form.Control
               placeholder={editedContent}
               value={editedContent}
-              onChange={(e) => setEditedContent(e.target.value)}
+              onChange={handleEditedContent}
             />
+            {confirmLimit===false
+                  ? <Formtext>33자이내로 적어주세요</Formtext> : null}
           </Form.Group>
         </Modal.Body>
         <Modal.Footer>
