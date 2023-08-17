@@ -18,7 +18,14 @@ import outro from "../assets/game/outro.mp4";
 import html2canvas from "html2canvas";
 
 import { useSelector, useDispatch } from "react-redux";
-import { handleCapture, handleGetScore, setNowScore, setTotalScore, switchGameEnded, switchGameStart } from "../slice/gameSlice";
+import {
+  handleCapture,
+  handleGetScore,
+  setNowScore,
+  setTotalScore,
+  switchGameEnded,
+  switchGameStart,
+} from "../slice/gameSlice";
 
 // 나랑노랑 인트로
 const IntroMp4 = styled.video`
@@ -46,8 +53,8 @@ axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 function Game1(props) {
   const { session } = props;
   console.log(props.streamManager, "여기 프롭!!");
-  const webcamRef = useSelector((state) => state.game.webcamRef)
-  console.log(webcamRef, "useSelector로 game1에서 받은 값")
+  const webcamRef = useSelector((state) => state.game.webcamRef);
+  console.log(webcamRef, "useSelector로 game1에서 받은 값");
 
   const gameStart = props.gameStart;
 
@@ -55,35 +62,41 @@ function Game1(props) {
   const [gameVideoStart, setGameVideoStart] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
-
   const scoreRlt = useSelector((state) => state.game.scoreRlt);
-  console.log(scoreRlt, '스코어 결과');
+  console.log(scoreRlt, "스코어 결과");
 
-  const videos = [Wow1, Gorilla, Wow2, Elephant, Wow1, Eagle, Wow2, Frog, Wow1, Cat, Wow2, Tiger, outro];
-
+  const videos = [
+    Wow1,
+    Gorilla,
+    Wow2,
+    Elephant,
+    Wow1,
+    Eagle,
+    Wow2,
+    Frog,
+    Wow1,
+    Cat,
+    Wow2,
+    Tiger,
+    outro,
+  ];
 
   const gameRef = useRef(null); // 게임 비디오 참조
 
-  
   const dispatch = useDispatch();
-
 
   const roomCode = props.streamManager.stream.session.sessionId;
   const participantId = props.streamManager.stream.connection.connectionId;
   // let scoreSum = 0;
   const [scoreSum, setScoreSum] = useState(0);
 
-
-
   const capture = async () => {
     if (webcamRef) {
-      console.log("videoRef.current:",webcamRef )
+      console.log("videoRef.current:", webcamRef);
       try {
         const canvas = await html2canvas(webcamRef, { scale: 2 });
         console.log("캡쳐 시작");
-        dispatch(
-          handleCapture(webcamRef, canvas, roomCode, participantId)
-        );
+        dispatch(handleCapture(webcamRef, canvas, roomCode, participantId));
         console.log("캡쳐 성공");
       } catch (error) {
         console.error("캡쳐 실패:", error);
@@ -95,7 +108,7 @@ function Game1(props) {
     try {
       console.log("webcamRef", webcamRef);
       console.log("gameRef", gameRef.current);
-  
+
       // gameRef가 유효한 경우에만 비디오의 너비와 높이 얻기 시도
       if (gameRef.current) {
         const gameVideoElement = gameRef.current;
@@ -104,19 +117,20 @@ function Game1(props) {
         gameVideoElement.width = videoWidth; // 원하는 너비 값으로 변경
         gameVideoElement.height = videoHeight; // 원하는 높이 값으로 변경
 
-
         // 비디오가 로드되지 않은 경우 함수 종료
         if (!videoWidth || !videoHeight) {
-          console.log("비디오가 로드되지 않았거나 올바르지 않은 크기의 비디오입니다.");
+          console.log(
+            "비디오가 로드되지 않았거나 올바르지 않은 크기의 비디오입니다."
+          );
           return;
         }
-        console.log(gameVideoElement, "gameVideoElement")
+        console.log(gameVideoElement, "gameVideoElement");
         const score = dispatch(handleGetScore(gameVideoElement, webcamRef));
         // 이후 사용자 포즈 비교 및 점수 계산 등을 처리
         // const detectedPose = await userpose.detectPose(webcamRef.current);
         // const score = userpose.getScore(detectedPose, currentVideoIndex);
-  
-        console.log("점수 계산 완료");
+
+        console.log("점수 계산 완료", score);
         return score;
       }
     } catch (error) {
@@ -132,7 +146,7 @@ function Game1(props) {
     console.log("handleGameStart", scoreSum);
     setIntroOpen(true);
   };
-  
+
   useEffect(() => {
     if (gameStart) {
       handleGameStartClick();
@@ -158,7 +172,6 @@ function Game1(props) {
     // console.log("props", props);
   }, [session]);
 
-
   // 비디오가 재생 중일 때마다 1초 간격으로 getScore 함수를 호출하고 그 점수를 합산
   useEffect(() => {
     const interval = setInterval(() => {
@@ -166,12 +179,11 @@ function Game1(props) {
         getScore().then((score) => {
           console.log(score, "1초마다 점수");
           dispatch(setNowScore(score));
-          dispatch(setTotalScore(score));
-          setScoreSum(prevScore => prevScore + score);
+          setScoreSum((prevScore) => prevScore + score);
         });
       }
     }, 2000); // 2초마다 호출
-  
+
     return () => {
       clearInterval(interval); // 컴포넌트가 언마운트되면 interval을 정리
     };
@@ -183,15 +195,16 @@ function Game1(props) {
       await axios({
         method: "PUT",
         url: "/participant/update",
-        data: {participantId, roomCode, "score": scoreSum}
-      }).then((res) => {
-        console.log(res);
-      }).catch((err) => {
-        console.log(err);
+        data: { participantId, roomCode, score: scoreSum },
       })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-    
-    
+
     if (currentVideoIndex < videos.length - 1) {
       await capture();
       const score = await getScore(currentVideoIndex);
@@ -200,16 +213,15 @@ function Game1(props) {
       dispatch(setTotalScore(score));
       setCurrentVideoIndex(currentVideoIndex + 1);
       // setTimeout(() => {
-        // }, 2000);
-      } else {
-        setGameVideoStart(false); // 게임 비디오 재생을 종료
-        // 여기에서 방 점수 넘기고, 게임 종료 상태 만들기
+      // }, 2000);
+    } else {
+      setGameVideoStart(false); // 게임 비디오 재생을 종료
+      // 여기에서 방 점수 넘기고, 게임 종료 상태 만들기
 
-        setTimeout(() => {
-          dispatch(switchGameStart());
-        }, 1000)
-        dispatch(switchGameEnded());
-        
+      setTimeout(() => {
+        dispatch(switchGameStart());
+      }, 1000);
+      dispatch(switchGameEnded());
     }
   };
 
@@ -217,7 +229,6 @@ function Game1(props) {
     setIntroOpen(false);
     setGameVideoStart(true);
   };
-
 
   return (
     <div>
@@ -228,15 +239,14 @@ function Game1(props) {
       )} */}
 
       {gameVideoStart && (
-        <div style={{width:"100%", height:"63vh"}}>
+        <div style={{ width: "100%", height: "63vh" }}>
           <GameVideo
-            ref={gameRef}// 게임 비디오 참조
+            ref={gameRef} // 게임 비디오 참조
             src={videos[currentVideoIndex]}
             autoPlay
             crossOrigin="anonymous"
             onEnded={handleVideoEnded}
           ></GameVideo>
-
         </div>
       )}
 
