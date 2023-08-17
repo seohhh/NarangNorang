@@ -23,6 +23,7 @@ const Askbutton = styled.div`
   box-shadow: 0 0 20px -10px rgba(0, 0, 0, 2);
   padding: 10px 15px;
   width: 130px;
+  z-index: 9999;
 
   &:hover{
     background-color: #EEEEEE;

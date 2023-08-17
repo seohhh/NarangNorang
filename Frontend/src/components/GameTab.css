@@ -1,37 +1,37 @@
 .nav-tabs .nav-link{
-    color: grey;
-    font-family: 'Pretendard-bold';
-  }
+  color: grey;
+  font-family: 'Pretendard-bold';
+}
 
-  .nav-tabs .nav-link.active{
-    color: #F7DB42;
-    font-family: 'Happiness-Sans-Bold';
-  }
+.nav-tabs .nav-link.active{
+color: #F7DB42;
+font-family: 'Happiness-Sans-Bold';
+}
 
 #content{
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
+display: flex;
+flex-direction: column;
+align-items: center;
+width: 100%;
 } 
 
 #cardContainer{
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
+display: flex;
+flex-direction: row;
+flex-wrap: wrap;
+justify-content: center;
+align-items: center;
+width: 100%;
 }
 
 .startBtn{
-  background-color: #F7DB42;
-  display: flex; 
-  justify-content: center; 
-  align-items: center; 
-  margin: 0 5rem;
+background-color: #F7DB42;
+display: flex; 
+justify-content: center; 
+align-items: center; 
+margin: 0 5rem;
 }
 
 .startBtn:hover{
-  background-color: #FCE982;
+background-color: #FCE982;
 }
