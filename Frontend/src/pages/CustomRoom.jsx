@@ -138,13 +138,16 @@ function CustomRoom(props) {
       }
 
       setRank(true);
+      setTimeout(() => {
+        setGameStatus(false)
+      }, 1000)
 
       setTimeout(() => {
         closeRankModal();
       }, 16800);
 
       dispatch(switchGameEnded())
-      dispatch(switchGameStuatus(sessionId))
+      dispatch(switchGameStuatus(sessionId, "wait"))
 
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -407,9 +410,13 @@ function CustomRoom(props) {
       "participantId": connectionId,
       "roomCode": sessionId
     })
-    console.log("참여자 정보 삭제")
-    axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + sessionId)
-    console.log("방인원 삭제")
+    .then((res) => {
+      if (res.data) {
+        axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + sessionId)
+        console.log("방인원 삭제")
+      }
+      console.log("참여자 정보 삭제")
+    })
     
 
     if (mySession) {

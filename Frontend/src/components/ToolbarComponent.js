@@ -68,11 +68,17 @@ const ToolbarComponent = (props) => {
     setVideoOn(!props.videoOn);
   };
 
-  const gameStatusChanged = () => {
+  const gameStatusStart = () => {
     dispatch(switchGameStart());
-    dispatch(switchGameStuatus(props.sessionId))
+    dispatch(switchGameStuatus(props.sessionId, "start"))
     SetGameSelect(false);
   };
+
+  const gameStatusStop = () => {
+    dispatch(switchGameStart());
+    dispatch(switchGameStuatus(props.sessionId, "wait"))
+    SetGameSelect(false);
+  }
 
   const setStretchingStatus = (videoId) => {
     dispatch(setStretchingId(videoId))
@@ -170,7 +176,7 @@ const ToolbarComponent = (props) => {
         </OverlayTrigger>
         
         {gameStatus ? (
-          <div className="endbtn" onClick={gameStatusChanged}>게임중지</div>
+          <div className="endbtn" onClick={gameStatusStop}>게임중지</div>
         ) : (
           <div className="startbtn" onClick={handleGameSelect}>게임시작</div>
         )}
@@ -258,7 +264,7 @@ const ToolbarComponent = (props) => {
         aria-labelledby="form-dialog-title"
         style={{fontFamily: "Happiness-Sans-Bold"}}
       >
-      <GameTab gameStatusChanged={gameStatusChanged} setStretchingStatus={setStretchingStatus}/>
+      <GameTab gameStatusStart={gameStatusStart} setStretchingStatus={setStretchingStatus}/>
     </Dialog>
 
     </div>

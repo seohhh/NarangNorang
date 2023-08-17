@@ -13,7 +13,7 @@ import mosquitoGame from "../assets/mosquitoGame.png";
 
 
 function GameTab (props) {
-  const gameStatusChanged = props.gameStatusChanged
+  const gameStatusStart = props.gameStatusStart
   const setStretchingStatus = props.setStretchingStatus
 
   const [show, setShow] = useState(false)
@@ -56,7 +56,7 @@ function GameTab (props) {
                     </Card.Text>
                     <div
                       className="btn startBtn"
-                      onClick={gameStatusChanged}
+                      onClick={gameStatusStart}
                     >
                       시작하기
                     </div>

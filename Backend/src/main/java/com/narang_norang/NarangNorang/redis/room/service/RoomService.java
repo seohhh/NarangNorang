@@ -27,9 +27,9 @@ public class RoomService {
         return true;
     }
 
-    public void updateRoomStatus(String roomCode) {
+    public void updateRoomStatus(String roomCode, String status) {
         Room room = findRoomByRoomCode(roomCode);
-        room.updateStatus();
+        room.updateStatus(status);
         roomRepository.save(room);
     }
 
