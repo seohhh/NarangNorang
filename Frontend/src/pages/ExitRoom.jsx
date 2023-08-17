@@ -186,25 +186,31 @@ function ExitRoom() {
           </div>
         </div>
         
-        <div className="imageContainer">
-          {images.map((image) => {
-            const isSelected = selectedPictureSeq.includes(image.pictureSeq);
-            return (
-              <div key={image.pictureSeq} className="imageContent" style={{ cursor: 'pointer' }}
-              onClick={() => handleImageClick(image)}>
-                <img src={`data:image/png;base64,${image.pictureData}`} alt="test"
-                  style={{width: "10rem", borderRadius: "5px"}} />
-                <label style={{position: "absolute", top: "20px", left: "20px"}}>
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    style={{accentColor: "#F7DB42", width: "20px", height: "20px"}}
-                    onChange={() => selectImageSeq(image.pictureSeq)}
-                  />
-                </label>
-              </div>)
-          })}
-        </div>
+        {images.length ? (
+          <div className="imageContainer">
+            {images.map((image) => {
+              const isSelected = selectedPictureSeq.includes(image.pictureSeq);
+              return (
+                <div key={image.pictureSeq} className="imageContent" style={{ cursor: 'pointer' }}
+                onClick={() => handleImageClick(image)}>
+                  <img src={`data:image/png;base64,${image.pictureData}`} alt="test"
+                    style={{width: "10rem", borderRadius: "5px"}} />
+                  <label style={{position: "absolute", top: "20px", left: "20px"}}>
+                    <input
+                      type="checkbox"
+                      checked={isSelected}
+                      style={{accentColor: "#F7DB42", width: "20px", height: "20px"}}
+                      onChange={() => selectImageSeq(image.pictureSeq)}
+                    />
+                  </label>
+                </div>)
+            })}
+          </div>
+        ) : (
+          <div>
+            <h4>캡쳐된 사진이 없습니다. 소중한 추억을 남겨보세요!</h4>
+          </div>
+        )}
         <div style={{display: "flex", flexDirection: "row"}}>
           <div id="downloadBtn" onClick={downloadSelectedImages}>
             사진 다운로드
