@@ -25,6 +25,8 @@ import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@mui/material/DialogContent";
 import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 
+import gameBackgourndImg from "../assets/gamebackground.png";
+
 // import Gorilla from '../assets/game/quiz/Gorilla.png';
 // import Elephant from '../assets/game/quiz/Elephant.png';
 // import Eagle from '../assets/game/quiz/Eagle.png';
@@ -622,6 +624,7 @@ function CustomRoom(props) {
             marginTop: "1%",
           }}
         >
+          <img src={gameBackgourndImg} alt="" style={{width: "100%", height: "100%", position: "absolute", top: "0px", left:"0px"}} />
           {join === true && (
             <div
               id="video-container"
@@ -657,7 +660,7 @@ function CustomRoom(props) {
               flexDirection: "row",
               justifyContent: "center",
               maxHeight: "100%",
-              // marginTop: "2%",
+              marginTop: "2%",
             }}
             className="row"
           >
@@ -739,6 +742,7 @@ function CustomRoom(props) {
               micStatusChanged={micStatusChanged}
               leaveSession={leaveSession}
               publisher={publisher}
+              gameStatus={gameStatus}
             />
           </div>
         </div>

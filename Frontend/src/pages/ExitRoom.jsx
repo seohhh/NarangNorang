@@ -6,6 +6,8 @@ import exitIcon from "../assets/icon/exit.png";
 import { Modal } from "react-bootstrap";
 import './ExitRoom.css';
 
+import LoadingSpinner from "../components/LoadingSpinner";
+
 
 axios.defaults.url = 'https://i9c208.p.ssafy.io/api/v1'
 
@@ -18,6 +20,7 @@ function ExitRoom() {
 
   const memberSeq = sessionStorage.getItem("user") !== null ? JSON.parse(sessionStorage.getItem("user")).memberSeq : -1
   const [ images, setImages ] = useState([])
+  const [loading, setLoading] = useState(true)
 
   // 창 나가기 모달
   const [show, setShow] = useState(false);
@@ -48,6 +51,7 @@ function ExitRoom() {
     })
     .then((res) => {
       setImages(res.data)
+      setLoading(false)
     })
     .catch((err) => {
       console.log(err)
@@ -242,6 +246,10 @@ function ExitRoom() {
       </Modal.Body>
     </Modal>
 
+    {loading ? (
+      <LoadingSpinner />
+
+    ): null}
     </div>
   );
 } 
