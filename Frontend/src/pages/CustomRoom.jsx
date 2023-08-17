@@ -84,9 +84,7 @@ function CustomRoom(props) {
   const [second, setSecond] = useState(null);
   const [third, setThird] = useState(null);
 
-  // const myUserNameFromUrl = urlParams.get("nickname");
-
-  const hostNickname = useSelector((state) => state.login.userNickname);
+  const hostNickname = JSON.parse(sessionStorage.getItem('userNickname'))
   const hostSeq = useSelector((state) => state.login.userSeq)
 
   const checkStatus = useSelector((state) => state.game.gameStart);

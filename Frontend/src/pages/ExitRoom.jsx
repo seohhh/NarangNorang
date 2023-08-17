@@ -94,6 +94,7 @@ function ExitRoom() {
       setTimeout(() => {
         handleSuccessClose();
       }, 500);
+      setSelectedPictureSeq([]);
     })
     .catch((error) => {
       console.log(error)

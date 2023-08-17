@@ -38,21 +38,21 @@ export default class OpenViduVideoComponent extends Component {
 
         { this.rank ? (
           <video 
-            style={{ width: "280px", height: "100%"}}
+            style={{ width: "280px", height: "27vh"}}
             autoPlay={true}
             ref={this.videoRef}
           />) : null } 
         
         { !this.guest && !this.rank && !this.gameStatus ? (
           <video
-            style={{ width: "100%", height: "100%" }}
+            style={{ width: "100%", height: "23vh" }}
             autoPlay={true}
             ref={this.videoRef}
           />) : null }
 
         { !this.guest && !this.rank && this.gameStatus ? (
           <video
-          style={{ width: "200px", height: "auto" }}
+          style={{ width: "200px", height: "20vh" }}
           autoPlay={true}
           ref={this.videoRef}
         />

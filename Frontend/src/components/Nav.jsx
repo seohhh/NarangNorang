@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Link, useNavigate } from "react-router-dom"; // react-router-dom에서 가져온 Link 컴포넌트
 import styled from "styled-components"; // styled-components를 가져옴
 import logo from "../assets/logo.png"; // 로고 이미지 파일의 경로를 설정
@@ -10,7 +10,7 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   background-color:transparent;
-  padding: 35px 80px;
+  padding: 35px 150px;
 `
 
 const NavLink = styled(Link)`
@@ -43,7 +43,7 @@ const NoUnderLine = styled(Link)`
 function CustomNavbar() {
   const isLoggedin = sessionStorage.getItem('isLoggedin')
   const user = JSON.parse(sessionStorage.getItem('user'));
-  const userId = useSelector(state => state.login.userId);
+  const userId = JSON.parse(sessionStorage.getItem('userId'))
   const userSeq = sessionStorage.getItem('userSeq')
   const [token, setToken] = useState(null)
   const navigate = useNavigate();
@@ -61,7 +61,7 @@ function CustomNavbar() {
   }
 
   return (
-    <Wrapper className="container">
+    <Wrapper>
       <div className="align-self-center">
         <Link to="/">
           <img

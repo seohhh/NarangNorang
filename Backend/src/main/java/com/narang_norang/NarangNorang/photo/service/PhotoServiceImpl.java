@@ -30,7 +30,7 @@ public class PhotoServiceImpl implements PhotoService {
 
     @Override
     public List<Photo> getPhotoByMember(Member member) {
-        List<Photo> photoList = photoRepository.findByMember(member);
+        List<Photo> photoList = photoRepository.findByMemberOrderByPhotoDateDesc(member);
         return photoList;
     }
 

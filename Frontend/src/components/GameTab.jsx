@@ -30,7 +30,7 @@ function GameTab (props) {
       <Tabs
         id="controlled-tab-example"
         className="mb-3"
-        style={{fontSize: "25px"}}
+        style={{fontSize: "25px", backgroundColor: "white"}}
       >
         <Tab eventKey="game" title="게임">
           <Fade cascade damping={0.2}>
