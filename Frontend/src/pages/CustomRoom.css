@@ -3,6 +3,7 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
+  background-color: white; 
 }
 
 #videoContainer {
@@ -11,7 +12,7 @@
   align-items: center;
 }
 
-#container {
+#shadowContainer {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -24,6 +25,7 @@
 
 #content {
   display: flex;
+  justify-content: center;
   flex-direction: row;
 }
 
@@ -45,6 +47,10 @@
   margin: 10px;
 }
 
+.button:hover{
+  background-color: #ffeb78;
+}
+
 #buttongroup {
   display: flex;
   flex-direction: row;
@@ -60,4 +66,14 @@
 
 #main-video {
   margin: 5px;
+}
+
+.iconSettting{
+  margin: 8px;
+  width: 53px;
+  transition: transform 0.3s ease;
+}
+
+.iconSettting:hover{
+  transform: scale(1.1);
 }

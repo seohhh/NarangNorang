@@ -12,6 +12,9 @@ const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  min-height: 100%;
+  position: relative;
+  padding-bottom: 60px;
 `;
 
 const Container = styled.div`
@@ -50,8 +53,8 @@ function Album() {
             <PhotoComponent key={index} photo={photo} />
           ))}
         </Container>
+        <Ask />
       </Wrapper>
-      <Ask />
       <Footer />
     </>
   );

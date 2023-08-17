@@ -10,7 +10,7 @@ const authSlice = createSlice({
     // isLoggedin: false,
     user: JSON.parse(sessionStorage.getItem('user')) || null,
     userNickname: null,
-    userId: null,
+    userId: JSON.parse(sessionStorage.getItem('userId')) || null,
     token: null,
     error : null,
     userSeq: null,
@@ -21,13 +21,12 @@ const authSlice = createSlice({
       state.user = action.payload[0]
       state.userNickname = action.payload[0].memberNickname
       state.userSeq = action.payload[0].memberSeq
-      console.log(state.userNickname, "로그인 시 유저닉네임")
-      console.log(state.userSeq, '유저 시퀀스')
       state.error = null
       state.token = action.payload[0].accessToken
       state.userId = action.payload[1]
       sessionStorage.setItem('isLoggedin', 'true');
       sessionStorage.setItem('user', JSON.stringify(action.payload[0]));
+      sessionStorage.setItem('userId', JSON.stringify(action.payload[1]));
       sessionStorage.setItem('userSeq', JSON.stringify(action.payload[0].memberSeq));
       sessionStorage.setItem('userNickname', JSON.stringify(action.payload[0].memberNickname));
     },
@@ -49,7 +48,7 @@ const authSlice = createSlice({
       sessionStorage.removeItem('user');
       sessionStorage.removeItem('userSeq');
       sessionStorage.removeItem('userNickname');
-      
+      sessionStorage.removeItem('userId');
     }
   },
 });
@@ -67,6 +66,7 @@ export const login = (user) => async (dispatch) => {
 export const logout = (token) => async (dispatch) => {
   try {
     // API 요청을 보내는 부분
+    console.log(token)
     const headers = {
       Authorization: `Bearer ${token}`,
     };

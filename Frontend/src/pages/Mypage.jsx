@@ -14,7 +14,9 @@ const Wrapper = styled.div`
 axios.defaults.baseURL = "https://i9c208.p.ssafy.io/api/v1";
 
 function Mypage() {
-  const memberId = useSelector((state) => state.login.userId);
+  const user = sessionStorage.getItem('user')
+  console.log(user)
+  const memberId = user.memberId
   const token = useSelector((state) => state.login.token);
 
   const [memberName, setMemberName] = useState(undefined);
