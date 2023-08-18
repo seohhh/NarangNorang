@@ -4,21 +4,31 @@ import lombok.Builder;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
-@RedisHash(value = "participant", timeToLive = 3600)
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
+@RedisHash(value = "participant", timeToLive = 86400L)
 @Builder
 @Getter
 public class Participant {
 
     @Id
-    private String nickname;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer participantSeq;
 
-    @Id
-    private String roomId;
+    @Indexed
+    private String participantId;
 
-    private Long memberSeq;
+    @Indexed
+    private String roomCode;
 
-    private Grade grade;
+    private Double score;
+
+    public void updateScore(Double score) {
+        this.score = score;
+    }
 
 
 }

@@ -11,7 +11,11 @@ const Wrapper = styled.div`
   flex-direction: column;
   background-color: #fff389;
   align-items: center;
+  position: relative;
+  transform: translatY(0%);
+  bottom: 0;
 `;
+
 const Top = styled.div`
   display: flex;
   width: 50%;
@@ -19,13 +23,18 @@ const Top = styled.div`
   justify-content: space-around;
   align-items: center;
   margin-top: 3rem;
+  margin-bottom: 2rem;
   color: grey;
-
 `;
 
 const Bottom = styled.div`
-  margin-bottom: 1rem;
+  font-family: 'Pretendard-bold';
+  width: 60%;
+  margin-bottom: 2rem;
+  margin-left: 20px;
   color: grey;
+  display: flex;
+  justify-content: flex-start;
 `;
 
 const Line = styled.div`
@@ -33,7 +42,12 @@ const Line = styled.div`
   text-align: center;
   border-bottom: 1px solid #aaa;
   line-height: 0.1em;
-  margin: 25px 0 20px; 
+  margin: 25px 0 7px; 
+`
+
+const ImgContainer = styled.img`
+  margin-left: 2rem; 
+  width: 40px;
 `
 
 function Footer() {
@@ -41,19 +55,18 @@ function Footer() {
     <Wrapper>
       <Top>
         <div style={{ display: "flex", alignItems: "center" }}>
-          <img src={LogoImg} alt="" />
-          <span style={{ marginLeft: "1rem", fontSize: "25pt" }}>나랑노랑</span>
+          <img src={LogoImg} alt="LogoImg" style={{ width: "50px" }}/>
+          <span style={{ marginLeft: "1rem", fontSize: "18pt" }}>나랑노랑</span>
         </div>
         <div>
-          <img src={InstaImg} alt="" style={{ marginLeft: "2rem" }} />
-          <img src={KakaoImg} alt="" style={{ marginLeft: "2rem" }} />
-          <img src={BlogImg} alt="" style={{ marginLeft: "2rem" }} />
+          <ImgContainer src={InstaImg} alt="InstaImg" />
+          <ImgContainer src={BlogImg} alt="BlogImg" />
+          <ImgContainer src={KakaoImg} alt="KakaoImg" />
         </div>
       </Top>
       <Line />
       <Bottom>
-        <span>나랑노랑</span>
-        <span>나랑노랑 © 2023. All rights reserved by C208</span>
+        <div>나랑노랑 © 2023. All rights reserved by C208</div>
       </Bottom>
     </Wrapper>
   );

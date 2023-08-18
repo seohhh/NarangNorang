@@ -8,8 +8,6 @@ import com.narang_norang.NarangNorang.member.security.jwt.JwtTokenUtil;
 import com.narang_norang.NarangNorang.member.service.MemberService;
 import io.swagger.annotations.*;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.collections.iterators.SingletonIterator;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ValueOperations;
 import org.springframework.http.ResponseEntity;
@@ -47,10 +45,12 @@ public class AuthController {
         Member member = memberService.getMemberByMemberId(memberId);
 
         if (passwordEncoder.matches(password, member.getMemberPassword())) {
-            return ResponseEntity.ok(new LoginMemberResponse(200, "Success", JwtTokenUtil.getToken(memberId)));
+            return ResponseEntity.ok(new LoginMemberResponse(200, "Success", JwtTokenUtil.getToken(memberId),
+                    member.getMemberNickname(), member.getMemberSeq()));
         }
 
-        return ResponseEntity.status(401).body(new LoginMemberResponse(401, "Invalid Password", null));
+        return ResponseEntity.status(401).body(new LoginMemberResponse(401, "Invalid Password", null,
+                null, null));
     }
 
 

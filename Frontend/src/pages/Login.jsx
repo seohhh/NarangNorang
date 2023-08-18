@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import loginImg from "../assets/loginImg.png";
-import { Form, Button, InputGroup } from "react-bootstrap";
+import { Form, Button, InputGroup, Modal } from "react-bootstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { login } from "../slice/authSlice";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+
+
+axios.defaults.baseURL = 'https://i9c208.p.ssafy.io/api/v1'
 
 const Container = styled.div`
   display: flex;
@@ -54,12 +58,16 @@ const TogglePasswordButton = styled(Button)`
   display: none; /* showPassword 버튼 숨기기 */
 `;
 
+
 function Login() {
-  const [inputId, setInputId] = useState("");
-  const [inputPw, setInputPw] = useState("");
+  const [memberId, setMemberId] = useState("");
+  const [memberPassword, setMemberPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const isLoggedin = useSelector((state) => state.login.isLoggedin);
 
@@ -70,12 +78,12 @@ function Login() {
     }
   }, [isLoggedin, navigate]);
 
-  const handleInputId = (e) => {
-    setInputId(e.target.value);
+  const handleMemberId = (e) => {
+    setMemberId(e.target.value);
   };
 
-  const handleInputPw = (e) => {
-    setInputPw(e.target.value);
+  const handleMemberPassword = (e) => {
+    setMemberPassword(e.target.value);
   };
 
   // eslint-disable-next-line no-unused-vars
@@ -85,7 +93,27 @@ function Login() {
 
   const onClickLogin = (e) => {
     e.preventDefault();
-    dispatch(login(inputId, inputPw));
+
+    axios({
+      method: 'POST',
+      url: '/auth/login',
+      data: { memberId, memberPassword }
+    })
+    .then((res) => {
+      const user = [res.data, memberId] 
+      dispatch(login(user));
+      navigate('/')
+    })
+    .catch((err) => {
+      console.log(err, "로그인 실패")
+      handleShow()
+      setTimeout(() => {
+        handleClose();
+      }, 600);
+      setMemberId('')
+      setMemberPassword('')
+    })
+
   };
 
   return (
@@ -94,10 +122,10 @@ function Login() {
         <Link to="/"><img src={loginImg} alt="LoginImage" /></Link>
       </ImgContent>
       <TextContent>
+        <div>
+          <h1><span style={{color: "#FFE600"}}>나랑노랑</span>에 오신것을 환영합니다</h1>
+        </div>
         <LoginForm>
-          <div style={{marginBottom: "3rem"}}>
-            <h1><span style={{color: "#FFE600"}}>나랑노랑</span>에 오신것을 환영합니다.</h1>
-          </div>
           <Form.Group className="mb-3" controlId="formBasicEmail">
             <StyledFormLabelContainer>
               <Form.Label>아이디</Form.Label>
@@ -105,8 +133,8 @@ function Login() {
             <Form.Control
               type="id"
               placeholder="아이디를 입력하세요."
-              value={inputId}
-              onChange={handleInputId}
+              value={memberId}
+              onChange={handleMemberId}
             />
           </Form.Group>
 
@@ -118,8 +146,8 @@ function Login() {
               <Form.Control
                 type={showPassword ? "text" : "password"}
                 placeholder="비밀번호를 입력하세요."
-                value={inputPw}
-                onChange={handleInputPw}
+                value={memberPassword}
+                onChange={handleMemberPassword}
               />
               {/* showPassword 버튼 숨겨서 기능 삭제 */}
             </InputGroup>
@@ -133,6 +161,13 @@ function Login() {
           </div>
         </LoginForm>
       </TextContent>
+
+      {/* 로그인 실패 모달 */}
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Body className="modalbody">
+          <div>아이디와 비밀번호를 확인하세요</div>
+        </Modal.Body>
+      </Modal>
     </Container>
   );
 }

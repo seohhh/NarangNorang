@@ -1,0 +1,107 @@
+.toolbar-container {
+  background-color: white;
+  width: 100vw;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  z-index: 3;
+}
+
+#linkContainer {
+  background-color: #F1F0F0;
+  border-radius: 5px;
+  padding: 8px 15px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.icon {
+  width: 45px;
+  margin: 13px;
+}
+
+.iconGroup {
+  display: flex;
+  justify-content: space-between;
+}
+
+#gameStartBtn {
+  font-family: "GmarketSansMedium";
+  font-size: 20px;
+  background-color: #F7DB42;
+  border-radius: 20px;
+  width: 140px;
+  height: 45px;
+  margin: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.startbtn {
+  background: #fae17b;
+  background-image: -webkit-linear-gradient(top, #fae17b, #faca08);
+  background-image: -moz-linear-gradient(top, #fae17b, #faca08);
+  background-image: -ms-linear-gradient(top, #fae17b, #faca08);
+  background-image: -o-linear-gradient(top, #fae17b, #faca08);
+  background-image: linear-gradient(to bottom, #fae17b, #faca08);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  font-family: 'Happiness-Sans-Bold';
+  width: 140px;
+  height: 45px;
+  margin: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.startbtn:hover {
+  background: #ffcb47;
+  background-image: -webkit-linear-gradient(top, #ffcb47, #f2ba11);
+  background-image: -moz-linear-gradient(top, #ffcb47, #f2ba11);
+  background-image: -ms-linear-gradient(top, #ffcb47, #f2ba11);
+  background-image: -o-linear-gradient(top, #ffcb47, #f2ba11);
+  background-image: linear-gradient(to bottom, #ffcb47, #f2ba11);
+  text-decoration: none;
+}
+
+.endbtn {
+  background: #ff6969;
+  background-image: -webkit-linear-gradient(top, #ff6969, #c42727);
+  background-image: -moz-linear-gradient(top, #ff6969, #c42727);
+  background-image: -ms-linear-gradient(top, #ff6969, #c42727);
+  background-image: -o-linear-gradient(top, #ff6969, #c42727);
+  background-image: linear-gradient(to bottom, #ff6969, #c42727);
+  -webkit-border-radius: 28;
+  -moz-border-radius: 28;
+  border-radius: 28px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 20px;
+  padding: 10px 20px 10px 20px;
+  text-decoration: none;
+  font-family: 'Happiness-Sans-Bold';
+  width: 140px;
+  height: 45px;
+  margin: 13px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.endbtn:hover {
+  background: #f22929;
+  background-image: -webkit-linear-gradient(top, #f22929, #b01c1c);
+  background-image: -moz-linear-gradient(top, #f22929, #b01c1c);
+  background-image: -ms-linear-gradient(top, #f22929, #b01c1c);
+  background-image: -o-linear-gradient(top, #f22929, #b01c1c);
+  background-image: linear-gradient(to bottom, #f22929, #b01c1c);
+  text-decoration: none;
+}

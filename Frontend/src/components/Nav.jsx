@@ -1,9 +1,8 @@
-import React from "react";
-import { useSelector, useDispatch } from 'react-redux';
-import { Button } from "react-bootstrap"; // React Bootstrap에서 가져온 Navbar와 Nav 컴포넌트
-import { Link } from "react-router-dom"; // react-router-dom에서 가져온 Link 컴포넌트
-import styled from "styled-components"; // styled-components를 가져옴
-import logo from "../assets/logo.png"; // 로고 이미지 파일의 경로를 설정
+import React, { useEffect, useState } from "react";
+import { useDispatch } from 'react-redux';
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import logo from "../assets/logo.png";
 import { logout } from "../slice/authSlice";
 
 
@@ -11,50 +10,80 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
   background-color:transparent;
-  padding: 35px 80px;
+  padding: 35px 150px;
 `
 
 const NavLink = styled(Link)`
   text-decoration: none;
   color: black;
   margin: 16px;
+  font-size: 1.1rem;
+
+  &:hover{
+    color: #656565;
+  }
+ `
+
+ const UserBtn = styled.div`
+  padding: 10px;
+  border-radius: 10px;
+  background-color: white;
+  border: none;
+
+  &:hover{
+    background-color: #EEEEEE;
+  }
+ `
+const NoUnderLine = styled(Link)`
+  text-decoration: none;
+  color: black;
 `
 
-// 컴포넌트를 정의하는 함수
 function CustomNavbar() {
-  const isLoggedin = useSelector(state => state.login.isLoggedin);
-  const dispatch = useDispatch()
-  const token = useSelector(state => state.login.token);
-  const userId = useSelector(state => state.login.userId);
+  const isLoggedin = sessionStorage.getItem('isLoggedin')
+  const user = JSON.parse(sessionStorage.getItem('user'));
+  const userId = JSON.parse(sessionStorage.getItem('userId'))
+  const userSeq = sessionStorage.getItem('userSeq')
+  const [token, setToken] = useState(null)
+  const navigate = useNavigate();
 
+  useEffect(() => {
+    if (user) {
+      setToken(user.accessToken)
+    }
+  }, [user])
+
+  const dispatch = useDispatch()
   const handleLogout = () => {
-    dispatch(logout(token))}
+    dispatch(logout(token));
+    navigate('/');
+  }
 
   return (
-    <Wrapper class="container">
-      <div class="align-self-center">
+    <Wrapper>
+      <div className="align-self-center">
         <Link to="/">
           <img
-            src={logo} // 로고 이미지 파일 경로 설정
-            height="70" // 로고 이미지 높이 설정
-            alt="Logo" // 대체 텍스트 설정
+            src={logo}
+            height="85"
+            alt="Logo"
           />
         </Link>
       </div>
-      <div class="align-self-center">
+      <div className="align-self-center">
         <NavLink to="/contents">컨텐츠 소개</NavLink>
-        <NavLink to={`/album/${userId}`}>앨범</NavLink>
+        <NavLink to={`/album/${userSeq}`}>앨범</NavLink>
         {isLoggedin ?
           <NavLink to={`/mypage/${userId}`}>마이페이지</NavLink>
           : <NavLink to="/signup">회원가입</NavLink>}
       </div>
-      <div class="align-self-center">
+      <div className="align-self-center">
         {isLoggedin ? 
-          <Button variant="light" onClick={handleLogout}>로그아웃</Button>
-          : <NavLink to="/login"><Button variant="light">로그인</Button></NavLink>}
+          <UserBtn variant="light" onClick={handleLogout}>로그아웃</UserBtn>
+          : <NoUnderLine to="/login"><UserBtn variant="light">&nbsp;&nbsp;로그인&nbsp;&nbsp;</UserBtn></NoUnderLine>}
       </div>
     </Wrapper>
   );
 }
 
-export default CustomNavbar; // 컴포넌트를 다른 곳에서 사용할 수 있도록 내보내기
+export default CustomNavbar;

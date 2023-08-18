@@ -1,0 +1,104 @@
+.wrapper{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  height: 100vh;
+}
+
+#albumBtn{
+  background-color: white;
+  border-radius: 15px;
+  padding: 5px 10px;
+  border: 1.8px solid rgb(201, 201, 201);
+  margin: 1rem;
+  font-Size: 18px;
+}
+
+#albumBtn:hover{
+  background-color: rgb(212, 212, 212);
+}
+
+#downloadBtn{
+  background-color: #F7DB42;
+  border-radius: 15px;
+  padding: 5px 10px;
+  margin: 1rem;
+  font-Size: 18px;
+}
+
+#downloadBtn:hover{
+  background-color: #ffed8a;
+}
+
+#modalphotoBtn{
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 7px;
+  font-Size: 18px;
+  background-color: #F7DB42;
+}
+
+#modalphotoBtn:hover{
+  background-color: #ffed8a;
+}
+
+#modalExitBtn{
+  border-radius: 10px;
+  padding: 5px 10px;
+  margin: 7px;
+  background-color: white;
+  padding: 5px 10px;
+  border: 1.8px solid rgb(201, 201, 201);
+  font-Size: 18px;
+}
+
+#modalExitBtn:hover{
+  background-color: rgb(201, 201, 201);
+}
+
+.imageContainer{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  flex-wrap: wrap;
+  max-height: 340px;
+  overflow-y: scroll;
+  width: 70vw;
+  margin-bottom: 4rem;
+}
+
+
+.imageContent{
+  display: flex; 
+  flex-direction: column; 
+  padding: 15px;
+  position: relative;
+}
+
+.ShadowContainer{
+  display: flex;
+  flex-direction: column;
+  flex-basis: auto;
+  padding: 4.9% 0;
+  justify-content: space-between;
+  align-items: center;
+  width: 95vw;
+  height: 95vh;
+  border-radius: 25px;
+  box-shadow: 0 0 20px -13px rgba(0, 0, 0, 2);
+  position: absolute;
+}
+
+#exitIcon{
+  width: 30px;
+  position: absolute; 
+  top: 2rem; 
+  right: 2rem;
+  transition: transform 0.3s ease;
+}
+
+#exitIcon:hover{
+  transform: scale(1.1);
+}

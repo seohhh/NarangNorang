@@ -20,17 +20,17 @@ const CONNECTION = [
   [13, 15],
   [14, 16],
 ];
-// const COLORS = ["White", "Gray", "Blue", "Red"];
+const WEIGHT = [1, 2, 1, 2, 1, 2, 2, 1, 2, 2, 2, 2];
 const estimationConfig = {
-  // maxPoses: 4,
   // flipHorizontal: false, // 좌우 반전
 
-  maxPoses: 4,
+  maxPoses: 3,
   flipHorizontal: false,
   scoreThreshold: 0.5,
   nmsRadius: 100,
 };
 const scoreThreshold = 0.5;
+const similarityThreshold = 0.8;
 
 // VARIABLE
 let detector;
@@ -63,7 +63,6 @@ const detectPose = async (video) => {
     poses = await detector.estimatePoses(video, estimationConfig);
   }
 
-  // console.log(poses);
   return poses;
 };
 
@@ -71,13 +70,21 @@ const startRender = async (videoref, context) => {
   video = videoref;
   ctx = context;
   raf = true;
-
   renderPose();
 };
+
+// const clearSkeleton = (ctx, videoWidth, videoHeight) => {
+//   ctx.clearRect(0, 0, videoWidth, videoHeight);
+// };
 
 const stopRender = () => {
   raf = false;
   cancelAnimationFrame(rafId);
+  if (ctx && video) {
+    const canvas = ctx.canvas;
+    ctx.clearRect(0, 0, video.width, video.height); // 스켈레톤 지우기
+    canvas.width = 0;
+  }
 };
 
 const renderPose = async () => {
@@ -94,11 +101,15 @@ const renderResult = async () => {
   let poses = null;
   let color = "White";
 
+  if (video === null) {
+    return;
+  }
+
   if (detector != null) {
     poses = await detector.estimatePoses(video, estimationConfig);
   }
 
-  ctx.drawImage(video, 0, 0, video.width, video.height);
+  ctx.clearRect(0, 0, video.width, video.height);
 
   for (var i = 0; i < poses.length; i++) {
     const pose = poses[i];
@@ -106,6 +117,8 @@ const renderResult = async () => {
       drawPose(ctx, pose, color);
     }
   }
+
+  // ctx.clearRect(0, 0, video.width, video.height);
 };
 
 const drawPose = (ctx, pose, color) => {
@@ -116,7 +129,7 @@ const drawPose = (ctx, pose, color) => {
 };
 
 const drawKeypoints = (ctx, keypoints, color) => {
-  ctx.fillStyle = "Black";
+  ctx.fillStyle = "White";
   ctx.strokeStyle = color;
   ctx.lineWidth = 4;
 
@@ -156,5 +169,83 @@ const drawSkeleton = (ctx, keypoints, poseId, color) => {
   });
 };
 
-const exportObj = { loadDetector, detectPose, startRender, stopRender };
+const getScore = async (gameRef, webcamRef) => {
+  const gpose = await detectPose(gameRef);
+  const wpose = await detectPose(webcamRef);
+
+  if (gpose.length === 0) {
+    return 0;
+  }
+
+  let total = 0;
+  let count = 0;
+  for (const pose of wpose) {
+    if (pose.score >= scoreThreshold) {
+      count++;
+      let score = computeScore(gpose[0].keypoints, pose.keypoints);
+      total += score > similarityThreshold ? score : 0.5;
+    }
+  }
+
+  if (count === 0) {
+    return 0;
+  } else {
+    return total / count;
+  }
+};
+
+const computeScore = (keypoints1, keypoints2) => {
+  const normPoints1 = normVector(keypoints1);
+  const normPoints2 = normVector(keypoints2);
+
+  let scoreSum = 0;
+  let similarity = 0;
+  for (var i = 0; i < normPoints2.length; i++) {
+    scoreSum += normPoints2[i].score;
+
+    similarity +=
+      normPoints2[i].score *
+      (normPoints1[i].x * normPoints2[i].x +
+        normPoints1[i].y * normPoints2[i].y);
+  }
+
+  if (scoreSum === 0) {
+    return 0;
+  }
+  return similarity / scoreSum;
+};
+
+const normVector = (keypoints) => {
+  let normPoints = [];
+
+  for (var i = 0; i < CONNECTION.length; i++) {
+    const mod = Math.sqrt(
+      Math.pow(
+        keypoints[CONNECTION[i][0]].x - keypoints[CONNECTION[i][1]].x,
+        2
+      ) +
+        Math.pow(
+          keypoints[CONNECTION[i][0]].y - keypoints[CONNECTION[i][1]].y,
+          2
+        )
+    );
+    normPoints.push({
+      x: (keypoints[CONNECTION[i][0]].x - keypoints[CONNECTION[i][1]].x) / mod,
+      y: (keypoints[CONNECTION[i][0]].y - keypoints[CONNECTION[i][1]].y) / mod,
+      score:
+        keypoints[CONNECTION[i][0]].score *
+        keypoints[CONNECTION[i][1]].score *
+        WEIGHT[i],
+    });
+  }
+
+  return normPoints;
+};
+const exportObj = {
+  loadDetector,
+  detectPose,
+  startRender,
+  stopRender,
+  getScore,
+};
 export default exportObj;

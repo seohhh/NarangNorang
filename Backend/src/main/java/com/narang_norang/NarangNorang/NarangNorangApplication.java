@@ -12,6 +12,10 @@ import java.nio.charset.StandardCharsets;
 @SpringBootApplication
 public class NarangNorangApplication {
 
+	static {
+		System.setProperty("com.amazonaws.sdk.disableEc2Metadata", "true");
+	}
+
 	public static void main(String[] args) {
 		SpringApplication.run(NarangNorangApplication.class, args);
 	}
