@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-// import mainImg from "../assets/mainImg.jpg";
-import PlayImg from "../assets/mainPlayImg.PNG";
+import PlayImg from "../assets/mainroom.png";
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { Fade } from "react-awesome-reveal";
@@ -50,7 +49,7 @@ function Main() {
         </div>
       </Container>
       <div id="mainContent">
-        <img id="mainImage" src={PlayImg} alt="PlayImg" />
+        <img id="mainImage" src={PlayImg} alt="PlayImg" style={{width: "1100px"}}/>
       </div>
       <div style={{marginBottom: "150px"}}>
         <IntroComponent />

@@ -39,9 +39,9 @@ function Intro() {
         <Fade cascade damping={0.2}>
           <h1>아이 발달에 도움이 되는</h1>
           <h1 style={color}>나랑노랑</h1>
-          <MySpan>거실도 놀이방이 될 수 있습니다</MySpan>
-          <MySpan>아이와 함께 놀이를 할 수 있다면 ?!</MySpan>
-          <MySpan>아이의 친구를 집으로 초대하지 않아도 같이 놀 수 있다 ?!</MySpan>
+          <MySpan>친구를 집에 초대하지 않아도</MySpan>
+          <MySpan>아이와 함께 밖에 나가지 않아도</MySpan>
+          <MySpan>친구들과 함께, 아이와 함께, 집에서 즐겁게 놀 수 있습니다</MySpan>
           <MyBox>
             <Image src={HeartImage} style={{width: "70px", height: "100%"}} rounded></Image>
             <Column>
