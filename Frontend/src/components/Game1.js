@@ -53,8 +53,6 @@ function Game1(props) {
   const [gameVideoStart, setGameVideoStart] = useState(false);
   const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
-  const scoreRlt = useSelector((state) => state.game.scoreRlt);
-
   const videos = [
     Wow1,
     Gorilla,

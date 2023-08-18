@@ -69,7 +69,7 @@ export const logout = (token) => async (dispatch) => {
     const headers = {
       Authorization: `Bearer ${token}`,
     };
-    const response = await axios.post('/auth/logout', null, {headers})
+    await axios.post('/auth/logout', null, {headers})
     // 로그아웃 성공
     dispatch(logoutSuccess())
   } catch (error) {
