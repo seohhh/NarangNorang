@@ -100,7 +100,6 @@ function Login() {
       data: { memberId, memberPassword }
     })
     .then((res) => {
-      console.log(res)
       const user = [res.data, memberId] 
       dispatch(login(user));
       navigate('/')

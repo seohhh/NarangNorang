@@ -41,9 +41,6 @@ const gameSlice = createSlice({
       },
       setNowScore(state, actions) {
         state.nowScore = actions.payload
-        console.log(state.nowScore);
-        console.log(actions.payload);
-        setTotalScore(state.nowScore);
 
       },
       setTotalScore(state, actions) {

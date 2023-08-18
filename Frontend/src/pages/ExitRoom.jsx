@@ -67,7 +67,6 @@ function ExitRoom() {
     }
     await axios.post('/album/capture/delete', data)
     .then((res) => {
-      console.log(res)
       navigate("/")
     })
     .catch((error) => {
@@ -89,7 +88,6 @@ function ExitRoom() {
 
     axios.post('/album/upload', data)
     .then((res) => {
-      console.log(res)
       handleSuccessShow();
       setTimeout(() => {
         handleSuccessClose();
@@ -97,8 +95,6 @@ function ExitRoom() {
       setSelectedPictureSeq([]);
     })
     .catch((error) => {
-      console.log(error)
-      console.log(memberSeq, selectedPictureSeq, sessionIdFromUrl, subscriberIdFromUrl)
       handleFailShow();
       setTimeout(() => {
         handleFailClose();
@@ -113,7 +109,6 @@ function ExitRoom() {
     } else {
       setSelectedPictureSeq([...selectedPictureSeq, seq]);
     }
-    console.log(selectedPictureSeq);
   }
 
 
