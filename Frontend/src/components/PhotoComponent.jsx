@@ -67,9 +67,6 @@ function PhotoComponent(props) {
       method: "DELETE",
       url: `album/delete/${photoSeq}`,
     })
-      .then((res) => {
-        console.log(res);
-      })
       .catch((err) => {
         console.log(err);
       });
@@ -86,7 +83,6 @@ function PhotoComponent(props) {
         },
       })
         .then((res) => {
-          console.log(res);
           handleClose();
         })
         .catch((err) => {
