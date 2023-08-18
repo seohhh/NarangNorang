@@ -85,7 +85,6 @@ function Ask() {
     if (confirmEmail && confirmContent) {
       axios.post('/question', { questionContent, questionEmail })
       .then((res) => {
-        console.log(res)
         handleClose()
         handleSuccessShow();
         setTimeout(() => {

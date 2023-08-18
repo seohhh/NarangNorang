@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from 'react-redux';
-import { Link, useNavigate } from "react-router-dom"; // react-router-dom에서 가져온 Link 컴포넌트
-import styled from "styled-components"; // styled-components를 가져옴
-import logo from "../assets/logo.png"; // 로고 이미지 파일의 경로를 설정
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import logo from "../assets/logo.png";
 import { logout } from "../slice/authSlice";
 
 
@@ -39,7 +39,6 @@ const NoUnderLine = styled(Link)`
   color: black;
 `
 
-// 컴포넌트를 정의하는 함수
 function CustomNavbar() {
   const isLoggedin = sessionStorage.getItem('isLoggedin')
   const user = JSON.parse(sessionStorage.getItem('user'));
