@@ -94,7 +94,6 @@ function Mypage() {
 
   const changeMemberPassword = (event) => {
     event.preventDefault();
-    console.log(memberPassword);
     axios({
       method: "POST",
       url: "/auth/login",
@@ -187,7 +186,6 @@ function Mypage() {
       },
     })
       .then((res) => {
-        // console.log(res.data);
         setMemberName(res.data.memberName);
         setMemberEmail(res.data.memberEmail);
         setMemberNickname(res.data.memberNickname);

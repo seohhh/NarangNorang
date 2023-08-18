@@ -71,14 +71,12 @@ function CustomRoom(props) {
   const hostSeq = useSelector((state) => state.login.userSeq)
 
   const checkStatus = useSelector((state) => state.game.gameStart);
-  // const scoreRlt = useSelector((state) => state.game.scoreRlt);
   const gameEnded = useSelector((state) => state.game.gameEnded);
 
   const [gameStatus, setGameStatus] = useState(false)
   const [scoreRlt, setScoreRlt] = useState([])
 
   const checkVideoId = useSelector((state) => state.game.videoId)
-  // const [stretchingStatus, setStretchingStatus] = useState(false)
   const [videoId, setVideoId] = useState(null)
 
 
@@ -94,11 +92,6 @@ function CustomRoom(props) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // const preventClose = (e) => {
-  //   e.preventDefault();
-  //   e.returnValue = ""; // chrome에서는 설정이 필요해서 넣은 코드
-  //   window.location.href=`https://i9c208.p.ssafy.io/exit?sessionId=${sessionId}&subscriberId=${connectionId}`
-  // }
 
   useEffect(() => {
     if (session) {
@@ -115,19 +108,14 @@ function CustomRoom(props) {
     if (scoreRlt && session && sessionId) {
 
       const Ranker = []
-      console.log(scoreRlt, "스코어rlt");
-      console.log(session);
 
       scoreRlt.forEach((scoreConnectionId) => {
         session.streamManagers.forEach((scoreStreamManager) => {
           if (scoreStreamManager.stream && scoreStreamManager.stream.connection && scoreStreamManager.stream.connection.connectionId === scoreConnectionId) {
-            console.log(scoreStreamManager, "랭크에 들어가는순서~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-            console.log(scoreConnectionId)
             Ranker.push(scoreStreamManager);
           }
         })
       })
-      console.log(Ranker, "여기 랭커!!");
       if (Ranker.length === 1) {
         setFirst(Ranker[0]);
       } else if (Ranker.length === 2 ) {
@@ -146,7 +134,7 @@ function CustomRoom(props) {
 
       setTimeout(() => {
         closeRankModal();
-      }, 16800);
+      }, 10000);
 
       dispatch(switchGameEnded())
       dispatch(switchGameStuatus(sessionId, "wait"))
@@ -162,12 +150,10 @@ function CustomRoom(props) {
         url: `/participant/room/${session.sessionId}`
       }).then((res) => {
         setScoreRlt(res.data);
-        console.log(res, "등수!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!")
       }).catch((err) => {
         console.log(err);
       })
 
-      console.log(scoreRlt, "점수데이터!!!!!!")
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [gameEnded])
@@ -194,24 +180,12 @@ function CustomRoom(props) {
 
     const mySession = OV.initSession();
     setSession(mySession);
-    console.log(session);
 
     mySession.on("streamCreated", (event) => {
       
       const subscriber = mySession.subscribe(event.stream, undefined);
-      console.log(subscriber)
       setSubscribers((prevSubscribers) => [...prevSubscribers, subscriber]);
     });
-
-    // mySession.on("publisherStartSpeaking", (event) => {
-    //   console.log("User " + event.connection.connectionId + " start speaking");
-    //   setIsSpeaking(true);
-    // });
-
-    // mySession.on("publisherStopSpeaking", (event) => {
-    //   console.log("User " + event.connection.connectionId + " stop speaking");
-    //   setIsSpeaking(false);
-    // });
 
     mySession.on("streamDestroyed", (event) => {
       deleteSubscriber(event.stream.streamManager);
@@ -231,10 +205,6 @@ function CustomRoom(props) {
 
     mySession.on("signal:rankRegist", (event) => {
       const Ranker = []
-      console.log(scoreRlt, "스코어rlt");
-      console.log(session);
-
-
 
       scoreRlt.forEach((connectionId) => {
         session.streamManagers.forEach((streamManager) => {
@@ -243,7 +213,7 @@ function CustomRoom(props) {
           }
         })
       })
-      console.log(Ranker, "여기 랭커!!");
+      
       if (Ranker.length === 1) {
         setFirst(Ranker[0]);
       } else if (Ranker.length === 2 ) {
@@ -301,11 +271,7 @@ function CustomRoom(props) {
         await mySession.connect(token, { clientData: myUserName });
       }
 
-      console.log(mySession, "여기");
-
       setConnectionId(mySession.connection.connectionId)
-
-      console.log(mySession, "여기");
 
       await axios.post(APPLICATION_SERVER_URL + "api/v1/participant/save",
       {
@@ -313,10 +279,8 @@ function CustomRoom(props) {
         "roomCode": mySession.sessionId,
         "score": 0
       })
-      console.log("참여자 정보 저장")
 
       await axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/plus/" + mySession.sessionId)
-      console.log("방인원 추가")
 
       let newpublisher = await OV.initPublisherAsync(undefined, {
         audioSource: undefined,
@@ -337,7 +301,6 @@ function CustomRoom(props) {
       setAudioOn(false);
       setMainStreamManager(newpublisher);
       setPublisher(newpublisher);
-      console.log(newpublisher, "newpublisher");
     } catch (error) {
       console.log(
         "There was an error connecting to the session:",
@@ -356,7 +319,6 @@ function CustomRoom(props) {
   };
 
   const getToken = async (mySessionId) => {
-    console.log(mySessionId, "마이 세션아이디");
     if (mySessionId === null) {
       const createSessionId = await createSession(mySessionId);
       setSessionId(createSessionId);
@@ -366,7 +328,6 @@ function CustomRoom(props) {
         "hostName": hostNickname,
         "hostSeq": hostSeq
       })
-      console.log("방생성")
 
       return await createToken(createSessionId);
     }
@@ -407,8 +368,6 @@ function CustomRoom(props) {
   const leaveSession = async () => {
     const mySession = session;
 
-    console.log("participantId : " + connectionId)
-    console.log("roomCode : " + sessionId)
     axios.post(APPLICATION_SERVER_URL + "api/v1/participant/delete", {
       "participantId": connectionId,
       "roomCode": sessionId
@@ -416,9 +375,7 @@ function CustomRoom(props) {
     .then((res) => {
       if (res.data) {
         axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + sessionId)
-        console.log("방인원 삭제")
       }
-      console.log("참여자 정보 삭제")
     })
     
 
@@ -449,7 +406,6 @@ function CustomRoom(props) {
 
     if (publisher) {
       publisher.publishVideo(videoOn);
-      console.log(publisher.properties);
     }
   };
 
@@ -458,7 +414,6 @@ function CustomRoom(props) {
 
     if (publisher) {
       publisher.publishAudio(audioOn);
-      console.log(publisher.properties);
     }
 
     session.signal({
@@ -475,10 +430,8 @@ function CustomRoom(props) {
       "roomCode": streamManager.stream.session.sessionId
     })
     .then((res) => {
-      console.log("참여자 정보 삭제")
       if (res.data) {
         axios.put(APPLICATION_SERVER_URL + "api/v1/room/update/minus/" + streamManager.stream.session.sessionId)
-        console.log("방인원 삭제")
       }
     })
 
