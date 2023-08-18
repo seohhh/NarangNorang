@@ -66,13 +66,11 @@ export const login = (user) => async (dispatch) => {
 export const logout = (token) => async (dispatch) => {
   try {
     // API 요청을 보내는 부분
-    console.log(token)
     const headers = {
       Authorization: `Bearer ${token}`,
     };
     const response = await axios.post('/auth/logout', null, {headers})
     // 로그아웃 성공
-    console.log('로그아웃 성공', response)
     dispatch(logoutSuccess())
   } catch (error) {
     // 로그인 실패

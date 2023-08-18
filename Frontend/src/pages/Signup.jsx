@@ -151,7 +151,6 @@ function Signup() {
         data: {memberId, memberPassword, memberName, memberNickname, memberEmail}
       })
       .then((res) => {
-        console.log(res)
         handleSignupSuccess()
         setTimeout(() => {
           handleSignupClose()

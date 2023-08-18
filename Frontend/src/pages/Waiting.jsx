@@ -89,7 +89,6 @@ function Waiting() {
 
 
   useEffect(() => {
-    console.log(isLoggedin, userNickname)
     if (isLoggedin === 'true' && userNickname) {
       joinCheck(userNickname)
     }
@@ -106,7 +105,6 @@ function Waiting() {
 
   const handleNickname = (e) => {
     setNickname(e.target.value);
-    console.log(nickname)
   };
 
   const onClickLogin = (e) => {
@@ -117,7 +115,6 @@ function Waiting() {
       data: { memberId, memberPassword }
     })
     .then((res) => {
-      console.log(res)
       const user = [res.data, memberId] 
       dispatch(login(user));
     })
@@ -144,7 +141,6 @@ function Waiting() {
           handleRoomAlertClose()
         }, 800)
       }
-      console.log(res)
     })
     .catch((err) =>  {
       console.log(err)
