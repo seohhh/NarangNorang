@@ -131,7 +131,7 @@
 
 |                   체조화면                   |               우승화면                |
 | :------------------------------------------: | :-----------------------------------: |
-| ![image](images/screenshots/11_체조시작.png) | ![image](./image/bp-user-message.gif) |
+| ![image](images/screenshots/11_체조시작.png) | ![image](/images/screenshots/14_게임시상.png) |
 
 | XRAY MODE |
 | :-------: |
@@ -144,7 +144,7 @@
 
 |               사진 선택화면               |                 앨범페이지                  |
 | :---------------------------------------: | :-----------------------------------------: |
-| ![image](./image/bp-sales-statistics.gif) | ![image](./image/bp-admin-kiosk-status.gif) |
+| ![image](images/screenshots/17_앨범저장.png) | ![image](images/screenshots/20_00_앨범.png) |
 
 <br/>
 <hr>
