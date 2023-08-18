@@ -63,7 +63,6 @@ const detectPose = async (video) => {
     poses = await detector.estimatePoses(video, estimationConfig);
   }
 
-  // console.log(poses);
   return poses;
 };
 
@@ -171,11 +170,8 @@ const drawSkeleton = (ctx, keypoints, poseId, color) => {
 };
 
 const getScore = async (gameRef, webcamRef) => {
-  console.log("userpose getscore", gameRef, webcamRef);
   const gpose = await detectPose(gameRef);
   const wpose = await detectPose(webcamRef);
-  console.log("gpose", gpose);
-  console.log("wpose", wpose);
 
   if (gpose.length === 0) {
     return 0;
@@ -213,12 +209,9 @@ const computeScore = (keypoints1, keypoints2) => {
         normPoints1[i].y * normPoints2[i].y);
   }
 
-  console.log("점수계산끝 norm", normPoints1, normPoints2);
   if (scoreSum === 0) {
-    console.log("점수계산끝 합=0", similarity, scoreSum);
     return 0;
   }
-  console.log("점수계산끝", similarity / scoreSum);
   return similarity / scoreSum;
 };
 

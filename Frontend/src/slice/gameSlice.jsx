@@ -37,18 +37,14 @@ const gameSlice = createSlice({
       },
       setStretchingId(state, actions) {
         state.videoId = actions.payload
-        console.log(state.videoId, "gameSlice에서 확인")
       },
       setNowScore(state, actions) {
         state.nowScore = actions.payload
-        console.log(state.nowScore);
-        console.log(actions.payload);
         setTotalScore(state.nowScore);
 
       },
       setTotalScore(state, actions) {
         state.totalScore += actions.payload
-        console.log(state.totalScore);
       }
     },
   });
@@ -70,14 +66,14 @@ export const handleCapture = (videoRef, canvas, roomCode, subscriberId) => async
         const header = {header: {"Content-Type": "multipart/form-data"}}
       
         axios.post('/album/capture', formData, {header})
-        .then((response) => {
-          console.log(response)
-          console.log(file)
-        })
-        .catch((error) => {
-          console.log(error)
-          console.log(file)
-        })
+        // .then((response) => {
+        //   console.log(response)
+        //   console.log(file)
+        // })
+        // .catch((error) => {
+        //   console.log(error)
+        //   console.log(file)
+        // })
       }
     });
   } catch (error) {
@@ -109,14 +105,13 @@ export const render = (dispatch) => {
 }
 
 export const switchGameStuatus = (roomCode, status) => async (dispatch) => {
-  console.log(roomCode, "방정보!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! ")
   axios.put('/room/update/status/' + roomCode, {"status": status})
-  .then((res) => {
-    console.log(res)
-  })
-  .catch((err) => {
-    console.log(err)
-  })
+  // .then((res) => {
+  //   console.log(res)
+  // })
+  // .catch((err) => {
+  //   console.log(err)
+  // })
 }
 
 export const { switchShowCanvas, switchGameStart, switchGameEnded, setScoreRlt, setWebcamRef, 
