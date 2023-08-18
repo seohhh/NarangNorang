@@ -1,5 +1,5 @@
 <div align="left">
-<img width="300" src="Frontend\src\assets\logo.png">
+<img width="300" src="./Frontend/src/assets/logo.png">
 </div>
 
 <h1>🎤 아이랑 진짜 놀자! 
