@@ -1,17 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import userpose from "../utils/userpose";
-// import POSE from "../utils/POSE";
-// import html2canvas from "html2canvas";
 import "./MainVideoComponent.css";
-import * as tf from "@tensorflow/tfjs-core"; // 텐서플로우 JS 라이브러리
-// import axios from "axios";
+import * as tf from "@tensorflow/tfjs-core";
 import { useSelector, useDispatch } from "react-redux";
 import { handleWebcamRef } from "../slice/gameSlice";
-// import NarangNorangIntro from "../assets/game/narangnorang_intro.mp4";
 import superStar from "../assets/game/score/superStar.gif";
 import winner from "../assets/game/score/winner.gif";
 
-// const BASE_URL = 'https://i9c208.p.ssafy.io/api/v1'
 
 const MainVideoComponent = (props) => {
   const webcamRef = useRef(); // 비디오 요소 참조 생성
@@ -21,7 +16,7 @@ const MainVideoComponent = (props) => {
     height: 480,
   });
   const dispatch = useDispatch()
-  console.log(webcamRef, "webcamRef확인")
+
   dispatch(handleWebcamRef(webcamRef.current))
   const showCanvas = useSelector((state) => state.game.showCanvas);
   const detectorRef = useRef(null);
@@ -40,7 +35,6 @@ const MainVideoComponent = (props) => {
     });
   };
 
-  // 컴포넌트 마운트 시 실행
   useEffect(() => {
     // 스켈레톤 표시 버튼 클릭 핸들러
     const handleSkeletonClick = async () => {
@@ -55,7 +49,6 @@ const MainVideoComponent = (props) => {
           userpose.startRender(webcamRef.current, ctx); // 사용자 포즈 렌더링 시작 (스켈레톤 그리기)
         } else {
           // 감지기가 로드되어 있지 않을 경우 로딩
-          console.log("Detector not ready yet.");
           detectorRef.current = await userpose.loadDetector(); // 포즈 감지기 로딩
         }
       } else {
@@ -66,8 +59,6 @@ const MainVideoComponent = (props) => {
     if (props && !!webcamRef) {
       props.streamManager.addVideoElement(webcamRef.current);
     }
-
-    console.log(props);
 
     // 메타데이터 로드 이벤트 리스너 추가 (비디오 크기를 가져오기 위해)
     webcamRef.current.addEventListener(
@@ -81,16 +72,11 @@ const MainVideoComponent = (props) => {
       if (showCanvas) {
         handleSkeletonClick();
       }
-      console.log(await userpose.detectPose(webcamRef.current));
     };
     tf.setBackend("webgpu").then(main);
 
     return () => {
       userpose.stopRender(videoDimensions.width, videoDimensions.height);
-      // 컴포넌트 언마운트 시 이벤트 리스너 제거
-      // if (webcamRef.current) {
-      //   webcamRef.current.removeEventListener("loadedmetadata", handleVideoMetadataLoaded);
-      // }
     };
   }, [
     props,
@@ -101,7 +87,6 @@ const MainVideoComponent = (props) => {
   ]);
 
   useEffect(() => {
-    console.log(nowScore, "동영상 끝 내 점수")
     if (0.5 <= nowScore && nowScore < 0.7) {
       setGreat(true);
       setTimeout(() => {
@@ -113,7 +98,6 @@ const MainVideoComponent = (props) => {
         setAwesome(false);
       }, 2000);
     }
-    console.log(great, awesome, "내 상태");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [totalScore]);
 
@@ -123,7 +107,6 @@ const MainVideoComponent = (props) => {
     }
   };
 
-  // 컴포넌트 렌더링
   return (
     <div>
       {props.streamManager !== undefined && !props.gameStatus ? (
