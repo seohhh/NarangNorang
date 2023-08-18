@@ -99,14 +99,14 @@ function Mypage() {
       url: "/auth/login",
       data: { memberId, memberPassword },
     })
-      .then((res) => {
+      .then(() => {
         if (newPassword === newPassword2) {
           axios({
             method: "PUT",
             url: `/member/me/update/${memberId}`,
             data: { memberPassword: newPassword },
           })
-            .then((res) => {
+            .then(() => {
               setPwSuccess(true);
               setTimeout(() => {
                 setPwSuccess(false);
@@ -137,7 +137,7 @@ function Mypage() {
 
   const handleSubmit = (event) => {
     const form = event.currentTarget;
-    if (form.checkValidity() === false) {
+    if (form.checkValidity === false) {
       event.preventDefault();
       event.stopPropagation();
     } else {
@@ -312,7 +312,7 @@ function Mypage() {
           </Form.Group>
           
           <div>
-            <UpdateBtn variant="outline-warning" type="submit" >
+            <UpdateBtn variant="outline-warning" type="submit" onClick={handleSubmit}>
               정보 수정
             </UpdateBtn>
             <PasswordBtn variant="outline-primary" className="mt-2" type="submit" onClick={handleShow}>
