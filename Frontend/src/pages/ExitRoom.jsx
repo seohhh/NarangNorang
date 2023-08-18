@@ -32,11 +32,11 @@ function ExitRoom() {
   const handleSuccessClose = () => setAlbumSuccessShow(false);
   const handleSuccessShow = () => setAlbumSuccessShow(true);
 
-  // 앨범 저장 성공 모달
+  // 앨범 저장 실패 모달
   const [albumFailShow, setAlbumFailShow] = useState(false);
   const handleFailClose = () => setAlbumFailShow(false);
   const handleFailShow = () => setAlbumFailShow(true);
-
+  const [noContent, setNoContent] = useState(false);
   
 
   useEffect(() => {
@@ -78,28 +78,36 @@ function ExitRoom() {
   // 앨범에 저장
   // arr: 원하는 pictureSeq 배열
   const saveImages = () => {
-
-    const data = {
-      "memberSeq": memberSeq,
-      "redisImageSeqs": selectedPictureSeq,
-      "roomCode": sessionIdFromUrl,
-      "subscriberId": subscriberIdFromUrl
-    }
-
-    axios.post('/album/upload', data)
-    .then((res) => {
-      handleSuccessShow();
-      setTimeout(() => {
-        handleSuccessClose();
-      }, 500);
-      setSelectedPictureSeq([]);
-    })
-    .catch((error) => {
+    if (selectedPictureSeq.length) {
+      const data = {
+        "memberSeq": memberSeq,
+        "redisImageSeqs": selectedPictureSeq,
+        "roomCode": sessionIdFromUrl,
+        "subscriberId": subscriberIdFromUrl
+      }
+  
+      axios.post('/album/upload', data)
+      .then((res) => {
+        handleSuccessShow();
+        setTimeout(() => {
+          handleSuccessClose();
+        }, 500);
+        setSelectedPictureSeq([]);
+      })
+      .catch((error) => {
+        handleFailShow();
+        setTimeout(() => {
+          handleFailClose();
+        }, 500);
+      })
+    } else {
+      setNoContent(true)
       handleFailShow();
-      setTimeout(() => {
-        handleFailClose();
-      }, 500);
-    })
+        setTimeout(() => {
+          handleFailClose();
+        }, 500);
+      setNoContent(false)
+    }
   }
 
   // 사진 선택
@@ -244,7 +252,7 @@ function ExitRoom() {
 
     <Modal show={albumFailShow} onHide={handleFailClose}>
       <Modal.Body className='modalbody'>
-        <div>앨범 저장에 실패하였습니다</div>
+        { noContent ? <div>선택된 사진이 없습니다</div> : <div>앨범 저장에 실패하였습니다</div> }
       </Modal.Body>
     </Modal>
 
