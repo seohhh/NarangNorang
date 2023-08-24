@@ -203,15 +203,15 @@
     - Nginx
  -->
 
-| Tech         | Stack                                  |
-| ------------ | -------------------------------------- |
-| **Language** | Java, JavaScript                       |
-| **Backend**  | Spring Boot, JPA, Spring Security, JWT |
-| **Frontend** | React, reduxjs                         |
-| **Database** | MariaDB                                |
-| **Server**   | AWS EC2, NginX                         |
-| **DevOps**   | Git, Docker                            |
-| **WebRTC**   | openvidu                               |
+| Tech         | Stack                                             |
+| ------------ |---------------------------------------------------|
+| **Language** | Java, JavaScript                                  |
+| **Backend**  | Spring Boot, JPA, Spring Security, JWT, RedisHash |
+| **Frontend** | React, reduxjs                                    |
+| **Database** | MySQL, Redis                                      |
+| **Server**   | AWS EC2, NginX                                    |
+| **DevOps**   | Gitlab-Runner, Docker                             |
+| **WebRTC**   | openvidu                                          |
 
 <br/>
 
