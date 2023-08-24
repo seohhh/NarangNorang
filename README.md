@@ -190,11 +190,11 @@
  -->
 
 | Tech         | Stack                                  |
-| ------------ | -------------------------------------- |
+| ------------ |----------------------------------------|
 | **Language** | Java, JavaScript                       |
 | **Backend**  | Spring Boot, JPA, Spring Security, JWT |
 | **Frontend** | React, reduxjs/toolkit                 |
-| **Database** | MariaDB                                |
+| **Database** | MySQL, Redis                           |
 | **Server**   | AWS EC2, NginX                         |
 | **DevOps**   | Git, Docker                            |
 | **WebRTC**   | openvidu                               |
